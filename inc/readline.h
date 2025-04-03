@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   teste.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/03 14:47:22 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/03 14:29:33 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/03 14:34:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "readline.h"
+#ifndef	READLINE_H
+# define READLINE_H
 
-int	main(void)
-{
-	char	*input;
+/* -- Includes -- */
 
-	while (1)
-	{
-		input = readline("minishell > ");
-		if (!input)
-			break ;
-		if (!*input == '\0')
-			add_history(input);
-		free(input);
-	}
-	rl_clear_history();
-	return (0);
-}
+#include <stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+#endif
