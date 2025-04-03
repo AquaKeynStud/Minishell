@@ -23,8 +23,9 @@ int	main(void)
 		prompt = readline("minishell > ");
 		if (!prompt)
 			break ;
-		printf("Prompt reçu : %s\n", prompt);
+		add_history(prompt);
 		free(prompt);
 	}
+	rl_clear_history();
 	return (0);
 }
