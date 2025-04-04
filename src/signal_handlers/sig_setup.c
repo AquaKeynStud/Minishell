@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_sigaction.c                                 :+:      :+:    :+:   */
+/*   sig_setup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/03 15:39:33 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/04 18:15:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
+#include "sigaction.h"
 
-bool	parse_flags(char *s)
+static bool	parse_flags(char *s)
 {
 	int	i;
 
@@ -29,8 +29,9 @@ bool	parse_flags(char *s)
 	return (true);
 }
 
-void	get_sa_flags(struct sigaction *sa, char *flags)
+static void	get_sa_flags(struct sigaction *sa, char *flags)
 {
+	sa.sa_flags = 0;
 	if (!parse_flags(flags))
 		return ;
 	if (flags[0] == '1')
@@ -52,12 +53,10 @@ void	get_sa_flags(struct sigaction *sa, char *flags)
 void	setup_sigaction(int signum, void (*handler)(int), char *flags)
 {
 	struct sigaction	*sa;
-	
-	if (ft_strlen)
+
 	sa.sa_handler = handler;
 	sigemptyset(&sa.sa_mask); // Masque vide
 	get_sa_flags(sa, flags); // Prend les flags avec une chaine de 7 "0000000" qui correspondent chacun à un flag
-
 	if (sigaction(signum, &sa, NULL))
 		return (perror("sigaction"));
 }
