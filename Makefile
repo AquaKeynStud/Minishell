@@ -6,7 +6,7 @@ NAME = minishell
 
 CC				:=	cc
 
-CFLAGS			:= -Wall -Wextra -Werror
+CFLAGS			:= -Wall -Wextra -Werror -MMD
 
 RM				:=	rm	-rf
 
@@ -28,6 +28,7 @@ FILE			=	$(file)
 D_SRC	=	src/
 D_INC	=	inc/
 D_OBJ	=	.obj/
+D_DEP	=	.dep/
 D_DOC	=	docs/ # A ENLEVER AVANT DE RENDRE
 D_SIG	=	$(D_SRC)signal_handlers/
 
@@ -48,27 +49,36 @@ INC			=	$(addprefix $(D_INC), $(LST_INC))
 
 OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRCS:.c=.o)))
 
+DEPS		=	$(addprefix $(D_DEPS), $(notdir $(LST_SRCS:.c=.d)))
+
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all:	$(NAME)
-
-$(D_OBJ):
-	@mkdir -p $@
 
 $(NAME):	$(OBJ) $(INC)
 	@$(CC) $(CFLAGS) $(OBJ) $(INCS) $(LIBS) -o minishell
 	@echo "\e[0;32mProgramme créé avec succès ! 🧬\e[0m"
 
+$(D_OBJ):
+	@mkdir -p $@
+
+$(D_DEP):
+	@mkdir -p $(D_DEP)
+
 vpath %.c $(D_SRCS)
 
-$(D_OBJ)%.o:	%.c $(INC) | $(D_OBJ) Makefile
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+$(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
+	@$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	@mv $(@:.o=.d) $(D_DEP)
+
+-include $(DEPS)
 
 clean:
 ifeq ($(SHOW_MSG_CLEAN), true)
 	@echo "\e[0;36mJ'ai enlevé tous les objets relatifs à $(NAME) 🧹\e[0m"
 endif
 	@$(RM) $(D_OBJ)
+	@$(RM) $(D_DEP)
 	@$(RM) $(D_DOC)
 
 fclean:

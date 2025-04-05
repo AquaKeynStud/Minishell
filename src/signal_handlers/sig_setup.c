@@ -6,10 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/04 18:15:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/05 19:32:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h> // Pour perror
+#include <stddef.h> // Pour le NULL, à mettre dans le header si réutilisé
 #include "sigaction.h"
 
 static bool	parse_flags(char *s)
@@ -31,32 +33,33 @@ static bool	parse_flags(char *s)
 
 static void	get_sa_flags(struct sigaction *sa, char *flags)
 {
-	sa.sa_flags = 0;
+	sa->sa_flags = 0;
 	if (!parse_flags(flags))
 		return ;
 	if (flags[0] == '1')
-		sa.sa_flags |= SA_RESTART;
+		sa->sa_flags |= SA_RESTART;
 	if (flags[1] == '1')
-		sa.sa_flags |= SA_NOCLDSTOP;
+		sa->sa_flags |= SA_NOCLDSTOP;
 	if (flags[2] == '1')
-		sa.sa_flags |= SA_NOCLDWAIT;
+		sa->sa_flags |= SA_NOCLDWAIT;
 	if (flags[3] == '1')
-		sa.sa_flags |= SA_SIGINFO;
+		sa->sa_flags |= SA_SIGINFO;
 	if (flags[4] == '1')
-		sa.sa_flags |= SA_NODEFER;
+		sa->sa_flags |= SA_NODEFER;
 	if (flags[5] == '1')
-		sa.sa_flags |= SA_ONSTACK;
+		sa->sa_flags |= SA_ONSTACK;
 	if (flags[6] == '1')
-		sa.sa_flags |= SA_RESETHAND;
+		sa->sa_flags |= SA_RESETHAND;
 }
 
-void	setup_sigaction(int signum, void (*handler)(int), char *flags)
+bool	set_sigaction(int signum, void (*handler)(int), char *flags)
 {
-	struct sigaction	*sa;
+	struct sigaction	sa;
 
 	sa.sa_handler = handler;
 	sigemptyset(&sa.sa_mask); // Masque vide
-	get_sa_flags(sa, flags); // Prend les flags avec une chaine de 7 "0000000" qui correspondent chacun à un flag
+	get_sa_flags(&sa, flags); // Prend les flags avec une chaine de 7 "0000000" qui correspondent chacun à un flag
 	if (sigaction(signum, &sa, NULL))
-		return (perror("sigaction"));
+		return (true);
+	return (false);
 }
