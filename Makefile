@@ -35,7 +35,8 @@ D_SIG	=	$(D_SRC)signal_handlers/
 D_SRCS	= $(D_SRC) $(D_SIG)
 
 # file lists
-LST_SRC		=	main.c
+LST_SRC		=	main.c				\
+				readline.c
 
 LST_SIG		=	sig_setup.c			\
 				sig_handlers.c

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/05 19:32:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/07 10:22:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static bool	parse_flags(char *s)
 static void	get_sa_flags(struct sigaction *sa, char *flags)
 {
 	sa->sa_flags = 0;
-	if (!parse_flags(flags))
+	if (!*flags || !parse_flags(flags))
 		return ;
 	if (flags[0] == '1')
 		sa->sa_flags |= SA_RESTART;
@@ -58,7 +58,7 @@ bool	set_sigaction(int signum, void (*handler)(int), char *flags)
 
 	sa.sa_handler = handler;
 	sigemptyset(&sa.sa_mask); // Masque vide
-	get_sa_flags(&sa, flags); // Prend les flags avec une chaine de 7 "0000000" qui correspondent chacun à un flag
+	get_sa_flags(&sa, flags); // Prend les flags avec une série de 7 fois 0 ou 1 qui correspondent chacun à un flag (ex : "0110010")
 	if (sigaction(signum, &sa, NULL))
 		return (true);
 	return (false);
