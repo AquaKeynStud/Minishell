@@ -6,25 +6,16 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:18:49 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/07 16:33:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/09 11:11:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "utils.h" // Pour strlen
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
-static size_t	ft_strlen(const char *str) // Potentiellement à mettre dans un fichier utils en non static
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
 
 static bool	is_only_whitespaces(char *input)
 {
