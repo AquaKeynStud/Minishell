@@ -6,63 +6,18 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:37:59 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 08:49:12 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/11 09:28:19 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenisation.h"
-#include "libft/libft.h"
-#include <stddef.h>
-
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_whitespace(char c)
-{
-	return (c == ' ' || c == '\t');
-}
-
-t_token	*create_token(const char *value, t_token_type type)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return NULL; //A redefinir avec un message d'erreur plus precis
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		return (NULL);
-	}
-	token->type = type;
-	token->next = NULL;
-	return (token);
-}
-
-void	add_token(t_token **head, t_token *new)
-{
-	t_token	*tmp;
-
-	tmp = *head;
-	if (!*head)
-	{
-		*head = new;
-		return ;
-	}
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
 
 static void	handle_redirection(const char *input, int *i, t_token **tokens)
 {
 	char	op;
 	char	*str;
 	int		len;
-	t_token *token;
+	t_token	*token;
 
 	len = 1;
 	op = input[*i];
@@ -70,7 +25,7 @@ static void	handle_redirection(const char *input, int *i, t_token **tokens)
 		len = 2;
 	str = ft_strndup(&input[*i], len);
 	if (!str)
-		return;
+		return ;
 	if (op == '>' && len == 2)
 		token = create_token(str, TOKEN_REDIR_APPEND);
 	else if (op == '<' && len == 2)
@@ -85,23 +40,24 @@ static void	handle_redirection(const char *input, int *i, t_token **tokens)
 	*i += len;
 }
 
-
 static void	handle_quotes(const char *input, int *i, t_token **tokens)
 {
 	char	quote;
 	char	*str;
 	int		start;
+	int		len;
+	t_token	*token;
 
 	quote = input[*i];
 	(*i)++;
 	start = *i;
 	while (input[*i] && input[*i] != quote)
 		(*i)++;
-	int len = *i - start;
+	len = *i - start;
 	str = ft_strndup(&input[start], len);
 	if (str)
 	{
-		t_token *token = create_token(str, TOKEN_WORD);
+		token = create_token(str, TOKEN_WORD);
 		if (token)
 			add_token(tokens, token);
 		free(str);
@@ -110,12 +66,12 @@ static void	handle_quotes(const char *input, int *i, t_token **tokens)
 		(*i)++;
 }
 
-
 static void	handle_word(const char *input, int *i, t_token **tokens)
 {
 	int		start;
 	int		len;
 	char	*str;
+	t_token	*token;
 
 	start = *i;
 	while (input[*i] && !is_whitespace(input[*i]) && !is_operator(input[*i]))
@@ -130,14 +86,13 @@ static void	handle_word(const char *input, int *i, t_token **tokens)
 		str = ft_strndup(&input[start], len);
 		if (str)
 		{
-			t_token *token = create_token(str, TOKEN_WORD);
+			token = create_token(str, TOKEN_WORD);
 			if (token)
 				add_token(tokens, token);
 			free(str);
 		}
 	}
 }
-
 
 t_token	*tokenize(const char *input)
 {

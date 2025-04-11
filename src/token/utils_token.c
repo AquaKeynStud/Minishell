@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   utils_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 14:03:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 09:10:58 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/11 09:19:07 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "tokenisation.h"
 
-char	*ft_strndup(const char *s, int n)
+int	is_operator(char c)
 {
-	int		i;
-	char	*dest;
+	return (c == '|' || c == '<' || c == '>');
+}
 
-	dest = (char *)malloc((n + 1) * sizeof(char));
-	if (dest == 0)
-		return (0);
-	i = 0;
-	while (s[i] != '\0' && i < n)
-	{
-		dest[i] = s[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
+int	is_whitespace(char c)
+{
+	return (c == ' ' || c == '\t');
 }
