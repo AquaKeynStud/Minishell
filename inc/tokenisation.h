@@ -6,11 +6,11 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 09:28:34 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:43:55 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include "libft.h"
 #include <stddef.h>
 
 typedef enum e_token_type

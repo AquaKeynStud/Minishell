@@ -6,12 +6,11 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:10:50 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 08:58:10 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:46:05 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenisation.h"
-#include "libft/libft.h"
 
 // À adapter selon ta définition de t_token_type
 const char *token_type_to_str(t_token_type type)
