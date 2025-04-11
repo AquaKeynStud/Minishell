@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:10:50 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 08:51:03 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/11 08:58:10 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,28 @@ void	print_tokens(t_token *tokens)
 
 int main(void)
 {
-	char *line = "cat 'mon fichier.txt' | grep \"bonjour\" >> sortie.txt";
-	t_token *tokens = tokenize(line);
-	print_tokens(tokens);
+	const char *tests[] = {
+		"cat 'mon fichier.txt' | grep \"bonjour\" >> sortie.txt",
+		"echo hello > file.txt",
+		"ls -l | wc -l",
+		"echo \"chaine avec > dans les quotes\"",
+		"commande << eof",
+		"simpleword",
+		"   spaced    out   ",
+		"\"quote ouverte",
+		"pipe | en début",
+		NULL
+	};
+
+	for (int i = 0; tests[i] != NULL; i++)
+	{
+		ft_printf("Test %d: \"%s\"\n", i + 1, tests[i]);
+		t_token *tokens = tokenize(tests[i]);
+		print_tokens(tokens);
+		ft_printf("--------------------------------------------------\n");
+		// (Optionnel) Ajoute une fonction free_tokens si tu veux tout libérer proprement ici
+	}
 	return (0);
 }
+
 
