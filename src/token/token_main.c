@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:10:50 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 10:46:05 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:27:22 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,18 @@ int main(void)
 		"   spaced    out   ",
 		"\"quote ouverte",
 		"pipe | en début",
+		"echo >> \"hello guys\"",
+		"cat < input.txt | sort | uniq > output.txt",
+		"cat /home/user/docs/file.txt",
+		"echo 'bonjour le' monde",
+		"ls | | wc",
+		"echo \"non fermée",
+		"echo hello > file1.txt >> file2.txt",
+		"echo    hello   |   grep   h",
+		"cat <<EOF\nline1\nline2\nEOF",
 		NULL
 	};
+	
 
 	for (int i = 0; tests[i] != NULL; i++)
 	{
