@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenisation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:37:59 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 09:28:19 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/12 09:51:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenisation.h"
+#include "lexing.h"
 
 static void	handle_redirection(const char *input, int *i, t_token **tokens)
 {

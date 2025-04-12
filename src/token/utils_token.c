@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 09:19:07 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/12 09:51:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenisation.h"
+#include "lexing.h"
 
 int	is_operator(char c)
 {
