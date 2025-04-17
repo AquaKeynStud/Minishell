@@ -1,23 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline.h                                         :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/03 14:29:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/13 09:30:23 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/13 09:32:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READLINE_H
-# define READLINE_H
+#ifndef PARSING_H
+# define PARSING_H
 
 /* -- Includes -- */
-# include <readline/history.h>
-# include <readline/readline.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+
+/* -- Structures -- */
+typedef enum e_ast_type
+{
+	AST_COMMAND,
+	AST_REDIR,
+	AST_PIPE
+}			t_ast_type;
+
+typedef struct s_ast
+{
+	t_ast_type		type;
+	char			*value;
+	struct s_ast	**childs;
+	int				child_count;
+}				t_ast;
 
 /* -- Functions -- */
-void	get_input_loop(void);
 
 #endif

@@ -6,15 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:18:49 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/07 16:33:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/12 17:52:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "readline.h"
 
 static size_t	ft_strlen(const char *str) // Potentiellement à mettre dans un fichier utils en non static
 {

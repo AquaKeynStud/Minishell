@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:11:58 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/05 18:21:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/13 09:31:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define SIGACTION_H
 
 /* -- Includes -- */
-#include <signal.h>
-#include <stdbool.h>
+# include <signal.h>
+# include <stdbool.h>
 
 /* -- Setup functions -- */
 bool	set_sigaction(int signum, void (*handler)(int), char *flags);
