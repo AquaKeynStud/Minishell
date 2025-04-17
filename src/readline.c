@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "readline.h"
 
 static bool	is_only_whitespaces(char *input)
 {
