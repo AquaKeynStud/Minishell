@@ -13,8 +13,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "readline.h"
 
 static size_t	ft_strlen(const char *str) // Potentiellement à mettre dans un fichier utils en non static
 {

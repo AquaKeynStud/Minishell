@@ -13,6 +13,10 @@
 #ifndef	READLINE_H
 # define READLINE_H
 
+/* -- Includes -- */
+# include <readline/history.h>
+# include <readline/readline.h>
+
 /* -- Functions -- */
 void	get_input_loop(void);
 
