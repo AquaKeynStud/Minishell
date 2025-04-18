@@ -42,7 +42,10 @@ LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
 
 LST_INC		=	readline.h			\
-				sigaction.h
+				sigaction.h			\
+				lexing.h			\
+				parsing.h			\
+				utils.h
 
 LST_SRCS	=	$(LST_SRC) $(LST_SIG)
 
