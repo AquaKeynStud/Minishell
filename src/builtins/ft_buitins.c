@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 12:11:12 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/18 15:12:10 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/18 15:36:02 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,52 @@ int	ft_pwd()
 	return (0);
 }
 
-int ft_export(char **args, t_env env)
+int	ft_env(t_env *env)
 {
-
+	while (env)
+	{
+		if (env->value)
+			ft_printf("%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
+	return (0);
 }
 
-int ft_unset(char **args, t_env env)
+int	ft_unset(char **args, t_env *env)
 {
-
-}
-int	ft_env(t_env env)
-{
+	int		i;
+	t_env	*prev;
+	t_env	*tmp;
 	
+	i = 1;
+	while (args[i])
+	{
+		prev = NULL;
+		tmp = env;
+		while (tmp) {
+			if (!strcmp(tmp->key, args[i]))
+			{
+				if (prev)
+					prev->next = tmp->next;
+				else
+					env = tmp->next;
+				free(tmp->key);
+				free(tmp->value);
+				free(tmp);
+				break ;
+			}
+			prev = tmp;
+			tmp = tmp->next;
+		}
+		i++;
+	}
+	return (0);
 }
+int	ft_export(char **args, t_env *env)
+{
+
+}
+
 
 int	ft_exit(args)
 {
