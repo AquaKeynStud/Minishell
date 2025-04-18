@@ -44,15 +44,18 @@ void	close_fd(t_fd **head, int fd)
 	}
 }
 
-void	close_fd(t_fd **head, int fd)
+void	close_all_fds(t_fd **head)
 {
 	t_fd 	*tmp;
 
+	if (!head || !*head)
+		return ;
 	while (*head)
 	{
 		tmp = *head;
 		*head = (*head)->next;
 		close(tmp->fd);
 		free(tmp);
+		tmp = NULL;
 	}
 }

@@ -6,9 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/13 10:50:19 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/18 14:01:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "lexing.h"
+#include "parsing.h"
 
 /*
 ** ============================================================================
@@ -58,8 +61,8 @@ t_ast	*parse_command(t_token **current)
 		*current = (*current)->next;
 	}
 	/* Gestion des redirections : > ou < */
-	while (*current && ((*current)->type == TOKEN_REDIRECT_IN ||
-				(*current)->type == TOKEN_REDIRECT_OUT))
+	while (*current && ((*current)->type == TOKEN_REDIR_IN ||
+				(*current)->type == TOKEN_REDIR_OUT))
 	{
 		t_token	*tmp;
 
@@ -68,7 +71,7 @@ t_ast	*parse_command(t_token **current)
 		if (*current && (*current)->type == TOKEN_WORD)
 		{
 			/* Crée un nœud redirection et l'attache comme enfant de la commande */
-			t_ast	*redir = new_ast(AST_REDIRECTION, tmp->value);
+			t_ast	*redir = new_ast(AST_REDIR, tmp->value);
 			ast_add_child(redir, new_ast(AST_COMMAND, (*current)->value));
 			ast_add_child(cmd, redir);
 			*current = (*current)->next;

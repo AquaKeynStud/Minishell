@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/13 11:27:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/18 13:57:53 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 	if (value)
 		node->value = ft_strdup(value);
 	node->child_count = 0;
-	node->children = NULL;
+	node->childs = NULL;
 	return (node);
 }
 
@@ -64,11 +64,11 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 void	ast_add_child(t_ast *parent, t_ast *child)
 {
 	parent->child_count++;
-	parent->children = realloc(parent->children, sizeof(t_ast *) * parent->child_count);
-	if (!parent->children)
+	parent->childs = realloc(parent->childs, sizeof(t_ast *) * parent->child_count);
+	if (!parent->childs)
 	{
 		perror("Realloc");
 		exit(EXIT_FAILURE);
 	}
-	parent->children[parent->child_count - 1] = child;
+	parent->childs[parent->child_count - 1] = child;
 }
