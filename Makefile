@@ -1,4 +1,4 @@
-.PHONY : all clean fclean re norminette valgrind exemple
+.PHONY : all clean fclean re norminette valgrind libft
 
 NAME = minishell
 
@@ -14,12 +14,6 @@ SHOW_MSG_CLEAN	=	true
 
 MAKEFLAGS		+=	--no-print-directory
 
-LIBS			:=	-lreadline -lncurses
-
-INCS			:=	-Iinc/
-
-FILE			=	$(file)
-
 # ╰━━━━━━━━━━━━━━━━════════════════╛出 ❖ 力╘════════════════━━━━━━━━━━━━━━━━╯ #
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ FILE TREE ❖ 力╒═══════════━━━━━━━━━━━━╮ #
@@ -27,12 +21,15 @@ FILE			=	$(file)
 # directories
 D_SRC	=	src/
 D_INC	=	inc/
+D_DOC	=	docs/ # A ENLEVER AVANT DE RENDRE
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
-D_DOC	=	docs/ # A ENLEVER AVANT DE RENDRE
+D_LFT	=	libft/
+D_TOK	=	$(D_SRC)token/
+D_PAR	=	$(D_SRC)parsing/
 D_SIG	=	$(D_SRC)signal_handlers/
 
-D_SRCS	= $(D_SRC) $(D_SIG)
+D_SRCS	= $(D_SRC) $(D_SIG) $(D_TOK) $(D_PAR)
 
 # file lists
 LST_SRC		=	main.c				\
@@ -41,10 +38,22 @@ LST_SRC		=	main.c				\
 LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
 
-LST_INC		=	readline.h			\
+LST_TOK		=	add_token.c			\
+				utils_token.c		\
+				tokenisation.c
+
+LST_PAR		=	ast_adders.c		\
+				ast_setters.c
+
+# LST_UTL
+
+LST_INC		=	utils.h				\
+				lexing.h			\
+				parsing.h			\
+				readline.h			\
 				sigaction.h
 
-LST_SRCS	=	$(LST_SRC) $(LST_SIG)
+LST_SRCS	=	$(LST_SRC) $(LST_SIG) $(LST_TOK) $(LST_PAR) #$(LST_UTL)
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 
@@ -52,13 +61,17 @@ OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRCS:.c=.o)))
 
 DEPS		=	$(addprefix $(D_DEPS), $(notdir $(LST_SRCS:.c=.d)))
 
+LIBS			:=	-L$(D_LFT) -lft -lreadline -lncurses
+
+INCS			:=	-I$(D_INC) -I$(D_LFT)
+
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all:	$(NAME)
 
-$(NAME):	$(OBJ) $(INC)
-	@$(CC) $(CFLAGS) $(OBJ) $(INCS) $(LIBS) -o minishell
-	@echo "\e[0;32mProgramme créé avec succès ! 🧬\e[0m"
+$(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o minishell
+	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 $(D_OBJ):
 	@mkdir -p $@
@@ -69,31 +82,32 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
+# @echo "Compiling $< → $@"
 	@$(CC) $(CFLAGS) $(INCS) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
 
+libft:	$(D_LFT)
+	$(MAKE) -C $(D_LFT)
+
 clean:
 ifeq ($(SHOW_MSG_CLEAN), true)
-	@echo "\e[0;36mJ'ai enlevé tous les objets relatifs à $(NAME) 🧹\e[0m"
+	@echo "\e[0;36mAll $(NAME) objects have been removed 🧹\e[0m"
 endif
-	@$(RM) $(D_OBJ)
-	@$(RM) $(D_DEP)
-	@$(RM) $(D_DOC)
+	@$(MAKE) -s -C $(D_LFT) clean
+	@$(RM) $(D_OBJ) $(D_DEP) $(D_DOC)
 
 fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
+	@$(MAKE) -s -C $(D_LFT) fclean
 	@$(RM) $(NAME)
-	@echo "\e[0;34mExecutable de $(NAME) nettoyé 🧼\e[0m"
+	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
-	@echo "\e[0;32mProgramme $(NAME) recréé avec succès ! 🫡\e[0m"
-
-exemple: # A ENLEVER AVANT DE RENDRE
-	$(CC) $(CFLAGS) $(FILE) $(INCS) $(LIBS) -o $(FILE:.c=)
+	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
 documentation:
 	doxygen Doxyfile
@@ -106,7 +120,4 @@ norminette:
 	norminette $(D_SRC) $(D_INC)
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
-
-clear: # A ENLEVER AVANT DE RENDRE
-	@$(RM) exemples/1_readline exemples/2_history exemples/3_autres_rl
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME)

@@ -6,33 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:18:49 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/07 16:33:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/18 14:06:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include "readline.h"
-
-static size_t	ft_strlen(const char *str) // Potentiellement à mettre dans un fichier utils en non static
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-static bool	is_only_whitespaces(char *input)
-{
-	while (*input && (*input == ' ' || *input == '\t')) // On incrémente le pointeur tant qu'il pointe un whitespace
-		input++;
-	if (*input) // Si on est pas à la fin d'input
-		return (false);
-	return (true);
-}
 
 static void	trim_input(char **input)
 {
@@ -65,10 +45,10 @@ void	get_input_loop(void)
 	
 	while (1)
 	{
-		input = readline("\033[1m\033[32mminishell \033[31m➤ \033[0m");
+		input = readline("minishell -> ");
 		if (!input)
 			break ;
-		if (*input && !is_only_whitespaces(input)) // On ajoute la chaine a l'historique si elle n'est pas vide ou seulement des whitespaces
+		if (*input) // On ajoute la chaine a l'historique si elle n'est pas vide
 			add_history(input);
 		trim_input(&input); // On enleve les espaces au début et à la fin
 		// printf("Nouvelle commande : [%s]\n", input); // Pour voir la commande enregistrée trimmée

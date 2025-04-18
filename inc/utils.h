@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline.h                                         :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/03 14:29:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/18 13:51:30 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/13 09:28:20 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/17 10:12:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READLINE_H
-# define READLINE_H
+#ifndef UTILS_H
+# define UTILS_H
 
 /* -- Includes -- */
-# include "libft.h"
-# include <readline/history.h>
-# include <readline/readline.h>
+# include <unistd.h>
+# include <fcntl.h>
+
+/* -- Structures -- */
+typedef struct s_fd
+{
+    int fd;
+    struct s_fd *next;
+}			t_fd;
 
 /* -- Functions -- */
-void	get_input_loop(void);
+void	open_fd(t_fd **head, int fd);
+void	close_fd(t_fd **head, int fd);
+void	close_fd(t_fd **head, int fd);
 
 #endif
