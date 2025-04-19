@@ -6,11 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/18 13:57:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/19 17:50:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "lexing.h"
 #include "parsing.h"
 
 /*

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/18 14:00:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/19 17:49:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_ast
 }				t_ast;
 
 /* -- Functions -- */
+t_ast	*parse_input(t_token *tokens);
 void	ast_add_child(t_ast *parent, t_ast *child);
 t_ast	*new_ast(t_ast_type type, const char *value);
 
