@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 20:12:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/20 20:23:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,14 @@
 
 /*
 ** parse_redirs : Parse les redirections.
+** @cmd: Adresse vers le noeud créé qui contient la commande.
 ** @curr: Adresse du pointeur sur le token courant.
 ** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
 */
 void	parse_redirs(t_ast	**cmd, t_token **curr)
 {
 	t_token	*tmp;
+	t_ast	*redir;
 
 	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT)) // Gestion des redirections : > ou <
 	{
@@ -56,7 +58,7 @@ void	parse_redirs(t_ast	**cmd, t_token **curr)
 		*curr = (*curr)->next;
 		if (*curr && (*curr)->type == TOKEN_WORD)
 		{
-			t_ast	*redir = new_ast(AST_REDIR, tmp->value); // Crée un nœud redirection et l'attache comme enfant de la commande
+			redir = new_ast(AST_REDIR, tmp->value); // Crée un nœud redirection et l'attache comme enfant de la commande
 			ast_add_child(redir, new_ast(AST_COMMAND, (*curr)->value));
 			ast_add_child((*cmd), redir);
 			*curr = (*curr)->next;
@@ -135,10 +137,11 @@ t_ast	*parse_pipeline(t_token **curr)
 */
 t_ast	*parse_input(t_token *tokens)
 {
+	t_ast	*ast;
 	t_token	*curr;
 
 	curr = tokens;
-	t_ast	*ast = parse_pipeline(&curr);
+	ast = parse_pipeline(&curr);
 	if (curr != NULL)
 	{
 		err("Erreur: tokens non consommés en fin de parsing\n");
