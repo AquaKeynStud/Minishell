@@ -6,10 +6,11 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/19 17:50:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/20 19:00:26 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "utils.h"
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
@@ -41,12 +42,7 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 {
 	t_ast	*node;
 
-	node = malloc(sizeof(t_ast));
-	if (!node)
-	{
-		perror("Malloc");
-		exit(EXIT_FAILURE);
-	}
+	node = (t_ast *)s_malloc(sizeof(t_ast));
 	node->type = type;
 	node->value = NULL;
 	if (value)
