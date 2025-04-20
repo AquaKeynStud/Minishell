@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 19:00:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/20 19:36:36 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 	node->value = NULL;
 	if (value)
 		node->value = ft_strdup(value);
-	node->child_count = 0;
+	node->sub_count = 0;
 	node->childs = NULL;
 	return (node);
 }
@@ -56,16 +56,11 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 ** ast_add_child : Ajoute un enfant au nœud AST parent.
 ** @parent: Le nœud parent auquel ajouter l'enfant.
 ** @child: Le nœud enfant à ajouter.
-** Réalloue le tableau des enfants et incrémente child_count.
+** Réalloue le tableau des enfants et incrémente sub_count.
 */
-void	ast_add_child(t_ast *parent, t_ast *child)
+void	ast_add_child(t_ast *head, t_ast *child)
 {
-	parent->child_count++;
-	parent->childs = realloc(parent->childs, sizeof(t_ast *) * parent->child_count);
-	if (!parent->childs)
-	{
-		perror("Realloc");
-		exit(EXIT_FAILURE);
-	}
-	parent->childs[parent->child_count - 1] = child;
+	head->sub_count++;
+	head->childs = s_realloc(head->childs, sizeof(t_ast *) * head->sub_count);
+	head->childs[head->sub_count - 1] = child;
 }

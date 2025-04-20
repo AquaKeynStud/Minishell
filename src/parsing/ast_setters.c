@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 18:51:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/20 20:12:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,84 +42,87 @@
 */
 
 /*
-** parse_command : Parse une commande simple.
-** @current: Adresse du pointeur sur le token courant.
+** parse_redirs : Parse les redirections.
+** @curr: Adresse du pointeur sur le token courant.
 ** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
 */
-t_ast	*parse_command(t_token **current)
+void	parse_redirs(t_ast	**cmd, t_token **curr)
 {
-	t_ast	*cmd;
+	t_token	*tmp;
 
-	if (!current || !(*current) || (*current)->type != TOKEN_WORD)
-		return (NULL);
-	/* Crée le nœud de la commande (premier mot = nom de commande) */
-	cmd = new_ast(AST_COMMAND, (*current)->value);
-	*current = (*current)->next;
-	/* Boucle sur les tokens de type TOKEN_WORD pour traiter les arguments */
-	while (*current && (*current)->type == TOKEN_WORD)
+	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT)) // Gestion des redirections : > ou <
 	{
-		ast_add_child(cmd, new_ast(AST_COMMAND, (*current)->value));
-		*current = (*current)->next;
-	}
-	/* Gestion des redirections : > ou < */
-	while (*current && ((*current)->type == TOKEN_REDIR_IN ||
-				(*current)->type == TOKEN_REDIR_OUT))
-	{
-		t_token	*tmp;
-
-		tmp = *current;
-		*current = (*current)->next;
-		if (*current && (*current)->type == TOKEN_WORD)
+		tmp = *curr;
+		*curr = (*curr)->next;
+		if (*curr && (*curr)->type == TOKEN_WORD)
 		{
-			/* Crée un nœud redirection et l'attache comme enfant de la commande */
-			t_ast	*redir = new_ast(AST_REDIR, tmp->value);
-			ast_add_child(redir, new_ast(AST_COMMAND, (*current)->value));
-			ast_add_child(cmd, redir);
-			*current = (*current)->next;
+			t_ast	*redir = new_ast(AST_REDIR, tmp->value); // Crée un nœud redirection et l'attache comme enfant de la commande
+			ast_add_child(redir, new_ast(AST_COMMAND, (*curr)->value));
+			ast_add_child((*cmd), redir);
+			*curr = (*curr)->next;
 		}
 		else
 		{
-			fprintf(stderr, "Erreur de syntaxe: redirection sans cible\n");
+			err("minishell: Syntax error near unexpected token `newline'\n");
+			// besoin de free ici
 			return (NULL);
 		}
 	}
+}
+
+/*
+** parse_command : Parse une commande simple.
+** @curr: Adresse du pointeur sur le token courant.
+** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
+*/
+t_ast	*parse_command(t_token **curr)
+{
+	t_ast	*cmd;
+
+	if (!curr || !(*curr) || (*curr)->type != TOKEN_WORD)
+		return (NULL);
+	cmd = new_ast(AST_COMMAND, (*curr)->value); // Crée le nœud de la commande (premier mot = nom de commande)
+	*curr = (*curr)->next;
+	while (*curr && (*curr)->type == TOKEN_WORD) // Tant que c'est un argument
+	{
+		ast_add_child(cmd, new_ast(AST_COMMAND, (*curr)->value));
+		*curr = (*curr)->next;
+	}
+	parse_redirs(&cmd, curr);
 	return (cmd);
 }
 
 /*
 ** parse_pipeline : Parse un ensemble de commandes séparées par des pipes.
-** @current: Adresse du pointeur sur le token courant.
+** @curr: Adresse du pointeur sur le token courant.
 ** Retourne un AST représentant le pipeline.
 ** Schéma:
 **             AST_PIPE ("|")
 **             /            \
 **   parse_command()   parse_command()
 */
-t_ast	*parse_pipeline(t_token **current)
+t_ast	*parse_pipeline(t_token **curr)
 {
 	t_ast	*left;
-	t_ast	*pipe_node;
 	t_ast	*right;
+	t_ast	*pipe_node;
 
-	left = parse_command(current);
+	left = parse_command(curr);
 	if (!left)
 		return (NULL);
-	while (*current && (*current)->type == TOKEN_PIPE)
+	while (*curr && (*curr)->type == TOKEN_PIPE)
 	{
-		/* Consomme le token pipe */
-		*current = (*current)->next;
-		right = parse_command(current);
+		*curr = (*curr)->next; // Consomme le token pipe
+		right = parse_command(curr);
 		if (!right)
 		{
-			fprintf(stderr, "Erreur de syntaxe après le pipe\n");
+			err("Error : Syntax error near unexpected token `pipe'\n");
 			return (NULL);
 		}
-		/* Crée un nœud pipe rassemblant left et right */
-		pipe_node = new_ast(AST_PIPE, "|");
+		pipe_node = new_ast(AST_PIPE, "|"); // Crée un nœud pipe rassemblant left et right
 		ast_add_child(pipe_node, left);
 		ast_add_child(pipe_node, right);
-		/* Le nouveau noeud pipe devient le nœud de gauche pour un pipeline plus long */
-		left = pipe_node;
+		left = pipe_node; // Le nouveau noeud pipe devient le nœud de gauche pour un pipeline plus long
 	}
 	return (left);
 }
@@ -132,13 +135,13 @@ t_ast	*parse_pipeline(t_token **current)
 */
 t_ast	*parse_input(t_token *tokens)
 {
-	t_token	*current;
+	t_token	*curr;
 
-	current = tokens;
-	t_ast	*ast = parse_pipeline(&current);
-	if (current != NULL)
+	curr = tokens;
+	t_ast	*ast = parse_pipeline(&curr);
+	if (curr != NULL)
 	{
-		fprintf(stderr, "Erreur: tokens non consommés en fin de parsing\n");
+		err("Erreur: tokens non consommés en fin de parsing\n");
 		return (NULL);
 	}
 	return (ast);
