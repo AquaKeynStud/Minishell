@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 20:23:37 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/21 11:19:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	parse_redirs(t_ast	**cmd, t_token **curr)
 		{
 			err("minishell: Syntax error near unexpected token `newline'\n");
 			// besoin de free ici
-			return (NULL);
+			return ;
 		}
 	}
 }
