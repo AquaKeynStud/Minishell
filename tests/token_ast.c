@@ -40,9 +40,9 @@ void print_ast_tree_rec(t_ast *node, const char *prefix, bool is_last)
     strcpy(new_prefix, prefix);
     strcat(new_prefix, is_last ? "   " : "│  ");
 
-    for (int i = 0; i < node->child_count; i++)
+    for (int i = 0; i < node->sub_count; i++)
     {
-        bool last_child = (i == node->child_count - 1);
+        bool last_child = (i == node->sub_count - 1);
         print_ast_tree_rec(node->childs[i], new_prefix, last_child);
     }
 }
@@ -54,9 +54,9 @@ void print_ast_tree(t_ast *root)
     // Affiche la racine
     printf("%s\n", root->value ? root->value : "(null)");
     // Affiche récursivement les enfants
-    for (int i = 0; i < root->child_count; i++)
+    for (int i = 0; i < root->sub_count; i++)
     {
-        bool last = (i == root->child_count - 1);
+        bool last = (i == root->sub_count - 1);
         print_ast_tree_rec(root->childs[i], "", last);
     }
 }

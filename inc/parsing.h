@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/19 17:49:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/20 19:30:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_ast
 	t_ast_type		type;
 	char			*value;
 	struct s_ast	**childs;
-	int				child_count;
+	int				sub_count;
 }				t_ast;
 
 /* -- Functions -- */
