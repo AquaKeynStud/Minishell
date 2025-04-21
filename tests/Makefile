@@ -25,9 +25,10 @@ D_OBJ	=	.obj/
 D_DEP	=	.dep/
 D_LFT	=	../libft/
 D_TOK	=	$(D_SRC)token/
+D_UTL	=	$(D_SRC)utils/
 D_PAR	=	$(D_SRC)parsing/
 
-D_SRCS	= $(D_SRC) $(D_SIG) $(D_TOK) $(D_PAR)
+D_SRCS	= $(D_SRC) $(D_TOK) $(D_PAR) $(D_UTL)
 
 # file lists
 LST_SRC		=	token_ast.c
@@ -39,7 +40,8 @@ LST_TOK		=	add_token.c			\
 LST_PAR		=	ast_adders.c		\
 				ast_setters.c
 
-# LST_UTL
+LST_UTL		=	printers.c		\
+				secure_alloc.c
 
 LST_INC		=	utils.h				\
 				lexing.h			\
@@ -47,7 +49,7 @@ LST_INC		=	utils.h				\
 				readline.h			\
 				sigaction.h
 
-LST_SRCS	=	$(LST_SRC) $(LST_TOK) $(LST_PAR) #$(LST_UTL)
+LST_SRCS	=	$(LST_SRC) $(LST_TOK) $(LST_PAR) $(LST_UTL)
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 
