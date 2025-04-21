@@ -6,7 +6,11 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:28:20 by arocca            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/04/20 19:20:56 by arocca           ###   ########.fr       */
+=======
+/*   Updated: 2025/04/20 19:59:41 by arocca           ###   ########.fr       */
+>>>>>>> parsing
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +29,8 @@ typedef struct s_fd
 }			t_fd;
 
 /* -- Functions -- */
+int		err(char *message);
+
 void	open_fd(t_fd **head, int fd);
 void	close_fd(t_fd **head, int fd);
 void	close_fd(t_fd **head, int fd);
