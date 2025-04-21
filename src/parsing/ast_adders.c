@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 19:36:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/21 11:06:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,13 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 ** @child: Le nœud enfant à ajouter.
 ** Réalloue le tableau des enfants et incrémente sub_count.
 */
-void	ast_add_child(t_ast *head, t_ast *child)
+void	ast_add_child(t_ast *parent, t_ast *child)
 {
-	head->sub_count++;
-	head->childs = s_realloc(head->childs, sizeof(t_ast *) * head->sub_count);
-	head->childs[head->sub_count - 1] = child;
+	size_t	old_size;
+	size_t	new_size;
+
+	old_size = sizeof(t_ast *) * parent->sub_count;
+	new_size = sizeof(t_ast *) * (++parent->sub_count);
+	parent->childs = s_realloc(parent->childs, old_size, new_size);
+	parent->childs[parent->sub_count - 1] = child;
 }
