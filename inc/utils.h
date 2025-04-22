@@ -30,9 +30,10 @@ typedef struct s_fd
 
 /* -- Functions -- */
 int		err(char *message);
+int		perr(const char *s, int	return_value);
 
+void	close_all_fds(t_fd **head);
 void	open_fd(t_fd **head, int fd);
-void	close_fd(t_fd **head, int fd);
 void	close_fd(t_fd **head, int fd);
 
 void	*s_malloc(size_t size);

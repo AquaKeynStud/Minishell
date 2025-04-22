@@ -6,14 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/21 11:06:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 17:09:53 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
+#include "minishell.h"
 
 /*
 ** ============================================================================
@@ -38,7 +38,7 @@
 ** @value: chaîne associée (commande, redirection, etc.)
 ** Retourne un pointeur sur le nœud ou quitte en cas d'erreur.
 */
-t_ast	*new_ast(t_ast_type type, const char *value)
+t_ast	*new_ast(t_ctx ctx, t_ast_type type, const char *value)
 {
 	t_ast	*node;
 
@@ -58,7 +58,7 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 ** @child: Le nœud enfant à ajouter.
 ** Réalloue le tableau des enfants et incrémente sub_count.
 */
-void	ast_add_child(t_ast *parent, t_ast *child)
+void	ast_add_child(t_ctx ctx, t_ast *parent, t_ast *child)
 {
 	size_t	old_size;
 	size_t	new_size;

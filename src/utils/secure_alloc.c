@@ -6,18 +6,19 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 19:16:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 17:09:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
+#include "minishell.h"
 
 // Fonction qui va permettre de sortir n'importe quand
-void	secure_exit(unsigned char code) // Le cast en unsigned char va faire en sorte de moduler le code pour ne jamais dépasser 255
+void	secure_exit(t_ctx *ctx, unsigned char code)
 {
-	// free ici la grande structure etc
+	close_all_fds(&ctx->fds); // close de tous les fds ouverts
 	exit(code);
 }
 
@@ -26,12 +27,12 @@ void	*s_malloc(size_t size)
 	void	*alloc;
 
 	if (!size)
-		secure_exit(1);
+		exit(1); // Trouver un moyen de secure exit
 	alloc = malloc(size);
 	if (!alloc)
 	{
 		perror("malloc");
-		secure_exit(1);
+		exit(1);
 	}
 	return (alloc);
 }
@@ -46,7 +47,7 @@ void	*s_calloc(size_t nmemb, size_t size)
 	if (!alloc)
 	{
 		perror("ft_calloc");
-		secure_exit(1);
+		exit(1);
 	}
 	return (alloc);
 }
@@ -60,8 +61,8 @@ void	*s_realloc(void *ptr, size_t old_size, size_t new_size)
 	alloc = ft_realloc(ptr, old_size, new_size);
 	if (!alloc)
 	{
-		perror("realloc");
-		secure_exit(1);
+		perror("ft_realloc");
+		exit(1);
 	}
 	return (alloc);
 }
