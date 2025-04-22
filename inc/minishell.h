@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 16:01:26 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/22 16:00:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "readline.h"
-#include "sigaction.h"
-#include "minishell.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-int	main(void)
+/* -- Includes -- */
+
+/* -- Structures -- */
+typedef struct	s_ctx
 {
-	set_sigaction(SIGQUIT, handle_sigint_sigquit, "\0");
-	set_sigaction(SIGINT, handle_sigint_sigquit, "1000000");
-	get_input_loop();
-	return (0);
-}
+    char    **env;		// pointeur vers ton tableau d’env
+    int      stdin_fd;	// pour restaurer après redir
+    int      stdout_fd;	// idem
+}			t_ctx;
+
+/* -- Functions -- */
+
+#endif
