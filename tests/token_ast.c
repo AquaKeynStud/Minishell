@@ -61,49 +61,79 @@ void print_ast_tree(t_ast *root)
     }
 }
 
-int main(void)
+void run_tests(const char *label, const char **tests, int num_tests)
 {
-    const char *tests[] = {
-        "ls -l",
-        "echo hello world",
-        "grep main *.c",
-        "cat file.txt | grep error | wc -l",
-        "sort < unsorted.txt > sorted.txt",
-        "echo \"I love $SHELL\"",
-        "find . -type f | xargs grep TODO",
-        "tar -czf archive.tar.gz folder/",
-        "du -sh * | sort -h | head -n 10",
-        "cat << EOF\nfoo\nbar\nEOF > heredoc_output.txt",
-        "echo start >> log.txt",
-        "awk '{print $1}' data.csv | uniq | wc -l",
-        "sed -e 's/foo/bar/g' < input.txt | tee modified.txt",
-        "ps aux | grep sshd | awk '{print $2}' | xargs -I {} ls -lh /proc/{}/fd",
-        // Pipeline complexe avec 10 pipes
-        "ps aux | grep ssh | awk '{print $2}' | xargs -I {} ls -lh /proc/{}/fd | grep sock | sort | uniq | head -n 5 | sed '1d' | wc -l"
-    };
-    int num_tests = sizeof(tests) / sizeof(tests[0]);
+	for (int i = 0; i < num_tests; i++)
+	{
+		printf("_________________________________________________________|\n");
+		printf("%s TEST %d: %s\n", label, i + 1, tests[i]);
+		printf("_________________________________________________________|\n");
 
-    for (int i = 0; i < num_tests; i++)
-    {
-        printf("_________________________________________________________|\n");
-        printf("TEST %d: %s\n", i + 1, tests[i]);
-        printf("_________________________________________________________|\n");
+		// Tokenisation
+		printf("Tokenisation :\n");
+		t_token *tokens = tokenize(tests[i]);
+		print_token_list(tokens);
 
-        // Tokenisation
-        printf("Tokenisation :\n");
-        t_token *tokens = tokenize(tests[i]);
-        print_token_list(tokens);
+		// Parsing en AST et affichage
+		printf("_________________________________________________________|\n");
+		printf("AST :\n");
+		t_ast *ast = parse_input(tokens);
+		if (ast)
+			print_ast_tree(ast);
+		else
+			printf("Erreur lors du parsing de la commande\n");
 
-        // Parsing en AST et affichage en arbre
-        printf("_________________________________________________________|\n");
-        printf("AST :\n");
-        t_ast *ast = parse_input(tokens);
-        if (ast)
-            print_ast_tree(ast);
-        else
-            printf("Erreur lors du parsing de la commande\n");
+		printf("_________________________________________________________|\n\n");
+	}
+}
 
-        printf("_________________________________________________________|\n\n");
-    }
-    return 0;
+// ────────────────────────────────────────────────────────────────────────────────
+
+int main(int argc, char **argv)
+{
+	const char *simple_tests[] = {
+		"ls -l",
+		"echo hello world",
+		"grep main *.c",
+		"cat file.txt | grep error | wc -l",
+		"sort < unsorted.txt > sorted.txt",
+		"echo \"I love $SHELL\"",
+		"find . -type f | xargs grep TODO",
+		"tar -czf archive.tar.gz folder/",
+		"du -sh * | sort -h | head -n 10",
+		"cat << EOF\nfoo\nbar\nEOF > heredoc_output.txt",
+		"echo start >> log.txt",
+		"awk '{print $1}' data.csv | uniq | wc -l",
+		"sed -e 's/foo/bar/g' < input.txt | tee modified.txt",
+		"ps aux | grep sshd | awk '{print $2}' | xargs -I {} ls -lh /proc/{}/fd",
+		"ps aux | grep ssh | awk '{print $2}' | xargs -I {} ls -lh /proc/{}/fd | grep sock | sort | uniq | head -n 5 | sed '1d' | wc -l"
+	};
+
+	const char *pipe_redirect_tests[] = {
+		"cat < input.txt | grep 'error'",
+		"grep keyword < input.txt | sort > sorted.txt",
+		"ls -l | tee files.txt > log.txt",
+		"find . -name '*.c' | xargs grep main > results.txt",
+		"cat << EOF | grep bar > result.txt\nfoo\nbar\nbaz\nEOF",
+		"sort < unsorted.txt | uniq > unique.txt",
+		"cut -d ':' -f1 /etc/passwd | sort > users.txt",
+		"cat << END | sed 's/foo/bar/' > output.txt\nfoo\nbaz\nfoo again\nEND",
+		"cat << DATA | awk '{print $1}' > col1.txt\none two\nthree four\nDATA",
+		"grep TODO < notes.txt | wc -l > count.txt"
+	};	
+
+	if (argc < 2)
+	{
+		fprintf(stderr, "Usage: %s [1 | 2]\n", argv[0]);
+		return 1;
+	}
+
+	if (strcmp(argv[1], "1") == 0)
+		run_tests("SIMPLE", simple_tests, sizeof(simple_tests) / sizeof(simple_tests[0]));
+	else if (strcmp(argv[1], "2") == 0)
+		run_tests("PIPE+REDIRECT", pipe_redirect_tests, sizeof(pipe_redirect_tests) / sizeof(pipe_redirect_tests[0]));
+	else
+		fprintf(stderr, "Argument invalide. Utilise : 1 ou 2\n");
+
+	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/21 11:19:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/21 12:12:01 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	parse_redirs(t_ast	**cmd, t_token **curr)
 	t_token	*tmp;
 	t_ast	*redir;
 
-	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT)) // Gestion des redirections : > ou <
+	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT || (*curr)->type == TOKEN_REDIR_APPEND || (*curr)->type == TOKEN_HEREDOC)) // Gestion des redirections : > ou <
 	{
 		tmp = *curr;
 		*curr = (*curr)->next;
