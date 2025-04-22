@@ -1,30 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 16:20:42 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/20 15:11:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef	ENV_H
+# define ENV_H
 
 /* -- Includes -- */
-#include "utils.h"
-#include "env.h"
+#include "libft.h"
+#include <stdbool.h>
 
 /* -- Structures -- */
-typedef struct	s_ctx
+typedef struct	s_env
 {
-	t_env	*env;		// pointeur vers ton tableau d’env
-	t_fd	*fds;
-	int
-}			t_ctx;
+	char *key;			// ex: "PATH"
+	char *value;		// ex: "/usr/bin:/bin"
+	struct s_env *next;
+}				t_env;
 
 /* -- Functions -- */
+int		ft_echo(char **args);
+
+void	free_split(char **split);
 
 #endif
