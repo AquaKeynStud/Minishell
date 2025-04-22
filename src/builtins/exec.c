@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:08:45 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/18 13:05:45 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:20:30 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ t_env	*init_env(char **envp)
 	while (envp[i])
 	{
 		split = ft_split(envp[i], '='); // "VAR=VALUE"
-		node = malloc(sizeof(t_env));
-		if (!node)
-			return (NULL); // penser à gérer les erreurs/malloc
+		node = (t_env *)s_malloc(sizeof(t_env));
 		node->key = ft_strdup(split[0]);
 		if (split[1])
 			node->value = ft_strdup(split[1]);

@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buitins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 12:11:12 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 13:32:07 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:19:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-
-int	ft_pwd()
-{
-	char cwd[PATH_MAX];
-
-	if (getcwd(cwd, sizeof(cwd)))
-		ft_printf("%s\n", cwd);
-	else
-		perror("pwd");
-	return (0);
-}
 
 int	ft_env(t_env *env)
 {

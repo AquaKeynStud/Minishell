@@ -3,36 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 11:08:32 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:14:17 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
+#include <stdbool.h>
+
+// Fonction qui permet de savoir si l'argument passé correspond à un flag -n
+bool	is_dash_n_flag(char *arg)
+{
+	if (!arg || !*arg || *arg != '-')
+		return (false);
+	while (*++arg)
+	{
+		if (*arg != 'n')
+			return (false);
+	}
+	return (true);
+}
 
 int	ft_echo(char **args)
 {
-	int	i;
-	int	newline;
+	int		i;
+	bool	newline;
 
 	i = 1;
-	newline = 1;
-	if (args[1] && !strcmp(args[1], "-n")) // -n supprime le retour a la ligne a la fin de la chaine de caractere
+	newline = true;
+	while (args[1] && is_dash_n_flag(args[i])) // Tant que les args sont des -n (ou -nnnn etc)
 	{
-		newline = 0;
+		newline = false;
 		i++;
 	}
 	while (args[i])
 	{
-		ft_printf("%s", args[i]);
+		printf("%s", args[i]);
 		if (args[i + 1])
-			ft_printf(" ");
+			printf(" ");
 		i++;
 	}
 	if (newline)
-		ft_printf("\n");
-	return (0);
+		printf("\n");
+	return (EXIT_SUCCESS);
 }
