@@ -6,11 +6,11 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 16:01:41 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:39:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:13:51 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft.h"
+#include "libft.h"
 #include "ft_printf.h"
 
 int	mandatory_parser(char c, va_list *args, ssize_t *total_len, int err)

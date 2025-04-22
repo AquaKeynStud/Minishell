@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandatory_handlers.c                               :+:      :+:    :+:   */
+/*   handlers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:27:01 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:21:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:14:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "ft_printf.h"
 
 int	handle_string(va_list *args, ssize_t *total_len, int err)
@@ -18,12 +19,16 @@ int	handle_string(va_list *args, ssize_t *total_len, int err)
 
 	arg = (char *)va_arg(*args, char *);
 	if (!arg)
-		*total_len += ft_putstr_fd("(null)", 1);
+	{
+		ft_putstr_fd("(null)", 1);
+		*total_len += 1;
+	}
 	else
 	{
 		if (err)
 			return (1);
-		*total_len += ft_putstr_fd(arg, 1);
+		ft_putstr_fd(arg, 1);
+		*total_len += 1;
 	}
 	return (0);
 }
@@ -41,7 +46,8 @@ int	handle_char(va_list *args, ssize_t *total_len, int err)
 	}
 	if (err)
 		return (1);
-	*total_len += ft_putchar_fd(arg, 1);
+	ft_putchar_fd(arg, 1);
+	*total_len += 1;
 	return (0);
 }
 

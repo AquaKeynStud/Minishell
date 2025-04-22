@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:43:53 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 11:27:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:21:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+char	*ft_strndup(const char *s, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *s, int c);
 char	*ft_strtrim(char const *s1, char const *set);

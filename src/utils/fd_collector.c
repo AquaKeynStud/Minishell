@@ -6,11 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/13 09:55:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:26:52 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
+#include <stdlib.h>
 
 void	open_fd(t_fd **head, int fd)
 {

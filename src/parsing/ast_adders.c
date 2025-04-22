@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/21 11:06:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:24:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 	if (value)
 		node->value = ft_strdup(value);
 	node->sub_count = 0;
-	node->childs = NULL;
+	node->childs = NULL;		
 	return (node);
 }
 
