@@ -6,7 +6,7 @@
 #    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/04/12 17:51:02 by arocca           ###   ########.fr        #
+#    Updated: 2025/04/22 11:36:44 by arocca           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ FLAGS	=	-Wall -Wextra -Werror -MMD -MP
 REMOVE	=	rm -rf
 MKDIR	=	mkdir -p
 
-OBJ_DIR	=	obj
-DEP_DIR	=	dep
+OBJ_DIR	=	./obj
+DEP_DIR	=	./dep
 
 SRCS	=	ft_atoi.c ft_bzero.c ft_calloc.c ft_abs.c\
 			ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
@@ -30,14 +30,25 @@ SRCS	=	ft_atoi.c ft_bzero.c ft_calloc.c ft_abs.c\
 			ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
 			ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
 			gnl/get_next_line.c gnl/get_next_line_utils.c \
-			printf/ft_intlen.c printf/ft_itoa_base.c printf/ft_itoa_ptr.c \
-			printf/ft_print_ptr.c printf/ft_printf.c printf/ft_printnbr.c \
-			printf/ft_printstr.c printf/ft_ptrlen.c printf/ft_putstr.c
+
+P_SRC	=	main.c					\
+			utils.c					\
+			handlers.c				\
+			printers.c				\
+			bonus_utils.c			\
+			bonus_parser.c			\
+			bonus_setter.c			\
+			bonus_printers_diuc.c	\
+			bonus_printers_spxX.c	\
+			bonus_error_handler.c	\
+
+P_LST	=	$(addprefix printf/, $(P_SRC))
 
 OBJS	=	$(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+OBJS	+=	$(addprefix $(OBJ_DIR)/, $(P_LST:.c=.o))
 DEPS	=	$(addprefix $(DEP_DIR)/, $(SRCS:.c=.d))
 
-HEADERS	=	libft.h
+HEADERS	=	libft.h ft_printf.h
 MAKEFILE=	Makefile
 
 GREEN	=	\033[0;32m
@@ -51,7 +62,7 @@ ${NAME}:	${OBJS} ${HEADERS} ${MAKEFILE}
 
 $(OBJ_DIR)/%.o: %.c ${HEADERS} ${MAKEFILE}
 	@$(MKDIR) $(dir $@) $(patsubst $(OBJ_DIR)%,$(DEP_DIR)%,$(dir $@))
-	@${CC} ${FLAGS} -c $< -o $@ -MF $(patsubst $(OBJ_DIR)%.o,$(DEP_DIR)%.d,$@)
+	@${CC} ${FLAGS} -I. -c $< -o $@ -MF $(patsubst $(OBJ_DIR)%.o,$(DEP_DIR)%.d,$@)
 	@echo "$(GREEN)$(NAME): $@ created$(RESET)"
 
 clean:
