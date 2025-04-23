@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 14:28:51 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:01:28 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,39 +15,84 @@
 
 static int	env_size(t_env *env)
 {
-	int	i;
+	int	size;
 
-	i = 0;
+	size = 0;
 	while (env)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", env->key, env->value);
-		i++;
+		size++;
 		env = env->next;
 	}
+	return (size);
 }
 
-static void	sort()
+static t_env	*copy_env_list(t_env *env)
 {
-	
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		append_env_node(&copy, create_env_node(env->key, env->value));
+		env = env->next;
+	}
+	return (copy);
+}
+
+static void	swap_env_value(t_env *a, t_env *b)
+{
+	char	*tmp_key;
+	char	*tmp_value;
+
+	tmp_key = a->key;
+	tmp_value = a->value;
+	a->key = b->key;
+	a->value = b->value;
+	b->key = tmp_key;
+	b->value = tmp_value;
+}
+
+static void	sort(t_env **env_array)
+{
+	t_env	*current;
+	int		sorted;
+
+	if (!env_array || !(*env_array))
+		return ;
+	sorted = 0;
+	while (!sorted)
+	{
+		sorted = 1;
+		current = *env_array;
+		while (current && current->next)
+		{
+			if (ft_strcmp(current->key, current->next->key) > 0)
+			{
+				swap_env_value(current, current->next);
+				sorted = 0;
+			}
+			current = current->next;
+		}
+	}
 }
 
 static void	print_sorted_env(t_env *env)
 {
-	int	i;
-	int	size;
-	t_env	**env_array;
+	t_env	*copy;
 	t_env	*tmp;
 
-	i = 0;
-	size = env_size(env);
-	env_array = malloc(sizeof(t_env *) * size);
-	tmp = env;
+	copy = copy_env_list(env);
+	sort(&copy);
+	tmp = copy;
 	while (tmp)
 	{
-		env_array[i++] = tmp;
+		if (tmp->value)
+			ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		else
+			ft_printf("declare -x %s\n", tmp->key);
 		tmp = tmp->next;
 	}
-	sort();
+	free_env(copy);
 }
 
 int	ft_export(char **args, t_env *env)
@@ -62,59 +107,4 @@ int	ft_export(char **args, t_env *env)
 		return (0);
 	}
 	return (0);
-}
-
-// ------------ FONCTIONS D'UTILS POUR TEST --------------------
-t_env *create_env_node(char *key, char *value)
-{
-	t_env *node = malloc(sizeof(t_env));
-	node->key = ft_strdup(key);
-	node->value = value ? ft_strdup(value) : NULL;
-	node->next = NULL;
-	return node;
-}
-
-void append_env_node(t_env **env, t_env *new_node)
-{
-	if (!*env)
-	{
-		*env = new_node;
-		return;
-	}
-	t_env *tmp = *env;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_node;
-}
-
-void free_env(t_env *env)
-{
-	t_env *tmp;
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
-}
-
-// ------------ MAIN DE TEST --------------------
-int	main(void)
-{
-	t_env *env = NULL;
-
-	append_env_node(&env, create_env_node("PATH", "/usr/bin:/bin"));
-	append_env_node(&env, create_env_node("USER", "student42"));
-	append_env_node(&env, create_env_node("HOME", "/home/user"));
-	append_env_node(&env, create_env_node("EMPTY", NULL));
-
-	char *args[] = { "export", NULL };
-
-	ft_export(args, env);
-
-	free_env(env);
-	return 0;
 }
