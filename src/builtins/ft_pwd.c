@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/23 12:20:24 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/20 14:24:54 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/22 17:18:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-
-/* -- Includes -- */
 #include "env.h"
-#include "utils.h"
 
-/* -- Structures -- */
-typedef struct	s_ctx
+int	ft_pwd(void)
 {
-	t_env	*env;		// pointeur vers ton tableau d’env
-	t_fd	*fds;
-	int		stdin_fd;
-	int		stdout_fd;
-	int		status;
-}			t_ctx;
+	char	cwd[PATH_MAX];
 
-/* -- Functions -- */
-
-#endif
+	if (getcwd(cwd, sizeof(cwd)))
+	{
+		ft_printf("%s\n", cwd);
+		return (EXIT_SUCCESS);
+	}
+	perror("pwd");
+	return (EXIT_FAILURE);
+}

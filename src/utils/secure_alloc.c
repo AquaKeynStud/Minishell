@@ -6,21 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 17:09:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/23 12:19:33 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
-#include "minishell.h"
-
-// Fonction qui va permettre de sortir n'importe quand
-void	secure_exit(t_ctx *ctx, unsigned char code)
-{
-	close_all_fds(&ctx->fds); // close de tous les fds ouverts
-	exit(code);
-}
 
 void	*s_malloc(size_t size)
 {

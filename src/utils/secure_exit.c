@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   secure_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/23 12:20:24 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/23 12:21:15 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-/* -- Includes -- */
-#include "env.h"
-#include "utils.h"
-
-/* -- Structures -- */
-typedef struct	s_ctx
+// Fonction qui va permettre de sortir n'importe quand
+void	secure_exit(t_ctx *ctx, unsigned char code)
 {
-	t_env	*env;		// pointeur vers ton tableau d’env
-	t_fd	*fds;
-	int		stdin_fd;
-	int		stdout_fd;
-	int		status;
-}			t_ctx;
+	close_all_fds(&ctx->fds); // close de tous les fds ouverts
+	exit(code);
+}
 
-/* -- Functions -- */
-
-#endif
+int	s_exec_exit(int status)
+{
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else
+		return (1);
+}

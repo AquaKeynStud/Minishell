@@ -40,4 +40,7 @@ void	*s_malloc(size_t size);
 void	*s_calloc(size_t nmemb, size_t size);
 void	*s_realloc(void *ptr, size_t old_size, size_t new_size);
 
+int		s_exec_exit(int status);
+void	secure_exit(t_ctx *ctx, unsigned char code);
+
 #endif
