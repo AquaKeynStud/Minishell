@@ -1,42 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_builtins.c                                   :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/23 11:10:14 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/22 10:51:08 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/22 10:54:08 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
+#include "libft.h"
 
-void	malloc_fail(void)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	perror("malloc");
-	exit(EXIT_FAILURE);
-}
-
-void	free_split(char **split)
-{
-	int	i;
+	size_t	i;
 
 	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
+	while ((s1[i] || s2[i]))
 	{
-		free(split[i]);
+		if ((unsigned char)s1[i] != (unsigned char)s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
 	}
-	free(split);
-}
-
-int count_args(char **args)
-{
-	int i = 0;
-	while (args[i])
-		i++;
-	return i;
+	return (0);
 }

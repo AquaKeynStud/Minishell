@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/23 10:01:28 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:11:24 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,15 @@ static void	print_sorted_env(t_env *env)
 
 int	ft_export(char **args, t_env *env)
 {
-	if (!args[1])
+	int	arg_count;
+
+	arg_count = count_args(args);
+	if (arg_count == 1)
 	{
 		print_sorted_env(env);
 		return (0);
 	}
-	else if (args[1])
+	else if (arg_count > 1)
 	{
 		return (0);
 	}

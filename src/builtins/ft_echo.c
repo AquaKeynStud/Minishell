@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 17:14:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/23 10:19:56 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ int	ft_echo(char **args)
 	}
 	while (args[i])
 	{
-		printf("%s", args[i]);
+		ft_printf("%s", args[i]);
 		if (args[i + 1])
 			printf(" ");
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		ft_printf("\n");
 	return (EXIT_SUCCESS);
 }

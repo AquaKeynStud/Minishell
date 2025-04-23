@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:43:53 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/23 09:58:34 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:14:18 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int		ft_lstsize(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstnew(void *content);
+int	ft_strcmp(const char *s1, const char *s2);
 
 /* GNL */
 char	*get_next_line(int fd);

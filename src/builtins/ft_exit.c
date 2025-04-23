@@ -1,42 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_builtins.c                                   :+:      :+:    :+:   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/23 11:10:14 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/23 10:16:42 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
-void	malloc_fail(void)
+int	ft_exit(args)
 {
-	perror("malloc");
-	exit(EXIT_FAILURE);
-}
-
-void	free_split(char **split)
-{
-	int	i;
-
-	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-}
-
-int count_args(char **args)
-{
-	int i = 0;
-	while (args[i])
-		i++;
-	return i;
+	
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
+#    By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/04/22 11:36:44 by arocca           ###   ########.fr        #
+#    Updated: 2025/04/23 11:14:26 by abouclie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCS	=	ft_atoi.c ft_bzero.c ft_calloc.c ft_abs.c\
 			ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c \
 			ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_realloc.c \
 			ft_split.c ft_strchr.c ft_strndup.c ft_strdup.c ft_striteri.c ft_strjoin.c \
-			ft_strlcat.c ft_strlen.c ft_strmapi.c ft_strncmp.c ft_strnstr.c \
+			ft_strlcat.c ft_strlen.c ft_strmapi.c ft_strcmp.c ft_strncmp.c ft_strnstr.c \
 			ft_strchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c \
 			ft_putnbr.c ft_putstr_fd.c \
 			ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
