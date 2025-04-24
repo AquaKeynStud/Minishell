@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/20 15:11:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/24 10:53:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,15 @@ typedef struct	s_env
 }				t_env;
 
 /* -- Functions -- */
+int		ft_pwd(void);
+int		ft_env(t_env *env);
 int		ft_echo(char **args);
+int		ft_exit(char **args);
+int		ft_cd(char **args, t_env *env);
+int		ft_unset(char **args, t_env *env);
+int		ft_export(char **args, t_env *env);
+
+t_env	*init_env(char **envp);
 
 void	free_split(char **split);
 

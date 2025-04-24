@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 12:11:12 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 17:19:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/24 10:40:33 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int	ft_export(char **args, t_env *env)
 }
 
 
-int	ft_exit(args)
+int	ft_exit(char **args)
 {
-	
+	(void)args;
+	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 17:09:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:41:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 ** @value: chaîne associée (commande, redirection, etc.)
 ** Retourne un pointeur sur le nœud ou quitte en cas d'erreur.
 */
-t_ast	*new_ast(t_ctx ctx, t_ast_type type, const char *value)
+t_ast	*new_ast(t_ast_type type, const char *value)
 {
 	t_ast	*node;
 
@@ -48,7 +48,7 @@ t_ast	*new_ast(t_ctx ctx, t_ast_type type, const char *value)
 	if (value)
 		node->value = ft_strdup(value);
 	node->sub_count = 0;
-	node->childs = NULL;
+	node->childs = NULL;		
 	return (node);
 }
 
@@ -58,7 +58,7 @@ t_ast	*new_ast(t_ctx ctx, t_ast_type type, const char *value)
 ** @child: Le nœud enfant à ajouter.
 ** Réalloue le tableau des enfants et incrémente sub_count.
 */
-void	ast_add_child(t_ctx ctx, t_ast *parent, t_ast *child)
+void	ast_add_child(t_ast *parent, t_ast *child)
 {
 	size_t	old_size;
 	size_t	new_size;

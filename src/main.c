@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 16:52:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:35:46 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include "sigaction.h"
 #include "minishell.h"
 
-void	init_context(t_ctx *ctx)
+static void	init_context(t_ctx *ctx, char **envp)
 {
-	ctx->env = init_env();
+	ctx->env = init_env(envp);
 	ctx->fds = NULL;
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
@@ -25,11 +25,13 @@ void	init_context(t_ctx *ctx)
 	return ;
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	t_ctx	ctx;
 
-	init_context(&ctx); // Remplit la structure contexte
+	(void)argc;
+	(void)argv;
+	init_context(&ctx, envp); // Remplit la structure contexte
 	set_sigaction(SIGQUIT, handle_sigint_sigquit, "\0");
 	set_sigaction(SIGINT, handle_sigint_sigquit, "1000000");
 	get_input_loop(); // Lance la détection des inputs avec readline

@@ -6,12 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/23 10:53:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/24 10:56:07 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "exec.h"
 #include "libft.h"
+#include "minishell.h"
 
 int	is_builtin(char *cmd)
 {

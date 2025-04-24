@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 11:01:16 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:36:36 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char *get_env_value(t_env *env, const char *key)
 		return (NULL); // pas trouvé
 	}
 	
-	int	ft_cd(char **args, t_env *env)
+int	ft_cd(char **args, t_env *env)
 {
 	char	cwd[PATH_MAX];
 	char	*oldpwd;

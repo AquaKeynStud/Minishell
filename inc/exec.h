@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 14:03:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 15:20:38 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/24 11:16:51 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef EXEC_H
+# define EXEC_H
 
-char	*ft_strndup(const char *s, size_t n)
-{
-	size_t	i;
-	char	*dup;
+/* -- Includes -- */
+# include "parsing.h"
+# include "minishell.h"
 
-	i = 0;
-	while (s[i] && i < n)
-		i++;
-	dup = (char *)malloc(sizeof(char) * (i + 1));
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (s[i] && i < n)
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
+/* -- Functions -- */
+int exec_pipe(t_ctx *ctx, t_ast *node);
+int	exec_redir(t_ast *node, t_ctx *ctx);
+int execute_ast(t_ctx *ctx, t_ast *node);
+int	execute_command(t_ast *node, t_ctx *ctx);
+
+int	is_builtin(char *cmd);
+int	exec_builtin(char **args, t_env *env);
+
+#endif
