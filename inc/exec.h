@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 13:54:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:59:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		is_builtin(char *cmd);
 int		exec_builtin(char **args, t_env *env);
 
 char	**env_to_envp(t_env *env);
-char	**ast_to_argv(t_ast **childs);
 char	*get_path(const char *cmd, t_env *env);
+char	**ast_to_argv(t_ast **childs, int sub_count);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 13:59:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:58:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,14 @@
 #include "parsing.h"
 #include "minishell.h"
 
-char	**ast_to_argv(t_ast **childs)
+char	**ast_to_argv(t_ast **childs, int sub_count)
 {
 	char	**argv;
-	int		counter;
 
-	counter = 0;
-	while (childs[counter])
-		counter++;
-	argv = s_malloc((counter + 1) * sizeof(char *));
-	argv[counter] = NULL;
-	while (--counter >= 0)
-		argv[counter] = childs[counter]->value;
+	argv = s_malloc((sub_count + 1) * sizeof(char *));
+	argv[sub_count] = NULL;
+	while (--sub_count >= 0)
+		argv[sub_count] = childs[sub_count]->value;
 	return (argv);
 }
 

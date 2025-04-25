@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 14:00:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 15:00:27 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	char	**args;
 	int		wstatus;
 
-	args = ast_to_argv(node->childs);
+	args = ast_to_argv(node->childs, node->sub_count);
 	if (is_builtin(node->value))
 		return (exec_builtin(args, ctx->env));
 	pid = fork();
@@ -97,7 +97,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	{
 		envp = env_to_envp(ctx->env);
 		path = get_path(node->value, ctx->env);
-		if (!envp || args || path)
+		if (!envp || !args || !path)
 		{
 			err_value("minishell: ", node->value);
 			err(": command not found\n"); // A modifier quand y'aura le dprintf (printf sur fd)
