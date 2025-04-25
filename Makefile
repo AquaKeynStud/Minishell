@@ -34,8 +34,7 @@ D_SIG	=	$(D_SRC)signal_handlers/
 D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
 
 # file lists
-LST_SRC		=	main.c				\
-				readline.c
+LST_SRC		=	main.c
 
 LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
@@ -67,7 +66,6 @@ LST_UTL		=	printers.c			\
 
 LST_INC		=	lexing.h			\
 				parsing.h			\
-				readline.h			\
 				sigaction.h			\
 				minishell.h
 
