@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:40:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 12:54:43 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/25 12:57:40 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,3 +96,5 @@ int	main(void)
 	free_env(env);
 	return 0;
 }
+
+// cc src/builtins/ft_export.c src/builtins/tests/test_export.c src/builtins/utils_builtins.c -Iinc -I./libft -L./libft -lft
