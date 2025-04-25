@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:40:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/23 09:57:04 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/25 12:54:43 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,28 @@
 t_env *create_env_node(char *key, char *value)
 {
 	t_env *node = malloc(sizeof(t_env));
+	if (!node)
+		return NULL;  // Gère l'échec de l'allocation de mémoire
+
 	node->key = ft_strdup(key);
+	if (!node->key)
+	{
+		free(node);
+		return NULL;  // Gère l'échec de l'allocation de la clé
+	}
+
 	node->value = value ? ft_strdup(value) : NULL;
+	if (value && !node->value)
+	{
+		free(node->key);
+		free(node);
+		return NULL;  // Gère l'échec de l'allocation de la valeur
+	}
+
 	node->next = NULL;
 	return node;
 }
 
-void append_env_node(t_env **env, t_env *new_node)
-{
-	if (!*env)
-	{
-		*env = new_node;
-		return;
-	}
-	t_env *tmp = *env;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_node;
-}
 
 void free_env(t_env *env)
 {
@@ -50,6 +54,28 @@ void free_env(t_env *env)
 	}
 }
 
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf("%s=%s\n", env->key, env->value ? env->value : "(null)");
+		env = env->next;
+	}
+}
+
+void	append_env_node(t_env **env, t_env *new_node)
+{
+	if (!*env)
+	{
+		*env = new_node;
+		return;
+	}
+	t_env *tmp = *env;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_node;
+}
+
 // ------------ MAIN DE TEST --------------------
 int	main(void)
 {
@@ -60,9 +86,12 @@ int	main(void)
 	append_env_node(&env, create_env_node("HOME", "/home/user"));
 	append_env_node(&env, create_env_node("EMPTY", NULL));
 
-	char *args[] = { "export", NULL };
+	char *args2[] = { "export", "TEST=abouclie", NULL};
+	char *args1[] = { "export", NULL };
+	
+	ft_export(args2, &env);
 
-	ft_export(args, env);
+	ft_export(args1, &env);
 
 	free_env(env);
 	return 0;
