@@ -6,11 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:24:54 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 17:18:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 11:13:51 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include <stdio.h>
 
 int	ft_pwd(void)
 {

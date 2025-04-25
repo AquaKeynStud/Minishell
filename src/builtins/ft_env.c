@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_builtins.c                                   :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 11:14:17 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/24 17:43:00 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/24 17:43:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-#include <stdio.h>
 
-void	malloc_fail(void)
+int	ft_env(t_env *env)
 {
-	perror("malloc");
-	exit(EXIT_FAILURE);
-}
-
-void	free_split(char **split)
-{
-	int	i;
-
-	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
+	while (env)
 	{
-		free(split[i]);
-		i++;
+		if (env->value)
+			ft_printf("%s=%s\n", env->key, env->value);
+		env = env->next;
 	}
-	free(split);
+	return (0);
 }

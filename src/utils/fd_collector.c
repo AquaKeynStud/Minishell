@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/24 11:09:52 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:02:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,21 @@ int	open_fd(t_fd **head, const char *filepath, int flags, mode_t perms)
 
 int	register_fd(t_fd **head, int fd)
 {
-    t_fd *new = malloc(sizeof(*new));
-    if (!new)
-        return (1);
-    new->fd   = fd;
-    new->next = *head;
-    *head     = new;
-    return (0);
+	t_fd	*new;
+
+	new = malloc(sizeof(*new));
+	if (!new)
+		return (1);
+	new->fd = fd;
+	new->next = *head;
+	*head = new;
+	return (0);
 }
 
 void	close_fd(t_fd **head, int fd)
 {
-	t_fd *tmp;
-	t_fd **curr;
+	t_fd	*tmp;
+	t_fd	**curr;
 
 	curr = head;
 	while (*curr)
@@ -81,7 +83,7 @@ void	close_fd(t_fd **head, int fd)
 
 void	close_all_fds(t_fd **head)
 {
-	t_fd 	*tmp;
+	t_fd	*tmp;
 
 	if (!head || !*head)
 		return ;

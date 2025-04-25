@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/24 11:51:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:00:17 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int exec_pipe(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(status));
 }
 
-int	exec_redir(t_ast *node, t_ctx *ctx)
+int	exec_redir(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
 	int	status;
@@ -64,10 +64,10 @@ int	exec_redir(t_ast *node, t_ctx *ctx)
 		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
 	else if (!ft_strcmp(node->value, ">>"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-	else if (!ft_strcmp(node->value, "<"))
+	else // if (!ft_strcmp(node->value, "<"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	else /* "<<" */
-		fd = here_doc(node->childs[0]->value);
+	// else /* "<<" */
+	// 	fd = here_doc(node->childs[0]->value);
 	if (fd < 0)
 		return (perr("redir", 1));
 	if (node->value[0] == '<')
@@ -81,35 +81,44 @@ int	exec_redir(t_ast *node, t_ctx *ctx)
 	return (status);
 }
 
-int	execute_command(t_ast *node, t_ctx *ctx)
+int	exec_command(t_ctx *ctx, t_ast *node)
 {
 	int		pid;
+	char	*path;
+	char	**envp;
+	char	**args;
 	int		wstatus;
-	char 	**args;
 
+	args = ast_to_argv(node->childs);
 	if (is_builtin(node->value))
-		return (exec_builtin(node, ctx));
+		return (exec_builtin(args, ctx->env));
 	pid = fork();
 	if (pid == 0)
 	{
-		args = (char **)node->childs;
-		execve(resolve_path(node->value, ctx->env),
-			   args, list_to_envp(ctx->env));
+		envp = env_to_envp(ctx->env);
+		path = get_path(node->value, ctx->env);
+		if (!envp || args || path)
+		{
+			err_value("minishell: ", node->value);
+			err(": command not found\n"); // A modifier quand y'aura le dprintf (printf sur fd)
+			return (127);
+		}
+		execve(path, args, envp);
 		perr("execve", 1);
 	}
 	waitpid(pid, &wstatus, 0);
-	return (WEXITSTATUS(wstatus));
+	return (s_exec_exit(wstatus));
 }
 
 int	execute_ast(t_ctx *ctx, t_ast *node)
 {
-	if (!node) 
+	if (!node)
 		return (ctx->status);
 	if (node->type == AST_PIPE)
-		ctx->status = execute_pipe(node, ctx);
+		ctx->status = exec_pipe(ctx, node);
 	else if (node->type == AST_REDIR)
-		ctx->status = execute_redirection(node, ctx);
+		ctx->status = exec_redir(ctx, node);
 	else
-		ctx->status = execute_command(node, ctx);
+		ctx->status = exec_command(ctx, node);
 	return (ctx->status);
 }

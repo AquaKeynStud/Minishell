@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:18:49 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/18 14:06:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 13:43:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	trim_input(char **input)
 		return ;
 	trimmed[len] = '\0';
 	while (len--)
-        trimmed[len] = (*input)[start + len]; // On copie input dans trimmed a partir de la fin
+		trimmed[len] = (*input)[start + len]; // On copie input dans trimmed a partir de la fin
 	free(*input);
 	*input = trimmed; // input devient la nouvelle chaine créée
 }
@@ -42,7 +42,7 @@ static void	trim_input(char **input)
 void	get_input_loop(void)
 {
 	char	*input;
-	
+
 	while (1)
 	{
 		input = readline("minishell -> ");

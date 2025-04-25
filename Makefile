@@ -21,17 +21,17 @@ MAKEFLAGS		+=	--no-print-directory
 # directories
 D_SRC	=	src/
 D_INC	=	inc/
-D_DOC	=	docs/ # A ENLEVER AVANT DE RENDRE
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
 D_LFT	=	libft/
 D_EXE	=	$(D_SRC)exec/
+D_UTL	=	$(D_SRC)utils/
 D_TOK	=	$(D_SRC)token/
 D_PAR	=	$(D_SRC)parsing/
 D_BLT	=	$(D_SRC)builtins/
 D_SIG	=	$(D_SRC)signal_handlers/
 
-D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_BLT) $(D_PAR) $(D_SIG)
+D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
 
 # file lists
 LST_SRC		=	main.c				\
@@ -48,15 +48,22 @@ LST_PAR		=	ast_adders.c		\
 				ast_setters.c
 
 LST_EXE		=	env.c				\
-				exec.c
+				exec.c				\
+				exec_utils.c
 
 LST_BLT		=	ft_cd.c				\
+				ft_env.c			\
 				ft_pwd.c			\
+				ft_exit.c			\
 				ft_echo.c			\
 				ft_unset.c			\
 				ft_export.c			\
-				ft_builtins.c		\
 				utils_builtins.c	\
+
+LST_UTL		=	printers.c			\
+				secure_exit.c		\
+				secure_alloc.c		\
+				fd_collector.c
 
 LST_INC		=	lexing.h			\
 				parsing.h			\
@@ -64,7 +71,7 @@ LST_INC		=	lexing.h			\
 				sigaction.h			\
 				minishell.h
 
-LST_SRCS	=	$(LST_SRC) $(LST_EXE) $(LST_TOK) $(LST_BLT) $(LST_PAR) $(LST_SIG)
+LST_SRCS	=	$(LST_SRC) $(LST_EXE) $(LST_TOK) $(LST_BLT) $(LST_PAR) $(LST_SIG) $(LST_UTL)
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 

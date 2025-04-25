@@ -6,12 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/24 10:36:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 13:46:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
+#include <stdio.h>
+#include <limits.h>
 
 static int	update_env(t_env *env, const char *key, const char *value)
 {
@@ -34,11 +36,11 @@ static char *get_env_value(t_env *env, const char *key)
 	{
 		if (!ft_strcmp(env->key, key))
 			return (env->value);
-			env = env->next;
-		}
-		return (NULL); // pas trouvé
+		env = env->next;
 	}
-	
+	return (NULL); // pas trouvé
+}
+
 int	ft_cd(char **args, t_env *env)
 {
 	char	cwd[PATH_MAX];
@@ -52,7 +54,7 @@ int	ft_cd(char **args, t_env *env)
 		return (1);
 	}
 	if (!path)
-	path = get_env_value(env, "HOME");
+		path = get_env_value(env, "HOME");
 	if (args[2])
 	{
 		ft_printf("cd: HOME is not set\n");

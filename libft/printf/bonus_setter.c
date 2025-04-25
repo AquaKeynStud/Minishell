@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:32:58 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 10:57:42 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 13:57:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ void	create_x(char c, va_list *args, ssize_t *total_len, int (*f)[8])
 	{
 		base[1] = "0x";
 		base[0] = "0123456789abcdef";
-		print_x_bonus(uarg, total_len, f, base);
+		print_hexa_b(uarg, total_len, f, base);
 	}
 	else if (c == 'X')
 	{
 		base[1] = "0X";
 		base[0] = "0123456789ABCDEF";
-		print_x_bonus(uarg, total_len, f, base);
+		print_hexa_b(uarg, total_len, f, base);
 	}
 	return ;
 }

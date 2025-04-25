@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:43:53 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/24 10:35:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 11:12:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <limits.h>
 # include <stdint.h>
 # include <stdarg.h>
+# include "ft_printf.h"
 
 typedef struct s_list
 {

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:32:32 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:40:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 13:56:52 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	print_x_left(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
 	return ;
 }
 
-void	print_x_bonus(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
+void	print_hexa_b(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
 {
 	int	fd;
 

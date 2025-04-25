@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/24 10:56:07 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:03:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,70 @@
 #include "libft.h"
 #include "minishell.h"
 
-int	is_builtin(char *cmd)
+char	*get_from_env(t_env *env, const char *key)
 {
-	return (!ft_strcmp(cmd, "cd")
-		|| !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "pwd")
-		|| !ft_strcmp(cmd, "echo")
-		|| !ft_strcmp(cmd, "exit")
-		|| !ft_strcmp(cmd, "unset")
-		|| !ft_strcmp(cmd, "export")
-		);
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }
 
-int	exec_builtin(char **args, t_env *env)
+static bool	fill_envp(char **envp, t_env *env)
 {
-	if (!ft_strcmp(args[0], "cd"))
-		return (ft_cd(args, env));
-	if (!ft_strcmp(args[0], "echo"))
-		return (ft_echo(args));
-	if (!ft_strcmp(args[0], "pwd"))
-		return (ft_pwd());
-	if (!ft_strcmp(args[0], "export"))
-		return (ft_export(args, env));
-	if (!ft_strcmp(args[0], "unset"))
-		return (ft_unset(args, env));
-	if (!ft_strcmp(args[0], "env"))
-		return (ft_env(env));
-	if (!ft_strcmp(args[0], "exit"))
-		return (ft_exit(args));
-	return (-1);
+	int		i;
+	char	*key_val_str;
+	t_env	*current;
+
+	i = 0;
+	current = env;
+	while (current)
+	{
+		key_val_str = ft_strjoin(current->key, "=");
+		if (!key_val_str)
+			return (false);
+		envp[i] = ft_strjoin(key_val_str, current->value);
+		free(key_val_str);
+		if (!envp[i])
+			return (false);
+		i++;
+		current = current->next;
+	}
+	envp[i] = NULL;
+	return (true);
+}
+
+char	**env_to_envp(t_env *env)
+{
+	int		i;
+	t_env	*tmp;
+	char	**envp;
+
+	i = 0;
+	tmp = env;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	envp = (char **)s_malloc((i + 1) * sizeof(char *));
+	if (!fill_envp(envp, env))
+	{
+		double_free((void **)envp, 0);
+		return (NULL);
+	}
+	return (envp);
 }
 
 t_env	*init_env(char **envp)
 {
-	t_env	*env_list;
+	int		i;
 	t_env	*node;
-	char 	**split;
-	int	i;
-	
+	char	**split;
+	t_env	*env_list;
+
 	env_list = NULL;
 	i = 0;
 	while (envp[i])

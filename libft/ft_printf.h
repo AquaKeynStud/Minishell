@@ -18,7 +18,8 @@
 
 int		parse_args(char *s, va_list *args, ssize_t *total_len);
 int		mandatory_parser(char c, va_list *args, ssize_t *total_len, int err);
-int		ft_printf(const char *format, ...)	__attribute__ ((format (printf, 1, 2)));
+int		ft_printf(const char *format, ...)
+		__attribute__ ((format (printf, 1, 2)));
 
 char	check_conv(char c);
 void	format_update(char **s, ssize_t	*i, ssize_t *len, va_list *args);
@@ -53,7 +54,7 @@ void	print_addr_bonus(void *arg, ssize_t *total_len, int (*f)[8]);
 void	ft_print_memory_bonus(void *addr, ssize_t *total_len, int (*f)[8]);
 void	print_uint_bonus(unsigned int arg, ssize_t *total_len, int (*f)[8]);
 void	print_x_left(unsigned int n, ssize_t *total_len, int (*f)[8], char **b);
-void	print_x_bonus(unsigned int n, ssize_t *total_len, int (*f)[8], char **b);
+void	print_hexa_b(unsigned int n, ssize_t *total_len, int (*f)[8], char **b);
 
 int		error_tab(char *s);
 int		error_parser(char *s, size_t len, ssize_t *total_len);
