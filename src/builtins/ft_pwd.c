@@ -1,39 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_token.c                                      :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/26 19:59:27 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/20 14:24:54 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/25 11:13:51 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexing.h"
+#include "env.h"
+#include <stdio.h>
 
-void	free_tokens(t_token **list)
+int	ft_pwd(void)
 {
-	t_token	*current;
-	t_token	*next;
+	char	cwd[PATH_MAX];
 
-	current = *list;
-	while (current)
+	if (getcwd(cwd, sizeof(cwd)))
 	{
-		next = current->next;
-		free(current->value);
-		free(current);
-		current = next;
+		ft_printf("%s\n", cwd);
+		return (EXIT_SUCCESS);
 	}
-	*list = NULL;
-}
-
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_whitespace(char c)
-{
-	return (c == ' ' || c == '\t');
+	perror("pwd");
+	return (EXIT_FAILURE);
 }

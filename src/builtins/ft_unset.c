@@ -1,34 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 14:03:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 15:20:38 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/25 13:48:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "env.h"
 #include "libft.h"
 
-char	*ft_strndup(const char *s, size_t n)
+int	ft_unset(char **args, t_env *env)
 {
-	size_t	i;
-	char	*dup;
+	int		i;
+	t_env	*prev;
+	t_env	*tmp;
 
-	i = 0;
-	while (s[i] && i < n)
-		i++;
-	dup = (char *)malloc(sizeof(char) * (i + 1));
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (s[i] && i < n)
+	i = 1;
+	while (args[i])
 	{
-		dup[i] = s[i];
+		prev = NULL;
+		tmp = env;
+		while (tmp)
+		{
+			if (!ft_strcmp(tmp->key, args[i]))
+			{
+				if (prev)
+					prev->next = tmp->next;
+				else
+					env = tmp->next;
+				free(tmp->key);
+				free(tmp->value);
+				free(tmp);
+				break ;
+			}
+			prev = tmp;
+			tmp = tmp->next;
+		}
 		i++;
 	}
-	dup[i] = '\0';
-	return (dup);
+	return (0);
 }

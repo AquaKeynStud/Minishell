@@ -6,13 +6,30 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/07 10:22:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 11:54:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h> // Pour perror
-#include <stddef.h> // Pour le NULL, à mettre dans le header si réutilisé
+#include <stddef.h>
 #include "sigaction.h"
+
+/*
+ * Gives a status to all the signals :
+ *				ex : SIG_IGN, SIG_DFL to restore them to default...
+ * The status is the handler.
+ */
+void	sig_set(void (*handler)(int))
+{
+	set_sigaction(SIGINT, handler, NULL); // Désactive mes fonctions sigaction de signal
+	set_sigaction(SIGQUIT, handler, NULL);
+}
+
+void	sig_init(void)
+{
+	set_sigaction(SIGQUIT, SIG_IGN, NULL);
+	set_sigaction(SIGINT, handle_sigint_sigquit, "1000000");
+}
 
 static bool	parse_flags(char *s)
 {
@@ -56,6 +73,8 @@ bool	set_sigaction(int signum, void (*handler)(int), char *flags)
 {
 	struct sigaction	sa;
 
+	if (!flags)
+		flags = "\0";
 	sa.sa_handler = handler;
 	sigemptyset(&sa.sa_mask); // Masque vide
 	get_sa_flags(&sa, flags); // Prend les flags avec une série de 7 fois 0 ou 1 qui correspondent chacun à un flag (ex : "0110010")

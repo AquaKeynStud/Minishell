@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:43:53 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/24 12:04:49 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:38:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <limits.h>
 # include <stdint.h>
 # include <stdarg.h>
+# include "ft_printf.h"
 
 typedef struct s_list
 {
@@ -35,6 +36,7 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	ft_putnbr_fd(int n, int fd);
 void	ft_putstr_fd(char *s, int fd);
+void	ft_trim(char **str, char *set);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	*ft_memchr(const void *s, int c, size_t n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
@@ -52,11 +54,13 @@ int		ft_toupper(int c);
 int		ft_abs(int x);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_itoa(int n);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+char	*ft_strndup(const char *s, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *s, int c);
 char	*ft_strtrim(char const *s1, char const *set);
@@ -80,17 +84,5 @@ t_list	*ft_lstnew(void *content);
 char	*get_next_line(int fd);
 char	*ft_strjoin_gnl(char *s1, char *s2, ssize_t b_read);
 char	*ft_strccpy(char *line);
-
-/* Printf */
-char	*ft_itoa_base(long int n, char *base);
-char	*ft_itoa_ptr(uintptr_t n, char *base);
-int		ft_intlen(long n, int bsize);
-int		ft_print_ptr(unsigned long long n);
-int		ft_printnbr(long int n, char *base);
-int		ft_printstr(char *str);
-int		ft_ptrlen(uintptr_t n);
-int		ft_printf(const char *str, ...);
-void	ft_putstr(char *str);
-char	*ft_strndup(const char *s, int n);
 
 #endif

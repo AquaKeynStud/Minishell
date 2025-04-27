@@ -1,39 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_token.c                                      :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/26 19:59:27 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/24 10:34:03 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/24 10:35:07 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexing.h"
-
-void	free_tokens(t_token **list)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	t_token	*current;
-	t_token	*next;
-
-	current = *list;
-	while (current)
+	while (*s1 && *s1 == *s2)
 	{
-		next = current->next;
-		free(current->value);
-		free(current);
-		current = next;
+		s1++;
+		s2++;
 	}
-	*list = NULL;
-}
-
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_whitespace(char c)
-{
-	return (c == ' ' || c == '\t');
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }

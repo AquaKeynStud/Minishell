@@ -120,7 +120,11 @@ int main(int argc, char **argv)
 		"cat << END | sed 's/foo/bar/' > output.txt\nfoo\nbaz\nfoo again\nEND",
 		"cat << DATA | awk '{print $1}' > col1.txt\none two\nthree four\nDATA",
 		"grep TODO < notes.txt | wc -l > count.txt"
-	};	
+	};
+
+	const char *my_tests[] = {
+		"cat Makefile > test.txt"
+	};
 
 	if (argc < 2)
 	{
@@ -132,8 +136,10 @@ int main(int argc, char **argv)
 		run_tests("SIMPLE", simple_tests, sizeof(simple_tests) / sizeof(simple_tests[0]));
 	else if (strcmp(argv[1], "2") == 0)
 		run_tests("PIPE+REDIRECT", pipe_redirect_tests, sizeof(pipe_redirect_tests) / sizeof(pipe_redirect_tests[0]));
+	else if (strcmp(argv[1], "3") == 0)
+		run_tests("my tests", my_tests, sizeof(my_tests) / sizeof(my_tests[0]));
 	else
-		fprintf(stderr, "Argument invalide. Utilise : 1 ou 2\n");
+		fprintf(stderr, "Argument invalide. Utilise : 1, 2 ou 3\n");
 
 	return 0;
 }
