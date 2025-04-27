@@ -6,7 +6,7 @@
 #    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/04/25 14:42:35 by arocca           ###   ########.fr        #
+#    Updated: 2025/04/27 13:02:24 by arocca           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,8 @@ P_SRC	=	main.c					\
 			bonus_utils.c			\
 			bonus_parser.c			\
 			bonus_setter.c			\
+			dprintf_main.c			\
+			dprintf_handlers.c		\
 			bonus_printers_diuc.c	\
 			bonus_printers_spxX.c	\
 			bonus_error_handler.c	\

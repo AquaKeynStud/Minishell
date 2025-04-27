@@ -1,4 +1,4 @@
-.PHONY : all clean fclean re norminette valgrind libft
+.PHONY : all clean fclean re libft norminette valgrind supp_file
 
 NAME = minishell
 
@@ -48,7 +48,8 @@ LST_PAR		=	ast_adders.c		\
 
 LST_EXE		=	env.c				\
 				exec.c				\
-				exec_utils.c
+				exec_utils.c		\
+				builtin_exec.c
 
 LST_BLT		=	ft_cd.c				\
 				ft_env.c			\
@@ -77,9 +78,11 @@ OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRCS:.c=.o)))
 
 DEPS		=	$(addprefix $(D_DEPS), $(notdir $(LST_SRCS:.c=.d)))
 
-LIBS			:=	-L$(D_LFT) -lft -lreadline -lncurses
+LIBS		:=	-L$(D_LFT) -lft -lreadline -lncurses
 
-INCS			:=	-I$(D_INC) -I$(D_LFT)
+INCS		:=	-I$(D_INC) -I$(D_LFT)
+
+SUPP_FILE	:=	readline.supp
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
@@ -129,16 +132,27 @@ re:
 	@$(MAKE) all
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
-documentation:
-	doxygen Doxyfile
+# documentation:
+# 	doxygen Doxyfile
 
-html:
-	$(MAKE) documentation
-	xdg-open docs/html/index.html 
+# html:
+# 	$(MAKE) documentation
+# 	xdg-open docs/html/index.html 
 
 norminette:
 	norminette $(D_SRC) $(D_INC)
 
-valgrind:
+supp_file: | $(D_OBJ)
+	@echo "Generating $(SUPP_FILE)..."
+	@printf '{\n	ignore_libreadline_leaks\n	Memcheck:Leak\n	...\n	obj:*/libreadline.so*\n}\n' > $(D_OBJ)$(SUPP_FILE)
+	@echo "$(SUPP_FILE) successfully created !"
+
+valgrind: supp_file
 	@$(MAKE) debug
-	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=readline.supp ./$(NAME)
+	valgrind							\
+		--leak-check=full					\
+		--show-leak-kinds=all				\
+		--track-origins=yes 				\
+		--track-fds=yes						\
+		--suppressions=$(D_OBJ)$(SUPP_FILE)	\
+		./$(NAME)

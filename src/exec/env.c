@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/26 19:48:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 11:56:52 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ char	**env_to_envp(t_env *env)
 
 void	free_env(t_env **env)
 {
-	t_env *current;
-	t_env *next;
-	
+	t_env	*next;
+	t_env	*current;
+
 	current = *env;
 	while (current)
 	{

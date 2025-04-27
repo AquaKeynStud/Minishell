@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 11:01:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 15:09:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,21 @@ void	*s_realloc(void *ptr, size_t old_size, size_t new_size)
 		exit(1);
 	}
 	return (alloc);
+}
+
+char	*join_with_delim(const char *s1, const char *s2, const char *delimiter)
+{
+	char	*tmp;
+	char	*final;
+
+	tmp = ft_strjoin(s1, delimiter);
+	if (!tmp)
+		return (NULL);
+	final = ft_strjoin((const char *)tmp, s2);
+	free(tmp);
+	if (!final)
+		perror("malloc");
+	return (final);
 }
 
 void	double_free(void **ptr, size_t size_if_not_null_term)

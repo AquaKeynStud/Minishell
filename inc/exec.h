@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 02:06:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 15:50:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int		exec_command(t_ctx *ctx, t_ast *node);
 
 int		is_builtin(char *cmd);
 int		exec_builtin(char **args, t_env *env);
+
+int		free_cmd(char *path, char **args, char **envp, int exit_code);
 
 char	**env_to_envp(t_env *env);
 char	**ast_to_argv(t_ast *node);

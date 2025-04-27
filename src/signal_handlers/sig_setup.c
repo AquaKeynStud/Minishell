@@ -6,14 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/26 12:55:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 11:54:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h> // Pour perror
 #include <stddef.h>
 #include "sigaction.h"
-
 
 /*
  * Gives a status to all the signals :

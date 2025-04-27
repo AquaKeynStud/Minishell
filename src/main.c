@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 01:26:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 15:50:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,39 +23,41 @@
 
 static void	init_context(t_ctx *ctx, char **envp)
 {
-	ctx->env = init_env(envp);
 	ctx->fds = NULL;
+	ctx->status = 0;
+	ctx->env = init_env(envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
-	ctx->status = 0;
 	return ;
+}
+
+static void	command_handler(t_ctx *ctx, char *cmd)
+{
+	t_ast	*ast;
+	t_token	*tokens;
+
+	tokens = tokenize(cmd);
+	ast = parse_input(tokens);
+	execute_ast(ctx, ast);
+	free_tokens(&tokens);
+	free_ast(ast);
+	ast = NULL;
 }
 
 static void	get_input_loop(t_ctx *ctx)
 {
 	char	*input;
-	t_token	*tokens;
-	t_ast	*ast;
 
 	while (1)
 	{
-		input = readline("minishell -> ");
+		input = readline("minishell => ");
 		if (!input)
 			break ;
 		if (*input) // On ajoute la chaine a l'historique si elle n'est pas vide
 			add_history(input);
 		ft_trim(&input, " \t"); // On enleve les espaces au début et à la fin
-		// printf("Nouvelle commande : [%s]\n", input); // Pour voir la commande enregistrée trimmée
-
-		tokens = tokenize(input);
-		ast = parse_input(tokens);
-		execute_ast(ctx, ast);
-		free_tokens(&tokens);
-		free_ast(ast);
-		ast = NULL;
-
+		command_handler(ctx, input);
 		free(input);
-		secure_exit(ctx, 0);
 	}
 	rl_clear_history();
 }
