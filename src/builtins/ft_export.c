@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 14:04:29 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/26 13:40:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,21 +87,6 @@ void append_env_node(t_env **env, t_env *new_node)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_node;
-}
-
-void	free_env(t_env *env)
-{
-	t_env	*tmp;
-	
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
 }
 
 // // ------------ MAIN DE TEST --------------------

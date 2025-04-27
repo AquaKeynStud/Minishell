@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 14:45:16 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 01:26:09 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,12 @@ static void	get_input_loop(t_ctx *ctx)
 		tokens = tokenize(input);
 		ast = parse_input(tokens);
 		execute_ast(ctx, ast);
+		free_tokens(&tokens);
+		free_ast(ast);
+		ast = NULL;
 
 		free(input);
+		secure_exit(ctx, 0);
 	}
 	rl_clear_history();
 }
@@ -63,8 +67,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_context(&ctx, envp); // Remplit la structure contexte
-	set_sigaction(SIGQUIT, handle_sigint_sigquit, "\0");
-	set_sigaction(SIGINT, handle_sigint_sigquit, "1000000");
+	sig_init();
 	get_input_loop(&ctx); // Lance la détection des inputs avec readline
+	secure_exit(&ctx, 0);
 	return (0);
 }

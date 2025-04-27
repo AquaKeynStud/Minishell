@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 14:04:01 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/26 13:39:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		ft_cd(char **args, t_env *env);
 int		ft_unset(char **args, t_env *env);
 int		ft_export(char **args, t_env *env);
 
+void	free_env(t_env **env);
 t_env	*init_env(char **envp);
 char	*get_from_env(t_env *env, const char *key);
 

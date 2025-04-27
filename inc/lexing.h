@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 13:54:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/26 19:51:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void	add_token(t_token **head, t_token *new);
 /* Utils */
 int		is_operator(char c);
 int		is_whitespace(char c);
+void	free_tokens(t_token **list);
 
 #endif

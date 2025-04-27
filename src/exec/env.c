@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 14:03:24 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/26 19:48:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,23 @@ char	**env_to_envp(t_env *env)
 		return (NULL);
 	}
 	return (envp);
+}
+
+void	free_env(t_env **env)
+{
+	t_env *current;
+	t_env *next;
+	
+	current = *env;
+	while (current)
+	{
+		next = current->next;
+		free(current->key);
+		free(current->value);
+		free(current);
+		current = next;
+	}
+	*env = NULL;
 }
 
 t_env	*init_env(char **envp)

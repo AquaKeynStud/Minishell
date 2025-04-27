@@ -86,7 +86,11 @@ INCS			:=	-I$(D_INC) -I$(D_LFT)
 all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o minishell
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
+
+debug:	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
+	@$(CC) $(CFLAGS) -g3 $(OBJ) $(LIBS) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 $(D_OBJ):
@@ -136,5 +140,5 @@ norminette:
 	norminette $(D_SRC) $(D_INC)
 
 valgrind:
-	@$(MAKE) $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME)
+	@$(MAKE) debug
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=readline.supp ./$(NAME)

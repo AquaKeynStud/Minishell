@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 15:00:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 02:11:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <sys/wait.h>
 #include "minishell.h"
+#include "sigaction.h"
 
 static void	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 {
@@ -24,6 +25,7 @@ static void	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 	pid = fork();
 	if (pid == 0) // On est dans le child process
 	{
+		sig_set(SIG_DFL);
 		if (is_l_side)
 			dup2(fds[1], STDOUT_FILENO);
 		else
@@ -46,12 +48,14 @@ int exec_pipe(t_ctx *ctx, t_ast *node)
 		return (1);
 	register_fd(&ctx->fds, fds[0]);
 	register_fd(&ctx->fds, fds[1]);
+	sig_set(SIG_IGN);
 	exec_side_pipe(ctx, node->childs[0], fds, true);
 	exec_side_pipe(ctx, node->childs[1], fds, false);
 	close_fd(&ctx->fds, fds[0]);
 	close_fd(&ctx->fds, fds[1]);
 	waitpid(-1, &status, 0);
 	waitpid(-1, &status, 0);
+	sig_init();
 	return (s_exec_exit(status));
 }
 
@@ -89,24 +93,31 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	char	**args;
 	int		wstatus;
 
-	args = ast_to_argv(node->childs, node->sub_count);
+	envp = env_to_envp(ctx->env);
+	path = get_path(node->value, ctx->env);
+	args = ast_to_argv(node);
+	if (!envp || !path || !args)
+    {
+        free(path);
+        free(args);
+        double_free((void **)envp, 0);
+        return (127);
+    }
 	if (is_builtin(node->value))
 		return (exec_builtin(args, ctx->env));
+	sig_set(SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
-		envp = env_to_envp(ctx->env);
-		path = get_path(node->value, ctx->env);
-		if (!envp || !args || !path)
-		{
-			err_value("minishell: ", node->value);
-			err(": command not found\n"); // A modifier quand y'aura le dprintf (printf sur fd)
-			return (127);
-		}
+		sig_set(SIG_DFL);
 		execve(path, args, envp);
 		perr("execve", 1);
 	}
 	waitpid(pid, &wstatus, 0);
+	sig_init();
+	free(path);
+	free(args);
+	double_free((void **)envp, 0);
 	return (s_exec_exit(wstatus));
 }
 

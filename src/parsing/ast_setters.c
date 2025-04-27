@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/23 16:41:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/26 20:07:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,27 @@
 **      les tokens ont été consommés.
 ** ============================================================================
 */
+
+/*
+** free_ast : Libère récursivement un arbre AST.
+** @node : Le nœud racine de l'AST à libérer.
+*/
+void	free_ast(t_ast *node)
+{
+	int	i;
+
+	if (!node)
+		return ;
+	i = 0;
+	while (i < node->sub_count)
+	{
+		free_ast(node->childs[i]);
+		i++;
+	}
+	free(node->childs);
+	free(node->value);
+	free(node);
+}
 
 /*
 ** parse_redirs : Parse les redirections.
