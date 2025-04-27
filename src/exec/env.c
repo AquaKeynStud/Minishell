@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 11:56:52 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 21:44:30 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_env	*init_env(char **envp)
 			node->value = ft_strdup(""); // ou NULL
 		node->next = env_list;
 		env_list = node;
-		free_split(split); // fonction  coder
+		double_free((void **)split, 0);
 		i++;
 	}
 	return (env_list);
