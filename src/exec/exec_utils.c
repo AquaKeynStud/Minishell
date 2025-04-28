@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 20:47:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 01:46:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	here_doc(const char *limiter)
 {
 	char	*line;
 	char	*prompt;
-	int	 	pipefd[2];
+	int		pipefd[2];
 
 	if (pipe(pipefd) < 0)
 		return (-1);
@@ -99,7 +99,7 @@ int	here_doc(const char *limiter)
 	{
 		line = readline(prompt);
 		if (!line)
-			break; // EOF (Ctrl-D)
+			break ; // EOF (Ctrl-D)
 		if (!ft_strcmp(line, limiter)) // Fin de heredoc
 		{
 			free(line);
@@ -111,3 +111,37 @@ int	here_doc(const char *limiter)
 	close(pipefd[1]); // On termine l'écriture et on renvoie le descripteur de lecture
 	return (pipefd[0]);
 }
+
+// int here_doc(const char *limiter)
+// {
+// 	char	*line;
+// 	char	*prompt;
+// 	int		pipefd[2];
+// 	pid_t	pid;
+
+// 	if (pipe(pipefd) < 0)
+// 		return (-1);
+// 	pid = fork();
+// 	if (pid < 0)
+// 		return (-1);
+// 	if (pid == 0)  // fils
+// 	{
+// 		close(pipefd[0]);
+// 		prompt = isatty(STDIN_FILENO) ? "> " : NULL;
+// 		while ((line = readline(prompt)))
+// 		{
+// 			if (!ft_strcmp(line, limiter))
+// 			{
+// 				free(line);
+// 				break;
+// 			}
+// 			ft_dprintf(pipefd[1], "%s\n", line);
+// 			free(line);
+// 		}
+// 		close(pipefd[1]);
+// 		exit(0);
+// 	}
+// 	close(pipefd[1]);
+// 	waitpid(pid, NULL, 0);
+// 	return pipefd[0];
+// }
