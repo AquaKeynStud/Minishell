@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 16:06:38 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 17:42:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	parse_redirs(t_ast **cmd, t_token **curr)
 	t_ast	*redir;
 	t_ast	*file_node;
 
-	while (*curr && ((*curr)->type != TOKEN_WORD && (*curr)->type == TOKEN_PIPE))
+	while (*curr && ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE))
 	{
 		tmp = *curr;
 		*curr = (*curr)->next;
@@ -100,15 +100,35 @@ void	parse_redirs(t_ast **cmd, t_token **curr)
 t_ast	*parse_command(t_token **curr)
 {
 	t_ast	*cmd;
+	t_ast	*stub;
 
-	if (!curr || !(*curr) || (*curr)->type != TOKEN_WORD)
-		return (NULL);
-	cmd = new_ast(AST_COMMAND, (*curr)->value); // Crée le nœud de la commande (premier mot = nom de commande)
-	*curr = (*curr)->next;
-	while (*curr && (*curr)->type == TOKEN_WORD) // Tant que c'est un argument
+	cmd = NULL;
+	while (*curr && (*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
 	{
-		ast_add_child(cmd, new_ast(AST_COMMAND, (*curr)->value));
+		if (!cmd)
+			cmd = new_ast(AST_COMMAND, NULL); // Si on n'a pas encore de noeud de commande, on en crée un “vide”
+		parse_redirs(&cmd, curr);
+	}
+	if (*curr && (*curr)->type == TOKEN_WORD)
+	{
+		if (!cmd)
+			cmd = new_ast(AST_COMMAND, (*curr)->value);
+		else
+		{
+			stub = cmd;
+			while (stub->type == AST_REDIR)
+				stub = stub->childs[1];
+			stub->value = ft_strdup((*curr)->value);
+		}
 		*curr = (*curr)->next;
+		while (*curr && (*curr)->type == TOKEN_WORD) // Tant que c'est un argument
+		{
+			if (cmd->type == AST_REDIR)
+				ast_add_child(stub, new_ast(AST_COMMAND, (*curr)->value));
+			else
+				ast_add_child(cmd, new_ast(AST_COMMAND, (*curr)->value));
+			*curr = (*curr)->next;
+		}
 	}
 	parse_redirs(&cmd, curr);
 	return (cmd);
