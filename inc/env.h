@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/28 09:12:21 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:51:48 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ void	free_split(char **split);
 
 /* ft_export */
 int	ft_export(char **args, t_env **env);
-void	sort(t_env **env);
+
+void	print_sorted_env(t_env *env);
 
 int		env_size(t_env *env);
 t_env	*copy_env_list(t_env *env);
-void	swap_env_value(t_env *a, t_env *b);
-void	print_sorted_env(t_env *env);
+t_env	*search_env_key(t_env *env, const char *key);
 
 /* Utils */
 int count_args(char **args);

@@ -6,64 +6,25 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/28 09:09:39 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:48:26 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 
-void	sort(t_env **env)
+static t_env	*create_env_node(const char *key, const char *value)
 {
-	t_env	*current;
-	int		sorted;
-
-	if (!env || !(*env))
-		return ;
-	sorted = 0;
-	while (!sorted)
-	{
-		sorted = 1;
-		current = *env;
-		while (current && current->next)
-		{
-			if (ft_strcmp(current->key, current->next->key) > 0)
-			{
-				swap_env_value(current, current->next);
-				sorted = 0;
-			}
-			current = current->next;
-		}
-	}
-}
-
-static void	add_or_update_env(t_env **env, char *key, char *value)
-{
-	t_env	*current;
 	t_env	*new;
 
-	current = *env;
-	while (current)
-	{
-		if (ft_strcmp(current->key, key) == 0)
-		{
-			free(current->value);
-			if (value)
-				current->value = ft_strdup(value);
-			else
-				current->value = NULL;
-			return ;
-		}
-		current = current->next;
-	}
 	new = malloc(sizeof(t_env));
 	if (!new)
-		return ; // a gérer
+		return (NULL);
 	new->key = ft_strdup(key);
 	if (!new->key)
 	{
 		free(new);
-		return ;  // Si l'allocation échoue, on libère et on sort
+		return (NULL);
 	}
 	if (value)
 		new->value = ft_strdup(value);
@@ -73,25 +34,74 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 	{
 		free(new->key);
 		free(new);
-		return ;  // Si l'allocation de la valeur échoue, on libère et on sort
+		return (NULL);
 	}
 	new->next = NULL;
+	return (new);
+}
+
+static void	append_env_node(t_env **env, t_env *new_node)
+{
+	t_env	*current;
+
 	if (!*env)
-		*env = new;
+		*env = new_node;
 	else
 	{
 		current = *env;
 		while (current->next)
 			current = current->next;
-		current->next = new;
+		current->next = new_node;
 	}
+}
+
+static void	add_or_update_env(t_env **env, char *key, char *value)
+{
+	t_env	*existing;
+	t_env	*new_node;
+
+	existing = search_env_key(*env, key);
+	if (existing)
+	{
+		free(existing->value);
+		if (value)
+			existing->value = ft_strdup(value);
+		else
+			existing->value = NULL;
+	}
+	else
+	{
+		new_node = create_env_node(key, value);
+		if (!new_node)
+			return ;
+		append_env_node(env, new_node);
+	}
+}
+
+static void	process_env_arg(char *arg, t_env **env)
+{
+	char	**split;
+
+	if (ft_strchr(arg, '='))
+	{
+		split = ft_split(arg, '=');
+		if (split && split[0])
+		{
+			if (split[1] && *split[1])
+				add_or_update_env(env, split[0], split[1]);
+			else
+				add_or_update_env(env, split[0], NULL);
+		}
+		free_split(split);
+	}
+	else
+		add_or_update_env(env, arg, NULL);
 }
 
 int	ft_export(char **args, t_env **env)
 {
-	int		arg_count;
-	int		i;
-	char	**split;
+	int	arg_count;
+	int	i;
 
 	arg_count = count_args(args);
 	if (arg_count == 1)
@@ -102,20 +112,7 @@ int	ft_export(char **args, t_env **env)
 	i = 1;
 	while (i < arg_count)
 	{
-		if (ft_strchr(args[i], '='))
-		{
-			split = ft_split(args[i], '=');
-			if (split && split[0])
-			{
-				if (split[1] && *split[1])
-					add_or_update_env(env, split[0], split[1]);
-				else
-					add_or_update_env(env, split[0], NULL);
-			}
-			free_split(split); // fonction utilitaire pour free un char**
-		}
-		else
-			add_or_update_env(env, args[i], NULL);
+		process_env_arg(args[i], env);
 		i++;
 	}
 	return (0);

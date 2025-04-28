@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/28 09:08:53 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:46:00 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,34 +38,15 @@ t_env	*copy_env_list(t_env *env)
 	return (copy);
 }
 
-void	swap_env_value(t_env *a, t_env *b)
+t_env	*search_env_key(t_env *env, const char *key)
 {
-	char	*tmp_key;
-	char	*tmp_value;
-
-	tmp_key = a->key;
-	tmp_value = a->value;
-	a->key = b->key;
-	a->value = b->value;
-	b->key = tmp_key;
-	b->value = tmp_value;
-}
-
-void	print_sorted_env(t_env *env)
-{
-	t_env	*copy;
-	t_env	*tmp;
-
-	copy = copy_env_list(env);
-	sort(&copy);
-	tmp = copy;
-	while (tmp)
+	while (env)
 	{
-		if (tmp->value)
-			ft_printf("export %s=\"%s\"\n", tmp->key, tmp->value);
-		else
-			ft_printf("export %s\n", tmp->key);
-		tmp = tmp->next;
+		if (ft_strcmp(env->key, key) == 0)
+		{
+			return (env);
+		}
+		env = env->next;
 	}
-	free_env(copy);
+	return (env);
 }

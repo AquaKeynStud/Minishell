@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:40:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/28 09:39:31 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:10:51 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,42 +76,46 @@ void	append_env_node(t_env **env, t_env *new_node)
 	tmp->next = new_node;
 }
 
-// ------------ MAIN DE TEST --------------------
-int	main(int argc, char **argv, char **env)
+t_env	*init_env(char **envp)
 {
-	t_env *env = NULL;
+	int		i;
+	t_env	*node;
+	char	**split;
+	t_env	*env_list;
 
-	append_env_node(&env, create_env_node("PATH", "/usr/bin:/bin"));
-	append_env_node(&env, create_env_node("USER", "student42"));
-	append_env_node(&env, create_env_node("HOME", "/home/user"));
-	append_env_node(&env, create_env_node("EMPTY", NULL));
+	env_list = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		split = ft_split(envp[i], '='); // "VAR=VALUE"
+		node = (t_env *)malloc(sizeof(t_env));
+		node->key = ft_strdup(split[0]);
+		if (split[1])
+			node->value = ft_strdup(split[1]);
+		else
+			node->value = ft_strdup(""); // ou NULL
+		node->next = env_list;
+		env_list = node;
+		// double_free((void **)split, 0);
+		i++;
+	}
+	return (env_list);
+}
 
-	char	*args1[3];
+// ------------ MAIN DE TEST --------------------
+int	main(int argc, char **argv, char **envp)
+{
+	t_env	*env = NULL;
+
+	env = init_env(envp);
+	ft_export(argv, &env);
+
+
 	char	*args2[2];
-
-	/* test basique */
-	args1[0] = "export";
-	args1[1] = "TEST=abouclie";
-	args1[2] = NULL;
-	ft_export(args1, &env);
 	args2[0] = "export";
 	args2[1] = NULL;
 	ft_export(args2, &env);
 
-	// *args = { "export", "TEST2", NULL};
-	// ft_export(args, &env);
-	// *args = { "export", NULL};
-	// ft_export(args, &env);
-
-	// /* test de mise a jour */
-	// *args = { "export", "TEST=arocca", NULL};
-	// ft_export(args, &env);
-	// *args = { "export", "TEST2=arocca", NULL};
-	// ft_export(args, &env);
-	// args = { "export", NULL};
-	// ft_export(args, &env);
-
-	free_env(env);
 	return 0;
 }
 
