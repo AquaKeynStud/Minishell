@@ -123,11 +123,27 @@ int main(int argc, char **argv)
 	};
 
 	const char *my_tests[] = {
-		"cat Makefile > test.txt",
-		"<< eof",
-		"Makefile < cat | echo > test.txt"
+		"cat Makefile > test.txt", // Test1
+		"<< eof", // Test 2
+		"Makefile < cat | echo > test.txt", // Test 3
+		"< infile cmd", // Test 4
+		"< in1 < in2 grep foo", // Test 5 
+		"echo bar > out.txt", // Test 6
+		"<< eof cat", // Test 7
+		"<< eof < in1 > out1 grep foo", // Test 8
+		"< input.txt > output.txt cat file1 file2", // Test 9
+		"<< eof < in1 < in2 > out1 > out2 cat foo", // Test 10
+		"cat | << eof < in1 | < in2 > out1 | grep foo", // Test 11
+		// Cas avec erreurs syntaxiques qu'il faudra détecter :
+		"cat | | grep foo",       // erreur de syntaxe : double pipe
+		">",                      // erreur de syntaxe : redirection sans fichier
+		"cat >",                  // erreur de syntaxe : redirection sans fichier
+		"<",                      // erreur de syntaxe : redirection sans fichier
+		"cat > fichier >",        // erreur de syntaxe : redirection sans fichier
+		"cat || grep",            // erreur de syntaxe (pour toi pour l'instant, car tu ne fais pas ||)
+		"cat ||| grep",           // erreur de syntaxe (triple pipe invalide)
 	};
-
+	
 	if (argc < 2)
 	{
 		fprintf(stderr, "Usage: %s [1 | 2]\n", argv[0]);

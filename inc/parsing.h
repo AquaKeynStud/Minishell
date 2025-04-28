@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/26 20:07:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 20:17:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include "lexing.h"
+# include <stdbool.h>
 
 /* -- Structures -- */
 typedef enum e_ast_type
@@ -36,9 +37,10 @@ typedef struct s_ast
 }				t_ast;
 
 /* -- Functions -- */
-void	free_ast(t_ast *node);
+void	*free_ast(t_ast *node);
 t_ast	*parse_input(t_token *tokens);
 void	ast_add_child(t_ast *parent, t_ast *child);
 t_ast	*new_ast(t_ast_type type, const char *value);
+void	*double_free_ast(t_ast *first, t_ast *second);
 
 #endif
