@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/26 20:07:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 02:06:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,28 +68,27 @@ void	free_ast(t_ast *node)
 ** @curr: Adresse du pointeur sur le token courant.
 ** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
 */
-void	parse_redirs(t_ast	**cmd, t_token **curr)
+void	parse_redirs(t_ast **cmd, t_token **curr)
 {
 	t_token	*tmp;
 	t_ast	*redir;
+	t_ast	*file_node;
 
-	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT)) // Gestion des redirections : > ou <
+	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT))
 	{
 		tmp = *curr;
 		*curr = (*curr)->next;
-		if (*curr && (*curr)->type == TOKEN_WORD)
+		if (!*curr || (*curr)->type != TOKEN_WORD)
 		{
-			redir = new_ast(AST_REDIR, tmp->value); // Crée un nœud redirection et l'attache comme enfant de la commande
-			ast_add_child(redir, new_ast(AST_COMMAND, (*curr)->value));
-			ast_add_child((*cmd), redir);
-			*curr = (*curr)->next;
-		}
-		else
-		{
-			err("minishell: Syntax error near unexpected token `newline'\n");
-			// besoin de free ici
+			err("minishell: syntax error near unexpected token\n");
 			return ;
 		}
+		file_node = new_ast(AST_COMMAND, (*curr)->value); // 1/ Crée le nœud fichier
+		redir = new_ast(AST_REDIR, tmp->value); // 2/ Crée le nœud redirection et lui ajoutes fichier + ancienne commande
+		ast_add_child(redir, file_node);	// child[0] = fichier
+		ast_add_child(redir, *cmd);		 // child[1] = l’arbre de la commande
+		*cmd = redir; // 3/ Remplace la commande courante par ce nouveau sous-arbre
+		*curr = (*curr)->next;
 	}
 }
 
