@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 13:32:29 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 20:47:53 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	**ast_to_argv(t_ast *node)
 	char	**argv;
 	t_ast	**childs;
 
+	if (!node)
+		return (NULL);
 	pos = node->sub_count;
 	childs = node->childs;
 	argv = s_malloc((pos + 2) * sizeof(char *));
@@ -44,6 +46,8 @@ char	*get_path(const char *cmd, t_env *env)
 	char	*full_cmd;
 
 	i = 0;
+	if (!cmd)
+		return (NULL);
 	raw_path = get_from_env(env, "PATH");
 	if (ft_strchr(cmd, '/') || !raw_path)
 		return (ft_strdup(cmd));

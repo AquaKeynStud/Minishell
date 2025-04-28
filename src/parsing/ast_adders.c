@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 11:55:37 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 20:13:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,33 @@ void	ast_add_child(t_ast *parent, t_ast *child)
 	new_size = sizeof(t_ast *) * (++parent->sub_count);
 	parent->childs = s_realloc(parent->childs, old_size, new_size);
 	parent->childs[parent->sub_count - 1] = child;
+}
+
+/*
+** free_ast : Libère récursivement un arbre AST.
+** @node : Le nœud racine de l'AST à libérer.
+*/
+void	*free_ast(t_ast *node)
+{
+	int	i;
+
+	if (!node)
+		return (NULL);
+	i = 0;
+	while (i < node->sub_count)
+	{
+		free_ast(node->childs[i]);
+		i++;
+	}
+	free(node->childs);
+	free(node->value);
+	free(node);
+	return (NULL);
+}
+
+void	*double_free_ast(t_ast *first, t_ast *second)
+{
+	free_ast(first);
+	free_ast(second);
+	return (NULL);
 }
