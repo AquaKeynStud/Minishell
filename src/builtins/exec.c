@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:08:45 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 17:20:30 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 12:00:38 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,23 @@ t_env	*init_env(char **envp)
 {
 	t_env	*env_list;
 	t_env	*node;
-	char 	**split;
-	int	i;
-	
+	char	**split;
+	int		i;
+
 	env_list = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		split = ft_split(envp[i], '='); // "VAR=VALUE"
+		split = ft_split(envp[i], '=');
 		node = (t_env *)s_malloc(sizeof(t_env));
 		node->key = ft_strdup(split[0]);
 		if (split[1])
 			node->value = ft_strdup(split[1]);
 		else
-			node->value = ft_strdup(""); // ou NULL
+			node->value = ft_strdup("");
 		node->next = env_list;
 		env_list = node;
-		free_split(split); // fonction  coder
+		free_split(split);
 		i++;
 	}
 	return (env_list);
