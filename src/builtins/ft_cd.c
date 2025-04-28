@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 11:01:16 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 08:40:43 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,21 @@ static int	update_env(t_env *env, const char *key, const char *value)
 		}
 		env = env->next;
 	}
-	return (1); // non trouvé
+	return (1);
 }
 
-static char *get_env_value(t_env *env, const char *key)
+static char	*get_env_value(t_env *env, const char *key)
 {
 	while (env)
 	{
 		if (!ft_strcmp(env->key, key))
 			return (env->value);
-			env = env->next;
-		}
-		return (NULL); // pas trouvé
+		env = env->next;
 	}
-	
-	int	ft_cd(char **args, t_env *env)
+	return (NULL);
+}
+
+int	ft_cd(char **args, t_env *env)
 {
 	char	cwd[PATH_MAX];
 	char	*oldpwd;
@@ -52,7 +52,7 @@ static char *get_env_value(t_env *env, const char *key)
 		return (1);
 	}
 	if (!path)
-	path = get_env_value(env, "HOME");
+		path = get_env_value(env, "HOME");
 	if (args[2])
 	{
 		ft_printf("cd: HOME is not set\n");

@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 12:53:16 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 09:47:32 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	free_split(char **split)
 	}
 	free(split);
 }
-
-
 
 int count_args(char **args)
 {

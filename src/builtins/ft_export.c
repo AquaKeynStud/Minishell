@@ -6,53 +6,14 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 12:53:54 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 09:09:39 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 
-static int	env_size(t_env *env)
-{
-	int	size;
-
-	size = 0;
-	while (env)
-	{
-		size++;
-		env = env->next;
-	}
-	return (size);
-}
-
-static t_env	*copy_env_list(t_env *env)
-{
-	t_env	*copy;
-
-	copy = NULL;
-	while (env)
-	{
-		append_env_node(&copy, create_env_node(env->key, env->value));
-		env = env->next;
-	}
-	return (copy);
-}
-
-static void	swap_env_value(t_env *a, t_env *b)
-{
-	char	*tmp_key;
-	char	*tmp_value;
-
-	tmp_key = a->key;
-	tmp_value = a->value;
-	a->key = b->key;
-	a->value = b->value;
-	b->key = tmp_key;
-	b->value = tmp_value;
-}
-
-static void	sort(t_env **env)
+void	sort(t_env **env)
 {
 	t_env	*current;
 	int		sorted;
@@ -76,26 +37,7 @@ static void	sort(t_env **env)
 	}
 }
 
-static void	print_sorted_env(t_env *env)
-{
-	t_env	*copy;
-	t_env	*tmp;
-
-	copy = copy_env_list(env);
-	sort(&copy);
-	tmp = copy;
-	while (tmp)
-	{
-		if (tmp->value)
-			ft_printf("export %s=\"%s\"\n", tmp->key, tmp->value);
-		else
-			ft_printf("export %s\n", tmp->key);
-		tmp = tmp->next;
-	}
-	free_env(copy);
-}
-
-void	add_or_update_env(t_env **env, char *key, char *value)
+static void	add_or_update_env(t_env **env, char *key, char *value)
 {
 	t_env	*current;
 	t_env	*new;

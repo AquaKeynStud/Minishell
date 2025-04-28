@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:40:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 12:57:40 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 09:39:31 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	append_env_node(t_env **env, t_env *new_node)
 }
 
 // ------------ MAIN DE TEST --------------------
-int	main(void)
+int	main(int argc, char **argv, char **env)
 {
 	t_env *env = NULL;
 
@@ -86,15 +86,33 @@ int	main(void)
 	append_env_node(&env, create_env_node("HOME", "/home/user"));
 	append_env_node(&env, create_env_node("EMPTY", NULL));
 
-	char *args2[] = { "export", "TEST=abouclie", NULL};
-	char *args1[] = { "export", NULL };
-	
+	char	*args1[3];
+	char	*args2[2];
+
+	/* test basique */
+	args1[0] = "export";
+	args1[1] = "TEST=abouclie";
+	args1[2] = NULL;
+	ft_export(args1, &env);
+	args2[0] = "export";
+	args2[1] = NULL;
 	ft_export(args2, &env);
 
-	ft_export(args1, &env);
+	// *args = { "export", "TEST2", NULL};
+	// ft_export(args, &env);
+	// *args = { "export", NULL};
+	// ft_export(args, &env);
+
+	// /* test de mise a jour */
+	// *args = { "export", "TEST=arocca", NULL};
+	// ft_export(args, &env);
+	// *args = { "export", "TEST2=arocca", NULL};
+	// ft_export(args, &env);
+	// args = { "export", NULL};
+	// ft_export(args, &env);
 
 	free_env(env);
 	return 0;
 }
 
-// cc src/builtins/ft_export.c src/builtins/tests/test_export.c src/builtins/utils_builtins.c -Iinc -I./libft -L./libft -lft
+// cc src/builtins/ft_export.c src/builtins/ft_export_utils.c src/builtins/tests/test_export.c src/builtins/utils_builtins.c -Iinc -I./libft -L./libft -lft
