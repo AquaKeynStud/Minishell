@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 15:33:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 13:32:29 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "parsing.h"
 #include "minishell.h"
 #include "sigaction.h"
+#include <readline/history.h>
+#include <readline/readline.h>
 
 char	**ast_to_argv(t_ast *node)
 {
@@ -69,4 +71,39 @@ int	free_cmd(char *path, char **args, char **envp, int exit_code)
 	if (envp)
 		double_free((void **)envp, 0);
 	return (exit_code);
+}
+
+/**
+ * here_doc: lit un here-document via readline, sans expansion
+ * @limiter: chaîne de fin du heredoc
+ *
+ * Retourne la borne de lecture du pipe (à dupliquer sur STDIN),
+ * ou -1 en cas d'erreur.
+ */
+int	here_doc(const char *limiter)
+{
+	char	*line;
+	char	*prompt;
+	int	 	pipefd[2];
+
+	if (pipe(pipefd) < 0)
+		return (-1);
+	prompt = NULL;
+	if (isatty(STDIN_FILENO)) // Prompt seulement si on est en interractif
+		prompt = "> ";
+	while (1)
+	{
+		line = readline(prompt);
+		if (!line)
+			break; // EOF (Ctrl-D)
+		if (!ft_strcmp(line, limiter)) // Fin de heredoc
+		{
+			free(line);
+			break ;
+		}
+		ft_dprintf(pipefd[1], "%s\n", line); // Écrire la ligne dans le pipe, en restaurant le '\n'
+		free(line);
+	}
+	close(pipefd[1]); // On termine l'écriture et on renvoie le descripteur de lecture
+	return (pipefd[0]);
 }

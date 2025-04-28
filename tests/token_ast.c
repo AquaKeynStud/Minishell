@@ -123,7 +123,9 @@ int main(int argc, char **argv)
 	};
 
 	const char *my_tests[] = {
-		"cat Makefile > test.txt"
+		"cat Makefile > test.txt",
+		"<< eof",
+		"Makefile < cat | echo > test.txt"
 	};
 
 	if (argc < 2)

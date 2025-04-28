@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 15:50:06 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 13:31:46 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "minishell.h"
 #include "sigaction.h"
 #include <readline/history.h>
-#include <readline/readline.h>	
+#include <readline/readline.h>
 
 static void	init_context(t_ctx *ctx, char **envp)
 {

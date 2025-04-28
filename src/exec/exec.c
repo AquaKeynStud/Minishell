@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 15:39:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 15:31:27 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
 	else if (!ft_strcmp(node->value, ">>"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-	else // if (!ft_strcmp(node->value, "<"))
+	else if (!ft_strcmp(node->value, "<"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	// else /* "<<" */
-	// 	fd = here_doc(node->childs[0]->value);
+	else if (!ft_strcmp(node->value, "<<"))
+		fd = here_doc(node->childs[0]->value);
 	if (fd < 0)
 		return (perr("redir", 1));
 	if (node->value[0] == '<')
