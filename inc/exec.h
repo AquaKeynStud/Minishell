@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 15:50:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 13:33:14 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int		free_cmd(char *path, char **args, char **envp, int exit_code);
 
 char	**env_to_envp(t_env *env);
 char	**ast_to_argv(t_ast *node);
+int		here_doc(const char *limiter);
 char	*get_path(const char *cmd, t_env *env);
 
 #endif

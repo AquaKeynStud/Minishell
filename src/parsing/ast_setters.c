@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 02:06:35 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 16:06:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	parse_redirs(t_ast **cmd, t_token **curr)
 	t_ast	*redir;
 	t_ast	*file_node;
 
-	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT))
+	while (*curr && ((*curr)->type != TOKEN_WORD && (*curr)->type == TOKEN_PIPE))
 	{
 		tmp = *curr;
 		*curr = (*curr)->next;
