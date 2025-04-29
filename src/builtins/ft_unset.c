@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 11:35:01 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:41:38 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ static void	remove_env_var(char *key, t_env **env)
 	t_env	*tmp;
 	t_env	*prev;
 
-	tmp = NULL;
-	prev = *env;
+	tmp = *env;
+	prev = NULL;
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, key))

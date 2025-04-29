@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:10:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 11:33:12 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:41:10 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	remove_env_var(char *key, t_env **env)
 	t_env	*tmp;
 	t_env	*prev;
 	
-	tmp = NULL;
-	prev = *env;
+	tmp = *env;
+	prev = NULL;
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, key))
@@ -96,6 +96,16 @@ t_env	*init_env(char **envp)
 	return (env_list);
 }
 
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		if (env->value)
+			printf("%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
+}
+
 int main(int argc, char ** argv, char **envp)
 {
 	t_env	*env;
@@ -103,6 +113,8 @@ int main(int argc, char ** argv, char **envp)
 
 	env = init_env(envp);
 	result = ft_unset(argv, env);
+	ft_printf("\n=== Environnement après unset ===\n");
+	print_env(env);
 	return (result);
 }
 // A voir si on doit gérer les variables qui sont en read only
