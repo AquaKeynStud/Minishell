@@ -24,21 +24,15 @@ D_INC	=	inc/
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
 D_LFT	=	libft/
-<<<<<<< HEAD
-=======
+
 D_EXE	=	$(D_SRC)exec/
->>>>>>> exec
 D_UTL	=	$(D_SRC)utils/
 D_TOK	=	$(D_SRC)token/
 D_PAR	=	$(D_SRC)parsing/
 D_BLT	=	$(D_SRC)builtins/
 D_SIG	=	$(D_SRC)signal_handlers/
 
-<<<<<<< HEAD
-D_SRCS	= $(D_SRC) $(D_SIG) $(D_TOK) $(D_PAR) $(D_UTL)
-=======
 D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
->>>>>>> exec
 
 # file lists
 LST_SRC		=	main.c
@@ -53,16 +47,10 @@ LST_TOK		=	add_token.c			\
 LST_PAR		=	ast_adders.c		\
 				ast_setters.c
 
-<<<<<<< HEAD
-LST_UTL		=	printers.c			\
-				fd_collector.c		\
-				secure_alloc.c		\
-=======
 LST_EXE		=	env.c				\
 				exec.c				\
 				exec_utils.c		\
 				builtin_exec.c
->>>>>>> exec
 
 LST_BLT		=	ft_cd.c				\
 				ft_env.c			\
@@ -82,11 +70,7 @@ LST_INC		=	lexing.h			\
 				sigaction.h			\
 				minishell.h
 
-<<<<<<< HEAD
-LST_SRCS	=	$(LST_SRC) $(LST_SIG) $(LST_TOK) $(LST_PAR) $(LST_UTL)
-=======
 LST_SRCS	=	$(LST_SRC) $(LST_EXE) $(LST_TOK) $(LST_BLT) $(LST_PAR) $(LST_SIG) $(LST_UTL)
->>>>>>> exec
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 
