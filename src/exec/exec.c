@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 01:54:02 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 14:55:03 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
 	else if (!ft_strcmp(node->value, ">>"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-	else if (!ft_strcmp(node->value, "<"))
+	else // if (!ft_strcmp(node->value, "<"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	else if (!ft_strcmp(node->value, "<<"))
-		fd = here_doc(node->childs[0]->value);
+	// else if (!ft_strcmp(node->value, "<<"))
+	// 	fd = here_doc(node->childs[0]->value);
 	if (fd < 0)
-		return (perr("redir", 1));
+		return (ft_dprintf(2, "minishell : "), perr(node->childs[0]->value, 1));
 	if (node->value[0] == '<')
 		dup2(fd, STDIN_FILENO);
 	else
@@ -117,6 +117,8 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 {
 	if (!node)
 		return (ctx->status);
+	if (!prepare_redirections(ctx, node))
+		return (ctx->status);	
 	if (node->type == AST_PIPE)
 		ctx->status = exec_pipe(ctx, node);
 	else if (node->type == AST_REDIR)

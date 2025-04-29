@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 12:19:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 13:55:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,12 @@ int	parse_redirs(t_ast **cmd, t_token **curr)
         *curr = (*curr)->next;
         if (!*curr || (*curr)->type != TOKEN_WORD)
             return err("minishell: syntax error near unexpected token\n"), 0;
-
-        // 1) Stub (cat ou stub vide)
         cat_empty_heredoc(cmd, tmp);
-
-        // 2) Création des nœuds
         file_node = new_ast(AST_COMMAND, (*curr)->value);
         redir      = new_ast(AST_REDIR, tmp->value);
         ast_add_child(redir, file_node);
-
-        // 3) Insertion générique
         if (*cmd && (*cmd)->type == AST_REDIR)
         {
-            // On descend jusqu'au dernier AST_REDIR
             t_ast *parent = *cmd;
             t_ast *leaf   = parent->childs[1];
             while (leaf->type == AST_REDIR)
@@ -81,18 +74,14 @@ int	parse_redirs(t_ast **cmd, t_token **curr)
                 parent = leaf;
                 leaf   = leaf->childs[1];
             }
-            // 'leaf' est l'ancien sous-arbre
             ast_add_child(redir, leaf);
-            // on remplace dans le parent
             parent->childs[1] = redir;
         }
         else
         {
-            // Première redir du segment
             ast_add_child(redir, *cmd);
             *cmd = redir;
         }
-
         *curr = (*curr)->next;
     }
     return 1;

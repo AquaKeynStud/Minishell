@@ -48,6 +48,7 @@ LST_PAR		=	ast_adders.c		\
 
 LST_EXE		=	env.c				\
 				exec.c				\
+				heredoc.c			\
 				exec_utils.c		\
 				builtin_exec.c
 
@@ -89,6 +90,7 @@ all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	@clear
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 debug:	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
@@ -124,6 +126,7 @@ fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(MAKE) -s -C $(D_LFT) fclean
 	@$(RM) $(NAME)
+	@clear
 	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
 re:
