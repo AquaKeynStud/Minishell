@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 01:40:22 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 19:47:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef enum e_ast_type
 
 typedef struct s_ast
 {
+	int				fd;
 	t_ast_type		type;
 	char			*value;
 	struct s_ast	**childs;

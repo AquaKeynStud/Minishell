@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 14:54:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 19:46:03 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,25 @@
 #include "minishell.h"
 #include <readline/history.h>
 #include <readline/readline.h>
+
+static void	verif_redir(t_ctx *ctx, t_ast *node)
+{
+	int	fd;
+
+	if (!ft_strcmp(node->value, "<"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
+	else if (!ft_strcmp(node->value, ">"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
+	else if (!ft_strcmp(node->value, ">>"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
+	if (fd < 0)
+	{
+		ft_dprintf(2, "minishell : ");
+		perr(node->childs[0]->value, 1);
+		return ;
+	}
+	close_fd(&ctx->fds, fd);
+}
 
 /**
  * here_doc: lit un here-document via readline, sans expansion
@@ -37,7 +56,7 @@ static int	here_doc(const char *limiter)
 	{
 		line = readline(prompt);
 		if (!line)
-			break ; // EOF (Ctrl-D)
+			break ;
 		if (!ft_strcmp(line, limiter)) // Fin de heredoc
 		{
 			free(line);
@@ -50,47 +69,30 @@ static int	here_doc(const char *limiter)
 	return (pipefd[0]);
 }
 
-int	prepare_redirections(t_ctx *ctx, t_ast *node)
+int	get_redir(t_ctx *ctx, t_ast *ast)
 {
 	int	fd;
 
-	if (node == NULL)
+	if (!ast)
 		return (1);
-	if (node->type == AST_PIPE)
+	if (ast->type == AST_PIPE)
 	{
-		if (!prepare_redirections(ctx, node->childs[0]))
-			return (0);
-		if (!prepare_redirections(ctx, node->childs[1]))
+		if (!get_redir(ctx, ast->childs[0]) || !get_redir(ctx, ast->childs[1]))
 			return (0);
 	}
-	else if (node->type == AST_REDIR)
+	else if (ast->type == AST_REDIR)
 	{
-		if (ft_strcmp(node->value, "<<") == 0)
+		if (ft_strcmp(ast->value, "<<") == 0)
 		{
-			fd = here_doc(node->childs[0]->value);
+			fd = here_doc(ast->childs[0]->value);
 			if (fd < 0)
 				return (perr("heredoc", 1), 0);
+			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		else if (ft_strcmp(node->value, "<") == 0)
-		{
-			fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-			if (fd < 0)
-				return (ft_dprintf(2, "minishell : "), perr(node->childs[0]->value, 1));
-		}
-		else if (ft_strcmp(node->value, ">") == 0)
-		{
-			fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
-			if (fd < 0)
-				return (ft_dprintf(2, "minishell : "), perr(node->childs[0]->value, 1));
-		}
-		else if (ft_strcmp(node->value, ">>") == 0)
-		{
-			fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-			if (fd < 0)
-				return (ft_dprintf(2, "minishell : "), perr(node->childs[0]->value, 1));
-		}
-		if (!prepare_redirections(ctx, node->childs[1]))
+		else
+			verif_redir(ctx, ast);
+		if (!get_redir(ctx, ast->childs[1]))
 			return (0);
 	}
 	return (1);
