@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   test_unset.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 11:35:01 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/29 11:10:55 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/29 11:33:12 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-#include "libft.h"
 
 static int	is_option(char **args)
 {
-	int		i;
 	char	*perror_msg;
-
+	int	i;
+	
 	i = 1;
 	while (args[i])
 	{
@@ -31,11 +30,11 @@ static int	is_option(char **args)
 	return (0);
 }
 
-static void	remove_env_var(char *key, t_env **env)
+void	remove_env_var(char *key, t_env **env)
 {
 	t_env	*tmp;
 	t_env	*prev;
-
+	
 	tmp = NULL;
 	prev = *env;
 	while (tmp)
@@ -70,3 +69,45 @@ int	ft_unset(char **args, t_env *env)
 	}
 	return (exit_code);
 }
+
+t_env	*init_env(char **envp)
+{
+	int		i;
+	t_env	*node;
+	char	**split;
+	t_env	*env_list;
+
+	env_list = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		split = ft_split(envp[i], '='); // "VAR=VALUE"
+		node = (t_env *)malloc(sizeof(t_env));
+		node->key = ft_strdup(split[0]);
+		if (split[1])
+			node->value = ft_strdup(split[1]);
+		else
+			node->value = ft_strdup(""); // ou NULL
+		node->next = env_list;
+		env_list = node;
+		// double_free((void **)split, 0);
+		i++;
+	}
+	return (env_list);
+}
+
+int main(int argc, char ** argv, char **envp)
+{
+	t_env	*env;
+	int		result;
+
+	env = init_env(envp);
+	result = ft_unset(argv, env);
+	return (result);
+}
+// A voir si on doit gérer les variables qui sont en read only
+// readonly VAR=test
+// unset VAR
+
+// bash: unset: VAR: cannot unset: readonly variable
+// echo $? = 1
