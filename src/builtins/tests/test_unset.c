@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:10:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 11:41:10 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:44:28 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ int main(int argc, char ** argv, char **envp)
 	print_env(env);
 	return (result);
 }
+
+// cc src/builtins/tests/test_unset.c src/builtins/utils_builtins.c -Iinc -I./libft -L./libft -lft
 // A voir si on doit gérer les variables qui sont en read only
 // readonly VAR=test
 // unset VAR

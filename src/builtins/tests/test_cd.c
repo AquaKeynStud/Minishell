@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 07:57:03 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/28 16:48:17 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:46:57 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,18 @@ t_env	*init_env(char **envp)
 
 int main(int argc, char **argv, char **envp)
 {
-    t_env *env;
+    t_env	*env;
+	int		result;
 
-    (void)argc; // si tu ne les utilises pas
-
-    env = init_env(envp);
-
-    if (!env)
-    {
-        printf("Erreur d'initialisation de l'environnement\n");
-        return (1);
-    }
-
-    ft_cd(argv, env);
-
-    return 0;
+	(void)argc;
+	env = init_env(envp);
+	if (!env)
+	{
+		printf("Erreur d'initialisation de l'environnement\n");
+		return (1);
+	}
+	result = ft_cd(argv, env);
+	return (result);;
 }
 
 // cc src/builtins/ft_cd.c  src/builtins/tests/test_cd.c src/builtins/utils_builtins.c -Iinc -I./libft -L./libft -lft
