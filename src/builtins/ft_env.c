@@ -5,15 +5,30 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 17:43:00 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/24 17:43:19 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/29 23:36:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
-int	ft_env(t_env *env)
+int	ft_env(t_env *env, int argc, char **args)
 {
+	int		i;
+
+	i = 1;
+	if (argc >= 2)
+	{
+		while (args[i])
+		{
+			if (args[i][0] == '-')
+				ft_printf("env: '%s': no option allowed\n", args[i]);
+			else
+				ft_printf("env: '%s': no argument allowed\n", args[i]);
+			i++;
+		}
+		return (1);
+	}
 	while (env)
 	{
 		if (env->value)

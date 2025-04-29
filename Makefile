@@ -60,7 +60,10 @@ LST_BLT		=	ft_cd.c				\
 				ft_exit.c			\
 				ft_echo.c			\
 				ft_unset.c			\
-				ft_export.c
+				ft_export.c			\
+				utils_builtins.c	\
+				ft_export_print.c	\
+				ft_export_utils.c
 
 LST_UTL		=	printers.c			\
 				secure_exit.c		\

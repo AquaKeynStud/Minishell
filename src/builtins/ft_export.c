@@ -3,118 +3,118 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 14:28:51 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/29 23:52:07 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
+#include "minishell.h"
 
-static int	env_size(t_env *env)
+t_env	*create_env_node(const char *key, const char *value)
 {
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->key = ft_strdup(key);
+	if (!new->key)
+	{
+		free(new);
+		return (NULL);
+	}
+	if (value)
+		new->value = ft_strdup(value);
+	else
+		new->value = NULL;
+	if (value && !new->value)
+	{
+		free(new->key);
+		free(new);
+		return (NULL);
+	}
+	new->next = NULL;
+	return (new);
+}
+
+void	append_env_node(t_env **env, t_env *new_node)
+{
+	t_env	*current;
+
+	if (!*env)
+		*env = new_node;
+	else
+	{
+		current = *env;
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
+	}
+}
+
+static void	add_or_update_env(t_env **env, char *key, char *value)
+{
+	char	*existing;
+	t_env	*new_node;
+
+	existing = get_from_env(*env, key);
+	if (existing)
+	{
+		free(existing);
+		if (value)
+			existing = ft_strdup(value);
+		else
+			existing = NULL;
+	}
+	else
+	{
+		new_node = create_env_node(key, value);
+		if (!new_node)
+			return ;
+		append_env_node(env, new_node);
+	}
+}
+
+static void	process_env_arg(char *arg, t_env **env)
+{
+	char	**split;
+
+	if (ft_strchr(arg, '='))
+	{
+		split = ft_split(arg, '=');
+		if (split && split[0])
+		{
+			if (split[1] && *split[1])
+				add_or_update_env(env, split[0], split[1]);
+			else
+				add_or_update_env(env, split[0], NULL);
+		}
+		double_free((void **)split, 0);
+	}
+	else
+		add_or_update_env(env, arg, NULL);
+}
+
+int	ft_export(char **args, t_env **env)
+{
+	int	arg_count;
 	int	i;
 
-	i = 0;
-	while (env)
+	arg_count = count_args(args);
+	if (arg_count == 1)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", env->key, env->value);
+		print_sorted_env(*env);
+		return (0);
+	}
+	i = 1;
+	while (i < arg_count)
+	{
+		process_env_arg(args[i], env);
 		i++;
-		env = env->next;
-	}
-}
-
-static void	sort()
-{
-	
-}
-
-static void	print_sorted_env(t_env *env)
-{
-	int	i;
-	int	size;
-	t_env	**env_array;
-	t_env	*tmp;
-
-	i = 0;
-	size = env_size(env);
-	env_array = malloc(sizeof(t_env *) * size);
-	tmp = env;
-	while (tmp)
-	{
-		env_array[i++] = tmp;
-		tmp = tmp->next;
-	}
-	sort();
-}
-
-int	ft_export(char **args, t_env *env)
-{
-	if (!args[1])
-	{
-		print_sorted_env(env);
-		return (0);
-	}
-	else if (args[1])
-	{
-		return (0);
 	}
 	return (0);
-}
-
-// ------------ FONCTIONS D'UTILS POUR TEST --------------------
-t_env *create_env_node(char *key, char *value)
-{
-	t_env *node = malloc(sizeof(t_env));
-	node->key = ft_strdup(key);
-	node->value = value ? ft_strdup(value) : NULL;
-	node->next = NULL;
-	return node;
-}
-
-void append_env_node(t_env **env, t_env *new_node)
-{
-	if (!*env)
-	{
-		*env = new_node;
-		return;
-	}
-	t_env *tmp = *env;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_node;
-}
-
-void free_env(t_env *env)
-{
-	t_env *tmp;
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
-}
-
-// ------------ MAIN DE TEST --------------------
-int	main(void)
-{
-	t_env *env = NULL;
-
-	append_env_node(&env, create_env_node("PATH", "/usr/bin:/bin"));
-	append_env_node(&env, create_env_node("USER", "student42"));
-	append_env_node(&env, create_env_node("HOME", "/home/user"));
-	append_env_node(&env, create_env_node("EMPTY", NULL));
-
-	char *args[] = { "export", NULL };
-
-	ft_export(args, env);
-
-	free_env(env);
-	return 0;
 }

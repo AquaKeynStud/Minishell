@@ -1,24 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline.h                                         :+:      :+:    :+:   */
+/*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/03 14:29:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/18 13:51:30 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/29 23:49:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READLINE_H
-# define READLINE_H
+#include "env.h"
 
-/* -- Includes -- */
-# include "libft.h"
-# include <readline/history.h>
-# include <readline/readline.h>
+int	env_size(t_env *env)
+{
+	int	size;
 
-/* -- Functions -- */
-void	get_input_loop(void);
+	size = 0;
+	while (env)
+	{
+		size++;
+		env = env->next;
+	}
+	return (size);
+}
 
-#endif
+t_env	*copy_env_list(t_env *env)
+{
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		append_env_node(&copy, create_env_node(env->key, env->value));
+		env = env->next;
+	}
+	return (copy);
+}
