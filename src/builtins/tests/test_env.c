@@ -6,15 +6,31 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:20:27 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 11:24:19 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:46:08 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 
-int	ft_env(t_env *env)
+int	ft_env(t_env *env, int argc, char **args)
 {
+	char	*perror_msg;
+	int		i;
+
+	i = 1;
+	if (argc >= 2)
+	{
+		while (args[i])
+		{
+			if (args[i][0] == '-')
+				ft_printf("env: '%s': no option allowed\n", args[i]);
+			else
+				ft_printf("env: '%s': no argument allowed\n", args[i]);
+			i++;
+		}
+		return (1);
+	}
 	while (env)
 	{
 		if (env->value)
@@ -24,58 +40,48 @@ int	ft_env(t_env *env)
 	return (0);
 }
 
-// 🔧 petite fonction pour créer un nœud d'env
-t_env	*create_env_node(char *key, char *value)
+t_env	*init_env(char **envp)
 {
-	t_env *node = malloc(sizeof(t_env));
-	if (!node)
-		return NULL;
-	node->key = ft_strdup(key);
-	node->value = value ? ft_strdup(value) : NULL;
-	node->next = NULL;
-	return node;
-}
+	t_env	*env_list;
+	t_env	*node;
+	char	**split;
+	int		i;
 
-// 🔧 ajoute un nœud à la fin
-void	append_env_node(t_env **env, t_env *new)
-{
-	t_env *tmp = *env;
-	if (!tmp)
+	env_list = NULL;
+	i = 0;
+	while (envp[i])
 	{
-		*env = new;
-		return;
+		split = ft_split(envp[i], '=');
+		node = (t_env *)malloc(sizeof(t_env));
+		node->key = ft_strdup(split[0]);
+		if (split[1])
+			node->value = ft_strdup(split[1]);
+		else
+			node->value = ft_strdup("");
+		node->next = env_list;
+		env_list = node;
+		free_split(split);
+		i++;
 	}
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
+	return (env_list);
 }
 
-void	free_env(t_env *env)
+int	main(int argc, char **argv, char **envp)
 {
-	t_env *tmp;
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
-}
+	t_env *env;
+	int		result;
 
-int	main(void)
-{
-	t_env *env = NULL;
+    (void)argc; // si tu ne les utilises pas
 
-	append_env_node(&env, create_env_node("PATH", "/usr/bin:/bin"));
-	append_env_node(&env, create_env_node("HOME", "/home/user"));
-	append_env_node(&env, create_env_node("SHELL", "/bin/bash"));
-	append_env_node(&env, create_env_node("EMPTY", NULL)); // ne s'affichera pas
+    env = init_env(envp);
 
-	ft_printf("Contenu de ft_env:\n");
-	ft_env(env);
+    if (!env)
+    {
+        printf("Erreur d'initialisation de l'environnement\n");
+        return (1);
+    }
 
-	free_env(env);
-	return 0;
+    result = ft_env(env, argc, argv);
+
+    return (result);
 }

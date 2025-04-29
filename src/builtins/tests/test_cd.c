@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 07:57:03 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/28 14:29:41 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/28 16:48:17 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,3 +63,5 @@ int main(int argc, char **argv, char **envp)
 
     return 0;
 }
+
+// cc src/builtins/ft_cd.c  src/builtins/tests/test_cd.c src/builtins/utils_builtins.c -Iinc -I./libft -L./libft -lft
