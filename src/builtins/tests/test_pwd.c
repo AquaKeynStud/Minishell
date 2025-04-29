@@ -1,46 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   test_pwd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 12:28:32 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/22 11:09:36 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/22 11:10:35 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 
-int	ft_unset(char **args, t_env *env)
+int	ft_pwd()
 {
-	int		i;
-	t_env	*prev;
-	t_env	*tmp;
+	char cwd[PATH_MAX];
 
-	i = 1;
-	while (args[i])
-	{
-		prev = NULL;
-		tmp = env;
-		while (tmp)
-		{
-			if (!ft_strcmp(tmp->key, args[i]))
-			{
-				if (prev)
-					prev->next = tmp->next;
-				else
-					env = tmp->next;
-				free(tmp->key);
-				free(tmp->value);
-				free(tmp);
-				break ;
-			}
-			prev = tmp;
-			tmp = tmp->next;
-		}
-		i++;
-	}
+	if (getcwd(cwd, sizeof(cwd)))
+		ft_printf("%s\n", cwd);
+	else
+		perror("pwd");
 	return (0);
+}
+
+int	main(void)
+{
+	ft_printf("Test ft_pwd:\n");
+	ft_pwd(); // Affiche le répertoire courant
+
+	// Tu peux tester aussi un changement de dossier :
+	chdir("..");
+	ft_printf("Test ft_pwd après chdir(\"..\"):\n");
+	ft_pwd();
+
+	return 0;
 }

@@ -1,32 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   ft_buitins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 12:28:32 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/18 12:11:12 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/22 17:19:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-#include "libft.h"
+
+int	ft_env(t_env *env)
+{
+	while (env)
+	{
+		if (env->value)
+			ft_printf("%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
+	return (0);
+}
 
 int	ft_unset(char **args, t_env *env)
 {
 	int		i;
 	t_env	*prev;
 	t_env	*tmp;
-
+	
 	i = 1;
 	while (args[i])
 	{
 		prev = NULL;
 		tmp = env;
-		while (tmp)
-		{
-			if (!ft_strcmp(tmp->key, args[i]))
+		while (tmp) {
+			if (!strcmp(tmp->key, args[i]))
 			{
 				if (prev)
 					prev->next = tmp->next;
@@ -43,4 +52,21 @@ int	ft_unset(char **args, t_env *env)
 		i++;
 	}
 	return (0);
+}
+int	ft_export(char **args, t_env *env)
+{
+	if (!args[1])
+	{
+		while (env)
+		{
+			ft_printf("declare -x %s=%s", env->key, env->value);
+			env = env->next;
+		}
+	}
+}
+
+
+int	ft_exit(args)
+{
+	
 }

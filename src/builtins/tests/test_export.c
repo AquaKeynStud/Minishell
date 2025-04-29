@@ -1,67 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_export.c                                        :+:      :+:    :+:   */
+/*   test_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 14:28:51 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/22 13:40:39 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/22 13:40:44 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 
-static int	env_size(t_env *env)
-{
-	int	i;
-
-	i = 0;
-	while (env)
-	{
-		ft_printf("declare -x %s=\"%s\"\n", env->key, env->value);
-		i++;
-		env = env->next;
-	}
-}
-
-static void	sort()
-{
-	
-}
-
-static void	print_sorted_env(t_env *env)
-{
-	int	i;
-	int	size;
-	t_env	**env_array;
-	t_env	*tmp;
-
-	i = 0;
-	size = env_size(env);
-	env_array = malloc(sizeof(t_env *) * size);
-	tmp = env;
-	while (tmp)
-	{
-		env_array[i++] = tmp;
-		tmp = tmp->next;
-	}
-	sort();
-}
-
 int	ft_export(char **args, t_env *env)
 {
 	if (!args[1])
 	{
-		print_sorted_env(env);
-		return (0);
+		while (env)
+		{
+			ft_printf("declare -x %s=\"%s\"\n", env->key, env->value);
+			env = env->next;
+		}
 	}
-	else if (args[1])
-	{
-		return (0);
-	}
-	return (0);
 }
 
 // ------------ FONCTIONS D'UTILS POUR TEST --------------------

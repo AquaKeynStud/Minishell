@@ -1,46 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   utils._builtins.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 12:28:32 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/18 15:04:05 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-#include "libft.h"
 
-int	ft_unset(char **args, t_env *env)
+void	malloc_fail(void)
 {
-	int		i;
-	t_env	*prev;
-	t_env	*tmp;
+	perror("malloc");
+	exit(EXIT_FAILURE);
+}
 
-	i = 1;
-	while (args[i])
+void	free_split(char **split)
+{
+	int	i;
+
+	i = 0;
+	if (!split)
+		return ;
+	while (split[i])
 	{
-		prev = NULL;
-		tmp = env;
-		while (tmp)
-		{
-			if (!ft_strcmp(tmp->key, args[i]))
-			{
-				if (prev)
-					prev->next = tmp->next;
-				else
-					env = tmp->next;
-				free(tmp->key);
-				free(tmp->value);
-				free(tmp);
-				break ;
-			}
-			prev = tmp;
-			tmp = tmp->next;
-		}
+		free(split[i]);
 		i++;
 	}
-	return (0);
+	free(split);
 }
