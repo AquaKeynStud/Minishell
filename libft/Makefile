@@ -6,7 +6,7 @@
 #    By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/04/23 11:14:26 by abouclie         ###   ########.fr        #
+#    Updated: 2025/04/27 13:02:24 by arocca           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,10 +23,10 @@ SRCS	=	ft_atoi.c ft_bzero.c ft_calloc.c ft_abs.c\
 			ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
 			ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c \
 			ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_realloc.c \
-			ft_split.c ft_strchr.c ft_strndup.c ft_strdup.c ft_striteri.c ft_strjoin.c \
-			ft_strlcat.c ft_strlen.c ft_strmapi.c ft_strcmp.c ft_strncmp.c ft_strnstr.c \
+			ft_split.c ft_strchr.c ft_strcmp.c ft_strndup.c ft_strdup.c ft_striteri.c \
+			ft_strjoin.c ft_strlcat.c ft_strlen.c ft_strmapi.c ft_strncmp.c ft_strnstr.c \
 			ft_strchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c \
-			ft_putnbr.c ft_putstr_fd.c \
+			ft_putnbr.c ft_putstr_fd.c ft_trim.c \
 			ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
 			ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
 			gnl/get_next_line.c gnl/get_next_line_utils.c \
@@ -38,6 +38,8 @@ P_SRC	=	main.c					\
 			bonus_utils.c			\
 			bonus_parser.c			\
 			bonus_setter.c			\
+			dprintf_main.c			\
+			dprintf_handlers.c		\
 			bonus_printers_diuc.c	\
 			bonus_printers_spxX.c	\
 			bonus_error_handler.c	\

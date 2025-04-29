@@ -1,39 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_token.c                                      :+:      :+:    :+:   */
+/*   secure_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/26 19:59:27 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
+/*   Updated: 2025/04/26 21:01:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexing.h"
+#include "env.h"
+#include "minishell.h"
 
-void	free_tokens(t_token **list)
+// Fonction qui va permettre de sortir n'importe quand
+void	secure_exit(t_ctx *ctx, unsigned char code)
 {
-	t_token	*current;
-	t_token	*next;
-
-	current = *list;
-	while (current)
-	{
-		next = current->next;
-		free(current->value);
-		free(current);
-		current = next;
-	}
-	*list = NULL;
+	free_env(&ctx->env);
+	close_all_fds(&ctx->fds); // close de tous les fds ouverts
+	close(ctx->stdin_fd);
+	close(ctx->stdout_fd);
+	exit(code);
 }
 
-int	is_operator(char c)
+int	s_exec_exit(int status)
 {
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_whitespace(char c)
-{
-	return (c == ' ' || c == '\t');
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else
+		return (1);
 }

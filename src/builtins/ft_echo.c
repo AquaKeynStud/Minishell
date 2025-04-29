@@ -42,7 +42,7 @@ int	ft_echo(char **args)
 	{
 		ft_printf("%s", args[i]);
 		if (args[i + 1])
-			printf(" ");
+			ft_printf(" ");
 		i++;
 	}
 	if (newline)

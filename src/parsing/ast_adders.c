@@ -6,14 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/21 11:06:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 12:54:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
+#include "minishell.h"
 
 /*
 ** ============================================================================
@@ -48,7 +48,7 @@ t_ast	*new_ast(t_ast_type type, const char *value)
 	if (value)
 		node->value = ft_strdup(value);
 	node->sub_count = 0;
-	node->childs = NULL;
+	node->childs = NULL;		
 	return (node);
 }
 
@@ -67,4 +67,55 @@ void	ast_add_child(t_ast *parent, t_ast *child)
 	new_size = sizeof(t_ast *) * (++parent->sub_count);
 	parent->childs = s_realloc(parent->childs, old_size, new_size);
 	parent->childs[parent->sub_count - 1] = child;
+}
+
+/*
+** free_ast : Libère récursivement un arbre AST.
+** @node : Le nœud racine de l'AST à libérer.
+*/
+void	*free_ast(t_ast *node)
+{
+	int	i;
+
+	if (!node)
+		return (NULL);
+	i = 0;
+	while (i < node->sub_count)
+	{
+		free_ast(node->childs[i]);
+		i++;
+	}
+	free(node->childs);
+	free(node->value);
+	free(node);
+	return (NULL);
+}
+
+void	*double_free_ast(t_ast *first, t_ast *second)
+{
+	free_ast(first);
+	free_ast(second);
+	return (NULL);
+}
+
+void	cat_empty_heredoc(t_ast **cmd, t_token *tmp)
+{
+	t_ast	*stub;
+
+	if (!*cmd)
+	{
+		if (tmp->type == TOKEN_HEREDOC)
+			*cmd = new_ast(AST_COMMAND, "cat");
+		else
+			*cmd = new_ast(AST_COMMAND, NULL);
+		return ;
+	}
+	if (tmp->type == TOKEN_HEREDOC)
+	{
+		stub = *cmd;
+		while (stub->type == AST_REDIR)
+			stub = stub->childs[1];
+		if (!stub->value)
+			stub->value = ft_strdup("cat");
+	}
 }

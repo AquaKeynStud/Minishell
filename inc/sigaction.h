@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:11:58 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/13 09:31:20 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/26 12:56:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stdbool.h>
 
 /* -- Setup functions -- */
+void	sig_init(void);
+void	sig_set(void (*handler)(int));
 bool	set_sigaction(int signum, void (*handler)(int), char *flags);
 
 /* -- Handlers functions -- */
