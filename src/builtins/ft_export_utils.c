@@ -1,40 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 09:47:43 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/28 11:46:00 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
-int	ft_env(t_env *env, int argc, char **args)
+int	env_size(t_env *env)
 {
-	char	*perror_msg;
-	int		i;
+	int	size;
 
-	i = 1;
-	if (argc >= 2)
-	{
-		while (args[i])
-		{
-			if (args[i][0] == '-')
-				ft_printf("env: '%s': no option allowed\n", args[i]);
-			else
-				ft_printf("env: '%s': no argument allowed\n", args[i]);
-			i++;
-		}
-		return (1);
-	}
+	size = 0;
 	while (env)
 	{
-		if (env->value)
-			ft_printf("%s=%s\n", env->key, env->value);
+		size++;
 		env = env->next;
 	}
-	return (0);
+	return (size);
+}
+
+t_env	*copy_env_list(t_env *env)
+{
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		append_env_node(&copy, create_env_node(env->key, env->value));
+		env = env->next;
+	}
+	return (copy);
+}
+
+t_env	*search_env_key(t_env *env, const char *key)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+		{
+			return (env);
+		}
+		env = env->next;
+	}
+	return (env);
 }

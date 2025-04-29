@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
+#    By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
 #    Updated: 2025/04/27 13:02:24 by arocca           ###   ########.fr        #

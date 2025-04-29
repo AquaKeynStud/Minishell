@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:43:53 by abouclie          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/04/22 15:21:16 by arocca           ###   ########.fr       */
-=======
 /*   Updated: 2025/04/25 14:38:08 by arocca           ###   ########.fr       */
->>>>>>> exec
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +31,7 @@ typedef struct s_list
 }					t_list;
 
 void	ft_bzero(void *s, size_t n);
-void	ft_putchar_fd(char c, int fd);
+ssize_t	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	ft_putnbr_fd(int n, int fd);
@@ -83,6 +79,7 @@ int		ft_lstsize(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstnew(void *content);
+int	ft_strcmp(const char *s1, const char *s2);
 
 /* GNL */
 char	*get_next_line(int fd);

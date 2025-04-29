@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 11:17:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 08:41:35 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include <stdbool.h>
 
-// Fonction qui permet de savoir si l'argument passé correspond à un flag -n
 bool	is_dash_n_flag(char *arg)
 {
 	if (!arg || !*arg || *arg != '-')
@@ -34,7 +33,7 @@ int	ft_echo(char **args)
 
 	i = 1;
 	newline = true;
-	while (args[1] && is_dash_n_flag(args[i])) // Tant que les args sont des -n (ou -nnnn etc)
+	while (args[1] && is_dash_n_flag(args[i]))
 	{
 		newline = false;
 		i++;

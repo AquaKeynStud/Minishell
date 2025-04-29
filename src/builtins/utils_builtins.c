@@ -1,26 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   utils_builtins.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/20 14:24:54 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 12:11:25 by abouclie         ###   ########.fr       */
+/*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/29 14:16:46 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
-int	ft_pwd(void)
+void	malloc_fail(void)
+{
+	perror("malloc");
+	exit(EXIT_FAILURE);
+}
+
+void	free_split(char **split)
+{
+	int	i;
+
+	if (!split)
+		return ;
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		split[i] = NULL;
+		i++;
+	}
+	free(split);
+}
+
+int	count_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+		i++;
+	return (i);
+}
+
+char	*get_current_dir(void)
 {
 	char	cwd[PATH_MAX];
 
-	if (getcwd(cwd, sizeof(cwd)))
+	if (!getcwd(cwd, sizeof(cwd)))
 	{
-		ft_printf("%s\n", cwd);
-		return (EXIT_SUCCESS);
+		perror("cd: getcwd");
+		return (NULL);
 	}
-	perror("pwd");
-	return (EXIT_FAILURE);
+	return (ft_strdup(cwd));
 }

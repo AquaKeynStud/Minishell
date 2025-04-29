@@ -6,13 +6,14 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 13:02:57 by abouclie          #+#    #+#             */
-/*   Updated: 2024/11/15 08:27:21 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:57:48 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putchar_fd(char c, int fd)
+ssize_t	ft_putchar_fd(char c, int fd)
 {
 	write(fd, &c, 1);
+	return (1);
 }
