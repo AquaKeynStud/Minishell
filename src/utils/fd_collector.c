@@ -6,37 +6,9 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/04/22 15:26:52 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 23:01:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "utils.h"
-#include <stdlib.h>
-=======
-/*   Updated: 2025/04/25 14:02:28 by arocca           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/*
- *	FD_COLLECTOR
- *
- * Paramètres :
- * 		- Head 		: Pointeur vers la liste chaînée des fds stockés
- * 		- filepath	: Chemin vers le fichier à ouvrir
- * 		- flags		: flags parmi les suivants :
- * 						obligatoire (1 seul):
- * 							- O_RDONLY	(lecture seule) = 0
- * 							- O_WRONLY	(écriture seule) = 1
- * 							- O_RDWR	(lecture + écriture) = 2
- * 						optionnels (avec |):
- * 							O_CREAT (64), O_EXCL (128), O_NOCTTY (256), O_TRUNC (512), O_APPEND (1024),
- * 							O_NONBLOCK (2048), O_DSYNC (4096), FASYNC (8192), O_DIRECT (16384), O_LARGEFILE (32768),
- * 							O_DIRECTORY (65536), O_NOFOLLOW (131072), O_CLOEXEC (524288), O_SYNC (1052672),
- * 							O_PATH (2097152), O_TMPFILE (4259840)
- * 		- perms		: Numéro de permissions (0000~0777)
- */
->>>>>>> exec
 
 #include "minishell.h"
 

@@ -44,11 +44,13 @@ LST_TOK		=	add_token.c			\
 				utils_token.c		\
 				tokenisation.c
 
-LST_PAR		=	ast_adders.c		\
-				ast_setters.c
+LST_PAR		=	parser.c			\
+				ast_builders.c		\
+				ast_semantics.c
 
 LST_EXE		=	env.c				\
 				exec.c				\
+				heredoc.c			\
 				exec_utils.c		\
 				builtin_exec.c
 
