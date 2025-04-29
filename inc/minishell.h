@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 19:49:01 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 15:14:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_ctx
 
 /* -- Functions -- */
 int		err(char *message);
-void	*nerr(char *message);
 int		perr(const char *s, int return_value);
 int		err_value(char *message, char *value);
 

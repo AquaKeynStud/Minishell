@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 19:48:19 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/25 14:02:01 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,6 @@ int	err(char *message) // Potentiellement ajouter un retour a la ligne si messag
 	if (count == -1)
 		perror("write");
 	return (count);
-}
-
-void	*nerr(char *message)
-{
-	ssize_t	count;
-
-	count = write(STDERR_FILENO, message, ft_strlen(message));
-	if (count == -1)
-		perror("write");
-	return (NULL);
 }
 
 int	err_value(char *message, char *value) // A remplacer par un dprintf

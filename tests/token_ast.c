@@ -134,14 +134,15 @@ int main(int argc, char **argv)
 		"< input.txt > output.txt cat file1 file2", // Test 9
 		"<< eof < in1 < in2 > out1 > out2 cat foo", // Test 10
 		"cat | << eof < in1 | < in2 > out1 | grep foo", // Test 11
-		// Cas avec erreurs syntaxiques qu'il faudra détecter :
-		"cat | | grep foo",       // erreur de syntaxe : double pipe
-		">",                      // erreur de syntaxe : redirection sans fichier
-		"cat >",                  // erreur de syntaxe : redirection sans fichier
-		"<",                      // erreur de syntaxe : redirection sans fichier
-		"cat > fichier >",        // erreur de syntaxe : redirection sans fichier
-		"cat || grep",            // erreur de syntaxe (pour toi pour l'instant, car tu ne fais pas ||)
-		"cat ||| grep",           // erreur de syntaxe (triple pipe invalide)
+		"cat << eof > outfile.txt",
+		// // Cas avec erreurs syntaxiques qu'il faudra détecter :
+		// "cat | | grep foo",       // erreur de syntaxe : double pipe
+		// ">",                      // erreur de syntaxe : redirection sans fichier
+		// "cat >",                  // erreur de syntaxe : redirection sans fichier
+		// "<",                      // erreur de syntaxe : redirection sans fichier
+		// "cat > fichier >",        // erreur de syntaxe : redirection sans fichier
+		// "cat || grep",            // erreur de syntaxe (pour toi pour l'instant, car tu ne fais pas ||)
+		// "cat ||| grep",           // erreur de syntaxe (triple pipe invalide)
 	};
 	
 	if (argc < 2)

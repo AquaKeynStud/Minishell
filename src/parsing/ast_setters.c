@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 20:20:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 12:19:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,31 +47,55 @@
 ** @curr: Adresse du pointeur sur le token courant.
 ** Retourne true si OK ou false en cas d'erreur.
 */
-bool	parse_redirs(t_ast **cmd, t_token **curr)
+int	parse_redirs(t_ast **cmd, t_token **curr)
 {
-	t_token	*tmp;
-	t_ast	*redir;
-	t_ast	*file_node;
+    t_token *tmp;
+    t_ast   *redir;
+    t_ast   *file_node;
 
-	while (*curr && ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE))
-	{
-		tmp = *curr;
-		*curr = (*curr)->next;
-		if (!*curr || (*curr)->type != TOKEN_WORD)
-		{
-			err("minishell: syntax error near unexpected token\n");
-			return (false);
-		}
-		if (!*cmd)
-			*cmd = new_ast(AST_COMMAND, NULL);
-		file_node = new_ast(AST_COMMAND, (*curr)->value); // 1/ Crée le nœud fichier
-		redir = new_ast(AST_REDIR, tmp->value); // 2/ Crée le nœud redirection et lui ajoutes fichier + ancienne commande
-		ast_add_child(redir, file_node);	// child[0] = fichier
-		ast_add_child(redir, *cmd);		 // child[1] = l’arbre de la commande
-		*cmd = redir; // 3/ Remplace la commande courante par ce nouveau sous-arbre
-		*curr = (*curr)->next;
-	}
-	return (true);
+    while (*curr
+        && (*curr)->type != TOKEN_WORD
+        && (*curr)->type != TOKEN_PIPE)
+    {
+        tmp = *curr;
+        *curr = (*curr)->next;
+        if (!*curr || (*curr)->type != TOKEN_WORD)
+            return err("minishell: syntax error near unexpected token\n"), 0;
+
+        // 1) Stub (cat ou stub vide)
+        cat_empty_heredoc(cmd, tmp);
+
+        // 2) Création des nœuds
+        file_node = new_ast(AST_COMMAND, (*curr)->value);
+        redir      = new_ast(AST_REDIR, tmp->value);
+        ast_add_child(redir, file_node);
+
+        // 3) Insertion générique
+        if (*cmd && (*cmd)->type == AST_REDIR)
+        {
+            // On descend jusqu'au dernier AST_REDIR
+            t_ast *parent = *cmd;
+            t_ast *leaf   = parent->childs[1];
+            while (leaf->type == AST_REDIR)
+            {
+                parent = leaf;
+                leaf   = leaf->childs[1];
+            }
+            // 'leaf' est l'ancien sous-arbre
+            ast_add_child(redir, leaf);
+            // on remplace dans le parent
+            parent->childs[1] = redir;
+        }
+        else
+        {
+            // Première redir du segment
+            ast_add_child(redir, *cmd);
+            *cmd = redir;
+        }
+
+        *curr = (*curr)->next;
+    }
+    return 1;
 }
 
 /*
@@ -113,10 +137,7 @@ t_ast	*parse_command(t_token **curr)
 
 	cmd = NULL;
 	if (!parse_redirs(&cmd, curr))
-	{
-		free_ast(cmd);
-		return (NULL);
-	}
+		return (free_ast(cmd));
 	if (*curr && (*curr)->type == TOKEN_WORD)
 	{
 		stub = overwrite_stub(curr, &cmd);
@@ -127,10 +148,7 @@ t_ast	*parse_command(t_token **curr)
 		}
 	}
 	if (!parse_redirs(&cmd, curr))
-	{
-		free_ast(cmd);
-		return (NULL);
-	}
+		return (free_ast(cmd));
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 15:47:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/28 20:42:33 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 int	is_builtin(char *cmd)
 {
+	if (!cmd)
+		return (0);
 	return (!ft_strcmp(cmd, "cd")
 		|| !ft_strcmp(cmd, "env")
 		|| !ft_strcmp(cmd, "pwd")

@@ -68,6 +68,7 @@ all:	$(NAME)
 $(NAME):	 libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o tester
 	@$(MAKE) clean
+	@clear
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 $(D_OBJ):
@@ -96,6 +97,7 @@ fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(MAKE) -s -C $(D_LFT) fclean
 	@$(RM) $(NAME)
+	@clear
 	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
 re:
