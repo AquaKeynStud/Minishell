@@ -14,7 +14,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-int	authorized_c(char c)
+int	auth_char(char c)
 {
 	char	*conv;
 	int		i;

@@ -1,4 +1,4 @@
-.PHONY : all clean fclean re norminette valgrind libft
+.PHONY : all clean fclean re libft norminette valgrind supp_file
 
 NAME = minishell
 
@@ -21,20 +21,27 @@ MAKEFLAGS		+=	--no-print-directory
 # directories
 D_SRC	=	src/
 D_INC	=	inc/
-D_DOC	=	docs/ # A ENLEVER AVANT DE RENDRE
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
 D_LFT	=	libft/
+<<<<<<< HEAD
+=======
+D_EXE	=	$(D_SRC)exec/
+>>>>>>> exec
 D_UTL	=	$(D_SRC)utils/
 D_TOK	=	$(D_SRC)token/
 D_PAR	=	$(D_SRC)parsing/
+D_BLT	=	$(D_SRC)builtins/
 D_SIG	=	$(D_SRC)signal_handlers/
 
+<<<<<<< HEAD
 D_SRCS	= $(D_SRC) $(D_SIG) $(D_TOK) $(D_PAR) $(D_UTL)
+=======
+D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
+>>>>>>> exec
 
 # file lists
-LST_SRC		=	main.c				\
-				readline.c
+LST_SRC		=	main.c
 
 LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
@@ -46,17 +53,40 @@ LST_TOK		=	add_token.c			\
 LST_PAR		=	ast_adders.c		\
 				ast_setters.c
 
+<<<<<<< HEAD
 LST_UTL		=	printers.c			\
 				fd_collector.c		\
 				secure_alloc.c		\
+=======
+LST_EXE		=	env.c				\
+				exec.c				\
+				exec_utils.c		\
+				builtin_exec.c
+>>>>>>> exec
 
-LST_INC		=	utils.h				\
-				lexing.h			\
+LST_BLT		=	ft_cd.c				\
+				ft_env.c			\
+				ft_pwd.c			\
+				ft_exit.c			\
+				ft_echo.c			\
+				ft_unset.c			\
+				ft_export.c
+
+LST_UTL		=	printers.c			\
+				secure_exit.c		\
+				secure_alloc.c		\
+				fd_collector.c
+
+LST_INC		=	lexing.h			\
 				parsing.h			\
-				readline.h			\
-				sigaction.h
+				sigaction.h			\
+				minishell.h
 
+<<<<<<< HEAD
 LST_SRCS	=	$(LST_SRC) $(LST_SIG) $(LST_TOK) $(LST_PAR) $(LST_UTL)
+=======
+LST_SRCS	=	$(LST_SRC) $(LST_EXE) $(LST_TOK) $(LST_BLT) $(LST_PAR) $(LST_SIG) $(LST_UTL)
+>>>>>>> exec
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 
@@ -64,16 +94,22 @@ OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRCS:.c=.o)))
 
 DEPS		=	$(addprefix $(D_DEPS), $(notdir $(LST_SRCS:.c=.d)))
 
-LIBS			:=	-L$(D_LFT) -lft -lreadline -lncurses
+LIBS		:=	-L$(D_LFT) -lft -lreadline -lncurses
 
-INCS			:=	-I$(D_INC) -I$(D_LFT)
+INCS		:=	-I$(D_INC) -I$(D_LFT)
+
+SUPP_FILE	:=	readline.supp
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o minishell
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
+
+debug:	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
+	@$(CC) $(CFLAGS) -g3 $(OBJ) $(LIBS) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 $(D_OBJ):
@@ -112,16 +148,27 @@ re:
 	@$(MAKE) all
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
-documentation:
-	doxygen Doxyfile
+# documentation:
+# 	doxygen Doxyfile
 
-html:
-	$(MAKE) documentation
-	xdg-open docs/html/index.html 
+# html:
+# 	$(MAKE) documentation
+# 	xdg-open docs/html/index.html 
 
 norminette:
 	norminette $(D_SRC) $(D_INC)
 
-valgrind:
-	@$(MAKE) $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes ./$(NAME)
+supp_file: | $(D_OBJ)
+	@echo "Generating $(SUPP_FILE)..."
+	@printf '{\n	ignore_libreadline_leaks\n	Memcheck:Leak\n	...\n	obj:*/libreadline.so*\n}\n' > $(D_OBJ)$(SUPP_FILE)
+	@echo "$(SUPP_FILE) successfully created !"
+
+valgrind: supp_file
+	@$(MAKE) debug
+	valgrind							\
+		--leak-check=full					\
+		--show-leak-kinds=all				\
+		--track-origins=yes 				\
+		--track-fds=yes						\
+		--suppressions=$(D_OBJ)$(SUPP_FILE)	\
+		./$(NAME)

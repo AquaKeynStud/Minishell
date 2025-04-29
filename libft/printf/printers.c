@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:27:07 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:39:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 13:05:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,27 @@ void	ft_putunbr_fd(unsigned int n, int fd, ssize_t *total_len, int (*f)[8])
 	return ;
 }
 
-void	convert_to(unsigned long nbr, char *base, ssize_t *total_len)
+void	convert_to_fd(int fd, unsigned long nbr, char *base, ssize_t *total_len)
 {
 	unsigned long	base_len;
 
 	base_len = ft_strlen(base);
 	if (nbr < base_len)
-		*total_len += write(1, &base[nbr % base_len], 1);
+		*total_len += write(fd, &base[nbr % base_len], 1);
 	else
 	{
-		convert_to(nbr / base_len, base, total_len);
-		*total_len += write(1, &base[nbr % base_len], 1);
+		convert_to_fd(fd, nbr / base_len, base, total_len);
+		*total_len += write(fd, &base[nbr % base_len], 1);
 	}
 	return ;
 }
 
-void	ft_print_memory(void *addr, ssize_t *total_len)
+void	ft_print_memory_fd(int fd, void *addr, ssize_t *total_len)
 {
 	unsigned long	a;
 
 	a = (unsigned long)addr;
-	*total_len += write(1, "0x", 2);
-	convert_to(a, "0123456789abcdef", total_len);
+	*total_len += write(fd, "0x", 2);
+	convert_to_fd(fd, a, "0123456789abcdef", total_len);
 	return ;
 }

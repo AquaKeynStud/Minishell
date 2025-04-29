@@ -6,13 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/21 11:19:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 12:19:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
 #include "lexing.h"
 #include "parsing.h"
+#include "minishell.h"
 
 /*
 ** ============================================================================
@@ -45,31 +45,84 @@
 ** parse_redirs : Parse les redirections.
 ** @cmd: Adresse vers le noeud créé qui contient la commande.
 ** @curr: Adresse du pointeur sur le token courant.
-** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
+** Retourne true si OK ou false en cas d'erreur.
 */
-void	parse_redirs(t_ast	**cmd, t_token **curr)
+int	parse_redirs(t_ast **cmd, t_token **curr)
 {
-	t_token	*tmp;
-	t_ast	*redir;
+    t_token *tmp;
+    t_ast   *redir;
+    t_ast   *file_node;
 
-	while (*curr && ((*curr)->type == TOKEN_REDIR_IN || (*curr)->type == TOKEN_REDIR_OUT)) // Gestion des redirections : > ou <
+    while (*curr
+        && (*curr)->type != TOKEN_WORD
+        && (*curr)->type != TOKEN_PIPE)
+    {
+        tmp = *curr;
+        *curr = (*curr)->next;
+        if (!*curr || (*curr)->type != TOKEN_WORD)
+            return err("minishell: syntax error near unexpected token\n"), 0;
+
+        // 1) Stub (cat ou stub vide)
+        cat_empty_heredoc(cmd, tmp);
+
+        // 2) Création des nœuds
+        file_node = new_ast(AST_COMMAND, (*curr)->value);
+        redir      = new_ast(AST_REDIR, tmp->value);
+        ast_add_child(redir, file_node);
+
+        // 3) Insertion générique
+        if (*cmd && (*cmd)->type == AST_REDIR)
+        {
+            // On descend jusqu'au dernier AST_REDIR
+            t_ast *parent = *cmd;
+            t_ast *leaf   = parent->childs[1];
+            while (leaf->type == AST_REDIR)
+            {
+                parent = leaf;
+                leaf   = leaf->childs[1];
+            }
+            // 'leaf' est l'ancien sous-arbre
+            ast_add_child(redir, leaf);
+            // on remplace dans le parent
+            parent->childs[1] = redir;
+        }
+        else
+        {
+            // Première redir du segment
+            ast_add_child(redir, *cmd);
+            *cmd = redir;
+        }
+
+        *curr = (*curr)->next;
+    }
+    return 1;
+}
+
+/*
+** overwrite_stub : Overwrite le potentiel stub créé par les redirections.
+** @curr: Adresse du pointeur sur le token courant.
+** @stub: Adresse du stub (Noeud vide nécessaire pour créer les redirections).
+** @cmd: La commande qui va remplacer le stub
+** Remplace le contenu vide dans le stub pour le transformer en commande.
+*/
+static t_ast	*overwrite_stub(t_token **curr, t_ast **cmd)
+{
+	t_ast	*stub;
+
+	if (!*cmd)
+		*cmd = new_ast(AST_COMMAND, (*curr)->value);
+	else
 	{
-		tmp = *curr;
-		*curr = (*curr)->next;
-		if (*curr && (*curr)->type == TOKEN_WORD)
-		{
-			redir = new_ast(AST_REDIR, tmp->value); // Crée un nœud redirection et l'attache comme enfant de la commande
-			ast_add_child(redir, new_ast(AST_COMMAND, (*curr)->value));
-			ast_add_child((*cmd), redir);
-			*curr = (*curr)->next;
-		}
-		else
-		{
-			err("minishell: Syntax error near unexpected token `newline'\n");
-			// besoin de free ici
-			return ;
-		}
+		stub = *cmd;
+		while (stub->type == AST_REDIR)
+			stub = stub->childs[1];
+		stub->value = ft_strdup((*curr)->value);
 	}
+	stub = *cmd;
+	while (stub->type == AST_REDIR)
+		stub = stub->childs[1];
+	*curr = (*curr)->next;
+	return (stub);
 }
 
 /*
@@ -80,17 +133,22 @@ void	parse_redirs(t_ast	**cmd, t_token **curr)
 t_ast	*parse_command(t_token **curr)
 {
 	t_ast	*cmd;
+	t_ast	*stub;
 
-	if (!curr || !(*curr) || (*curr)->type != TOKEN_WORD)
-		return (NULL);
-	cmd = new_ast(AST_COMMAND, (*curr)->value); // Crée le nœud de la commande (premier mot = nom de commande)
-	*curr = (*curr)->next;
-	while (*curr && (*curr)->type == TOKEN_WORD) // Tant que c'est un argument
+	cmd = NULL;
+	if (!parse_redirs(&cmd, curr))
+		return (free_ast(cmd));
+	if (*curr && (*curr)->type == TOKEN_WORD)
 	{
-		ast_add_child(cmd, new_ast(AST_COMMAND, (*curr)->value));
-		*curr = (*curr)->next;
+		stub = overwrite_stub(curr, &cmd);
+		while (*curr && (*curr)->type == TOKEN_WORD) // Tant que c'est un argument
+		{
+			ast_add_child(stub, new_ast(AST_COMMAND, (*curr)->value));
+			*curr = (*curr)->next;
+		}
 	}
-	parse_redirs(&cmd, curr);
+	if (!parse_redirs(&cmd, curr))
+		return (free_ast(cmd));
 	return (cmd);
 }
 
@@ -110,16 +168,19 @@ t_ast	*parse_pipeline(t_token **curr)
 	t_ast	*pipe_node;
 
 	left = parse_command(curr);
-	if (!left)
-		return (NULL);
+	if (!left || !left->value)
+	{
+		err("Error: Syntax error near unexpected token `pipe'\n");
+		return (free_ast(left));
+	}
 	while (*curr && (*curr)->type == TOKEN_PIPE)
 	{
 		*curr = (*curr)->next; // Consomme le token pipe
 		right = parse_command(curr);
-		if (!right)
+		if (!right || !right->value)
 		{
-			err("Error : Syntax error near unexpected token `pipe'\n");
-			return (NULL);
+			err("Error: Missing command after token `pipe'\n");
+			return (double_free_ast(right, left));
 		}
 		pipe_node = new_ast(AST_PIPE, "|"); // Crée un nœud pipe rassemblant left et right
 		ast_add_child(pipe_node, left);

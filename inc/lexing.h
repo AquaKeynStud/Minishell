@@ -1,17 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenisation.h                                     :+:      :+:    :+:   */
+/*   lexing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/11 11:43:39 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/04/26 19:51:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stddef.h>
+#ifndef LEXING_H
+# define LEXING_H
+
+# include "libft.h"
+# include <stddef.h>
 
 typedef enum e_token_type
 {
@@ -40,3 +43,6 @@ void	add_token(t_token **head, t_token *new);
 /* Utils */
 int		is_operator(char c);
 int		is_whitespace(char c);
+void	free_tokens(t_token **list);
+
+#endif

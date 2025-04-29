@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:32:37 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:44:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 13:12:42 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_print_memory_bonus(void *addr, ssize_t *total_len, int (*f)[8])
 		}
 	}
 	*total_len += 2;
-	convert_to(a, "0123456789abcdef", total_len);
+	convert_to_fd(1, a, "0123456789abcdef", total_len);
 	return ;
 }
 

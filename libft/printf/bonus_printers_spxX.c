@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:32:32 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:40:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 13:13:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ void	print_x_left(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
 		if (!(*f)[1] && !(*f)[2] && !(*f)[3] && !(*f)[4]
 			&& !(*f)[5] && !(*f)[6] && !(*f)[7] && !(*f)[0])
 			return ;
-		convert_to(n, b[0], total_len);
+		convert_to_fd(1, n, b[0], total_len);
 	}
 	if ((*f)[7])
 		*total_len += fill(' ', (*f)[7] - x_len(n), f, 1);
 	return ;
 }
 
-void	print_x_bonus(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
+void	print_hexa_b(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
 {
 	int	fd;
 
@@ -57,7 +57,7 @@ void	print_x_bonus(unsigned int n, ssize_t *total_len, int (*f)[8], char **b)
 		*total_len += write(1, " ", 1);
 		return ;
 	}
-	convert_to(n, b[0], total_len);
+	convert_to_fd(1, n, b[0], total_len);
 }
 
 static void	ajust_len(char *str, ssize_t *total_len, int (*f)[8])

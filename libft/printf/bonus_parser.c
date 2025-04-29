@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:32:27 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/22 11:43:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 13:04:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	error_tab(char *s)
 
 	value = 0;
 	has_space = 0;
-	while (*s && !check_conv(*s) && authorized_c(*s) >= 0)
+	while (*s && !check_conv(*s) && auth_char(*s) >= 0)
 	{
-		if (authorized_c(*s) >= 6 && ft_isdigit(*s))
+		if (auth_char(*s) >= 6 && (ft_isdigit(*s) && *s != '0'))
 		{
 			if (value && (!last_is_dot || has_space))
 				return (1);
@@ -41,7 +41,7 @@ int	error_tab(char *s)
 			{
 				value = 1;
 				has_space = 0;
-				while (ft_isdigit(*s) || *s == '0')
+				while (ft_isdigit(*s))
 					s++;
 			}
 		}
@@ -55,17 +55,17 @@ static void	init_tab(char *s, int (*f)[8], int tab_len)
 {
 	while (tab_len >= 0)
 		(*f)[tab_len--] = 0;
-	while (*s && !check_conv(*s) && authorized_c(*s) >= 0)
+	while (*s && !check_conv(*s) && auth_char(*s) >= 0)
 	{
-		if (authorized_c(*s) >= 6 && ft_isdigit(*s))
+		if (auth_char(*s) >= 6 && (ft_isdigit(*s) && *s != '0'))
 		{
 			(*f)[7] = ft_atoi(s);
 			s += c_d((*f)[7]) - 1;
 		}
 		else
 		{
-			(*f)[authorized_c(*s)] = 1;
-			if (authorized_c(*s) == 2)
+			(*f)[auth_char(*s)] = 1;
+			if (auth_char(*s) == 2)
 			{
 				(*f)[6] = ft_atoi(s + 1);
 				s += c_d((*f)[6]);
@@ -108,7 +108,7 @@ int	parse_args(char *s, va_list *args, ssize_t *total_len)
 	if (handler != -1)
 		return (handler);
 	init_tab(s, &f, 7);
-	while (s[len] && !check_conv(s[len]) && authorized_c(s[len]) >= 0)
+	while (s[len] && !check_conv(s[len]) && auth_char(s[len]) >= 0)
 		len++;
 	if (!check_conv(s[len]) && !check_conv(s[len + 1]))
 	{

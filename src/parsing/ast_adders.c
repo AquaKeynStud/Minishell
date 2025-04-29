@@ -6,14 +6,18 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:07:51 by arocca            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/04/22 15:24:18 by arocca           ###   ########.fr       */
+=======
+/*   Updated: 2025/04/29 01:40:40 by arocca           ###   ########.fr       */
+>>>>>>> exec
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
+#include "minishell.h"
 
 /*
 ** ============================================================================
@@ -67,4 +71,55 @@ void	ast_add_child(t_ast *parent, t_ast *child)
 	new_size = sizeof(t_ast *) * (++parent->sub_count);
 	parent->childs = s_realloc(parent->childs, old_size, new_size);
 	parent->childs[parent->sub_count - 1] = child;
+}
+
+/*
+** free_ast : Libère récursivement un arbre AST.
+** @node : Le nœud racine de l'AST à libérer.
+*/
+void	*free_ast(t_ast *node)
+{
+	int	i;
+
+	if (!node)
+		return (NULL);
+	i = 0;
+	while (i < node->sub_count)
+	{
+		free_ast(node->childs[i]);
+		i++;
+	}
+	free(node->childs);
+	free(node->value);
+	free(node);
+	return (NULL);
+}
+
+void	*double_free_ast(t_ast *first, t_ast *second)
+{
+	free_ast(first);
+	free_ast(second);
+	return (NULL);
+}
+
+void	cat_empty_heredoc(t_ast **cmd, t_token *tmp)
+{
+	t_ast	*stub;
+
+	if (!*cmd)
+	{
+		if (tmp->type == TOKEN_HEREDOC)
+			*cmd = new_ast(AST_COMMAND, "cat");
+		else
+			*cmd = new_ast(AST_COMMAND, NULL);
+		return ;
+	}
+	if (tmp->type == TOKEN_HEREDOC)
+	{
+		stub = *cmd;
+		while (stub->type == AST_REDIR)
+			stub = stub->childs[1];
+		if (!stub->value)
+			stub->value = ft_strdup("cat");
+	}
 }

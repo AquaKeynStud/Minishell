@@ -18,7 +18,10 @@
 
 int		parse_args(char *s, va_list *args, ssize_t *total_len);
 int		mandatory_parser(char c, va_list *args, ssize_t *total_len, int err);
-int		ft_printf(const char *format, ...)	__attribute__ ((format (printf, 1, 2)));
+int		ft_printf(const char *format, ...)
+		__attribute__ ((format (printf, 1, 2)));
+int		ft_dprintf(int fd, const char *format, ...)
+		__attribute__ ((format (printf, 2, 3)));
 
 char	check_conv(char c);
 void	format_update(char **s, ssize_t	*i, ssize_t *len, va_list *args);
@@ -29,13 +32,19 @@ int		handle_nbr(va_list *args, ssize_t *total_len, int isInt, int err);
 int		handle_address(va_list *args, ssize_t *total_len, int err);
 int		handle_hexa(va_list *args, ssize_t *total_len, int isLower, int err);
 
-void	ft_print_memory(void *addr, ssize_t *total_len);
-void	convert_to(unsigned long a, char *base, ssize_t *total_len);
+int		handle_char_fd(int fd, va_list *args, ssize_t *total_len);
+int		handle_string_fd(int fd, va_list *args, ssize_t *total_len);
+int		handle_address_fd(int fd, va_list *args, ssize_t *total_len);
+int		handle_nbr_fd(int fd, va_list *args, ssize_t *total_len, int isInt);
+int		handle_hexa_fd(int fd, va_list *args, ssize_t *total_len, int isLower);
+
+void	ft_print_memory_fd(int fd, void *addr, ssize_t *total_len);
+void	convert_to_fd(int fd, unsigned long a, char *base, ssize_t *total_len);
 void	ft_putnbr_pt(int n, int fd, ssize_t *total_len, int (*f)[8]);
 void	ft_putunbr_fd(unsigned int n, int fd, ssize_t *total_len, int (*f)[8]);
 
 int		c_d(int nb);
-int		authorized_c(char c);
+int		auth_char(char c);
 int		addr_len(void *addr);
 int		x_len(unsigned int nb);
 int		fill(char c, int len, int (*f)[8], int both);
@@ -53,7 +62,7 @@ void	print_addr_bonus(void *arg, ssize_t *total_len, int (*f)[8]);
 void	ft_print_memory_bonus(void *addr, ssize_t *total_len, int (*f)[8]);
 void	print_uint_bonus(unsigned int arg, ssize_t *total_len, int (*f)[8]);
 void	print_x_left(unsigned int n, ssize_t *total_len, int (*f)[8], char **b);
-void	print_x_bonus(unsigned int n, ssize_t *total_len, int (*f)[8], char **b);
+void	print_hexa_b(unsigned int n, ssize_t *total_len, int (*f)[8], char **b);
 
 int		error_tab(char *s);
 int		error_parser(char *s, size_t len, ssize_t *total_len);
