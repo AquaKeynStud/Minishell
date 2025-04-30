@@ -6,11 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 23:38:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:49:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "minishell.h"
 
 static int	str_is_numeric(char *arg)
 {
@@ -52,5 +53,6 @@ int	ft_exit(int argc, char **args)
 			exit(arg);
 		}
 	}
+	double_free((void **)args, 0);
 	exit(0);
 }

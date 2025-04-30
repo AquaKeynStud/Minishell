@@ -6,12 +6,20 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/04/29 23:36:23 by arocca           ###   ########.fr       */
+=======
+/*   Updated: 2025/04/30 11:33:43 by arocca           ###   ########.fr       */
+>>>>>>> exec
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
+<<<<<<< HEAD
+=======
+#include "minishell.h"
+>>>>>>> exec
 
 static int	update_env(t_env *env, const char *key, const char *value)
 {
@@ -90,5 +98,6 @@ int	ft_cd(char **args, t_env *env)
 	if (!oldpwd)
 		return (1);
 	result = perform_cd(path, oldpwd, env);
+	double_free((void **)args, 0);
 	return (result);
 }

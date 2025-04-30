@@ -6,13 +6,18 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/04/29 23:20:20 by arocca           ###   ########.fr       */
+=======
+/*   Updated: 2025/04/30 11:34:13 by arocca           ###   ########.fr       */
+>>>>>>> exec
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 #include <stdbool.h>
+#include "minishell.h"
 
 bool	is_dash_n_flag(char *arg)
 {
@@ -47,5 +52,6 @@ int	ft_echo(char **args)
 	}
 	if (newline)
 		printf("\n");
+	double_free((void **)args, 0);
 	return (EXIT_SUCCESS);
 }

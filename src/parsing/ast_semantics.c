@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   semantics.c                                        :+:      :+:    :+:   */
+/*   ast_semantics.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 22:37:20 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 22:57:44 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:50:33 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+#include "minishell.h"
+
+void	*parsing_err(t_ctx *ctx, const char *msg, int code)
+{
+	if (code >= 0)
+		ctx->status = code;
+	ft_dprintf(2, "minishell: syntax error near unexpected token `%s'\n", msg);
+	return (NULL);
+}
 
 /*
 ** redir_priority : Assure la hiérarchie des redirections.

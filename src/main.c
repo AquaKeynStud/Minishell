@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 13:31:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 10:28:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_token	*tokens;
 
 	tokens = tokenize(cmd);
-	ast = parse_input(tokens);
+	ast = parse_input(ctx, tokens);
 	execute_ast(ctx, ast);
 	free_tokens(&tokens);
 	free_ast(ast);

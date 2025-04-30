@@ -6,46 +6,27 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 19:45:29 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:50:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "libft.h"
+#include <errno.h>
 #include "parsing.h"
 #include <stdbool.h>
 #include <sys/wait.h>
 #include "minishell.h"
 #include "sigaction.h"
 
-static void	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid == 0) // On est dans le child process
-	{
-		sig_set(SIG_DFL);
-		if (is_l_side)
-			dup2(fds[1], STDOUT_FILENO);
-		else
-			dup2(fds[0], STDIN_FILENO);
-		close_fd(&ctx->fds, fds[0]);
-		close_fd(&ctx->fds, fds[1]);
-		execute_ast(ctx, node);
-		exit(ctx->status);
-	}
-}
-
 int	exec_pipe(t_ctx *ctx, t_ast *node)
 {
 	int	ret;
-	int	status;
 	int	fds[2];
 
 	ret = pipe(fds);
 	if (ret != 0)
-		return (1);
+		return (exit_with_code(ctx, s_exec_exit(ctx->status)));
 	register_fd(&ctx->fds, fds[0]);
 	register_fd(&ctx->fds, fds[1]);
 	sig_set(SIG_IGN);
@@ -53,16 +34,15 @@ int	exec_pipe(t_ctx *ctx, t_ast *node)
 	exec_side_pipe(ctx, node->childs[1], fds, false);
 	close_fd(&ctx->fds, fds[0]);
 	close_fd(&ctx->fds, fds[1]);
-	waitpid(-1, &status, 0);
-	waitpid(-1, &status, 0);
+	waitpid(-1, &ctx->status, 0);
+	waitpid(-1, &ctx->status, 0);
 	sig_init();
-	return (s_exec_exit(status));
+	return (s_exec_exit(ctx->status));
 }
 
 int	exec_redir(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
-	int	status;
 
 	if (!ft_strcmp(node->value, ">"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
@@ -73,16 +53,16 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 	else if (!ft_strcmp(node->value, "<<"))
 		fd = node->fd;
 	if (fd < 0)
-		return (ft_dprintf(2, "minishell : "), perr(node->childs[0]->value, 1));
+		return (out_err(ctx, node->childs[0]->value, errno));
 	if (node->value[0] == '<')
 		dup2(fd, STDIN_FILENO);
 	else
 		dup2(fd, STDOUT_FILENO);
-	status = execute_ast(ctx, node->childs[1]);
+	ctx->status = execute_ast(ctx, node->childs[1]);
 	dup2(ctx->stdin_fd, STDIN_FILENO);
 	dup2(ctx->stdout_fd, STDOUT_FILENO);
 	close_fd(&ctx->fds, fd);
-	return (status);
+	return (s_exec_exit(ctx->status));
 }
 
 int	exec_command(t_ctx *ctx, t_ast *node)
@@ -91,9 +71,8 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	char	*path;
 	char	**envp;
 	char	**args;
-	int		status;
 
-	args = ast_to_argv(node);
+	args = ast_to_argv(ctx, node);
 	if (is_builtin(node->value))
 		return (exec_builtin(args, ctx->env));
 	envp = env_to_envp(ctx->env);
@@ -106,11 +85,12 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	{
 		sig_set(SIG_DFL);
 		execve(path, args, envp);
-		perr("execve", 1);
+		free_cmd(path, args, envp, execve_err(ctx, node));
+		exit(ctx->status);
 	}
-	waitpid(pid, &status, 0);
+	waitpid(pid, &ctx->status, 0);
 	sig_init();
-	return (free_cmd(path, args, envp, s_exec_exit(status)));
+	return (free_cmd(path, args, envp, s_exec_exit(ctx->status)));
 }
 
 int	execute_ast(t_ctx *ctx, t_ast *node)

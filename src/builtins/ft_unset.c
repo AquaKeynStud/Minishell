@@ -6,12 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 23:38:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:49:46 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
+#include "minishell.h"
 
 static int	is_option(char **args)
 {
@@ -67,5 +68,6 @@ int	ft_unset(char **args, t_env *env)
 		remove_env_var(args[i], &env);
 		i++;
 	}
+	double_free((void **)args, 0);
 	return (exit_code);
 }

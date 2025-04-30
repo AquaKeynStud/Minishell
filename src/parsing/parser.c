@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_setters.c                                      :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 22:58:35 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:51:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@
 ** @curr: Adresse du pointeur sur le token courant.
 ** Retourne true si OK ou false en cas d'erreur.
 */
+<<<<<<< HEAD
 static int	parse_redirs(t_ast **cmd, t_token **curr)
+=======
+static int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
+>>>>>>> exec
 {
 	t_token	*tmp;
 	t_ast	*redir;
@@ -58,7 +62,10 @@ static int	parse_redirs(t_ast **cmd, t_token **curr)
 		tmp = *curr;
 		*curr = (*curr)->next;
 		if (!*curr || (*curr)->type != TOKEN_WORD)
-			return (err("minishell: syntax error near unexpected token\n"));
+		{
+			parsing_err(ctx, (*curr)->value, 2);
+			return (ctx->status);
+		}
 		cat_empty_heredoc(cmd, tmp);
 		file_node = new_ast(AST_COMMAND, (*curr)->value);
 		redir = new_ast(AST_REDIR, tmp->value);
@@ -74,14 +81,17 @@ static int	parse_redirs(t_ast **cmd, t_token **curr)
 ** @curr: Adresse du pointeur sur le token courant.
 ** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
 */
-static t_ast	*parse_command(t_token **curr)
+static t_ast	*parse_command(t_ctx *ctx, t_token **curr)
 {
 	t_ast	*cmd;
 	t_ast	*stub;
 
 	cmd = NULL;
-	if (!parse_redirs(&cmd, curr))
+	if (!parse_redirs(ctx, &cmd, curr))
+	{
+		parsing_err(ctx, (*curr)->value, 2);
 		return (free_ast(cmd));
+	}
 	if (*curr && (*curr)->type == TOKEN_WORD)
 	{
 		stub = overwrite_stub(curr, &cmd);
@@ -91,8 +101,11 @@ static t_ast	*parse_command(t_token **curr)
 			*curr = (*curr)->next;
 		}
 	}
-	if (!parse_redirs(&cmd, curr))
+	if (!parse_redirs(ctx, &cmd, curr))
+	{
+		parsing_err(ctx, (*curr)->value, 2);
 		return (free_ast(cmd));
+	}
 	return (cmd);
 }
 
@@ -105,25 +118,25 @@ static t_ast	*parse_command(t_token **curr)
 **             /            \
 **   parse_command()   parse_command()
 */
-static t_ast	*parse_pipeline(t_token **curr)
+static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 {
 	t_ast	*left;
 	t_ast	*right;
 	t_ast	*pipe_node;
 
-	left = parse_command(curr);
+	left = parse_command(ctx, curr);
 	if (!left || !left->value)
 	{
-		err("Error: Syntax error near unexpected token `pipe'\n");
+		parsing_err(ctx, "pipe", 2);
 		return (free_ast(left));
 	}
 	while (*curr && (*curr)->type == TOKEN_PIPE)
 	{
 		*curr = (*curr)->next; // Consomme le token pipe
-		right = parse_command(curr);
+		right = parse_command(ctx, curr);
 		if (!right || !right->value)
 		{
-			err("Error: Missing command after token `pipe'\n");
+			parsing_err(ctx, "pipe", 2);
 			return (double_free_ast(right, left));
 		}
 		pipe_node = new_ast(AST_PIPE, "|"); // Crée un nœud pipe rassemblant left et right
@@ -140,16 +153,17 @@ static t_ast	*parse_pipeline(t_token **curr)
 ** Retourne l'AST complet ou NULL en cas d'erreur.
 ** Vérifie que tous les tokens ont été consommés.
 */
-t_ast	*parse_input(t_token *tokens)
+t_ast	*parse_input(t_ctx *ctx, t_token *tokens)
 {
 	t_ast	*ast;
 	t_token	*curr;
 
 	curr = tokens;
-	ast = parse_pipeline(&curr);
+	ast = parse_pipeline(ctx, &curr);
 	if (curr != NULL)
 	{
 		err("Erreur: tokens non consommés en fin de parsing\n");
+		ctx->status = 2;
 		return (NULL);
 	}
 	return (ast);
