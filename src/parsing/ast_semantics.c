@@ -6,19 +6,30 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 22:37:20 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 09:44:22 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 23:21:58 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include "minishell.h"
 
-void	*parsing_err(t_ctx *ctx, const char *msg, int code)
+int	parsing_err(t_ctx *ctx, const char *msg, int code)
 {
+	char	*err;
+	char	one;
+	char	space;
+
+	one = '`';
+	space = ' ';
+	err = "minishell: syntax error near unexpected token";
 	if (code >= 0)
 		ctx->status = code;
-	ft_dprintf(2, "minishell: syntax error near unexpected token `%s'\n", msg);
-	return (NULL);
+	if (!ctx->has_found_err)
+	{
+		ft_dprintf(2, "%s%c%c%s'\n", err, space, one, msg);
+		ctx->has_found_err = true;
+	}
+	return (0);
 }
 
 /*

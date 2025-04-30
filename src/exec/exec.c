@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:22:30 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 23:35:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	exec_pipe(t_ctx *ctx, t_ast *node)
 {
 	int	ret;
 	int	fds[2];
+	int	pid_left;
+	int	pid_right;
 
 	ret = pipe(fds);
 	if (ret != 0)
@@ -30,12 +32,12 @@ int	exec_pipe(t_ctx *ctx, t_ast *node)
 	register_fd(&ctx->fds, fds[0]);
 	register_fd(&ctx->fds, fds[1]);
 	sig_set(SIG_IGN);
-	exec_side_pipe(ctx, node->childs[0], fds, true);
-	exec_side_pipe(ctx, node->childs[1], fds, false);
+	pid_left = exec_side_pipe(ctx, node->childs[0], fds, true);
+	pid_right = exec_side_pipe(ctx, node->childs[1], fds, false);
 	close_fd(&ctx->fds, fds[0]);
 	close_fd(&ctx->fds, fds[1]);
-	waitpid(-1, &ctx->status, 0);
-	waitpid(-1, &ctx->status, 0);
+	waitpid(pid_left, NULL, 0);
+	waitpid(pid_right, &ctx->status, 0);
 	sig_init();
 	return (s_exec_exit(ctx->status));
 }
@@ -53,7 +55,11 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 	else if (!ft_strcmp(node->value, "<<"))
 		fd = node->fd;
 	if (fd < 0)
-		return (out_err(ctx, node->childs[0]->value, errno));
+	{
+		ft_dprintf(2, "minishell: ");
+		perror(node->childs[0]->value);
+		return (exec_err(ctx, false));
+	}
 	if (node->value[0] == '<')
 		dup2(fd, STDIN_FILENO);
 	else
@@ -62,7 +68,7 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 	dup2(ctx->stdin_fd, STDIN_FILENO);
 	dup2(ctx->stdout_fd, STDOUT_FILENO);
 	close_fd(&ctx->fds, fd);
-	return (s_exec_exit(ctx->status));
+	return (ctx->status);
 }
 
 int	exec_command(t_ctx *ctx, t_ast *node)
@@ -85,7 +91,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	{
 		sig_set(SIG_DFL);
 		execve(path, args, envp);
-		free_cmd(path, args, envp, execve_err(ctx, node));
+		free_cmd(path, args, envp, exec_err(ctx, true));
 		exit(ctx->status);
 	}
 	waitpid(pid, &ctx->status, 0);
@@ -96,8 +102,6 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 int	execute_ast(t_ctx *ctx, t_ast *node)
 {
 	if (!node)
-		return (ctx->status);
-	if (!get_redir(ctx, node))
 		return (ctx->status);
 	if (node->type == AST_PIPE)
 		ctx->status = exec_pipe(ctx, node);

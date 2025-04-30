@@ -6,11 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:17:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/12 09:51:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 18:00:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexing.h"
+
 
 t_token	*create_token(const char *value, t_token_type type)
 {

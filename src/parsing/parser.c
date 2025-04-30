@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 10:26:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 23:33:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,40 +42,53 @@
 */
 
 /*
-** parse_redirs : Parse les redirections.
-** @cmd: Adresse vers le noeud créé qui contient la commande.
-** @curr: Adresse du pointeur sur le token courant.
-** Retourne true si OK ou false en cas d'erreur.
+** parse_redirs : traite une redirection unique
+** @ctx   : contexte de parsing
+** @cmd   : adresse du pointeur vers l'AST de la commande
+** @curr  : pointeur sur le token courant (redir op)
+** Retourne 1 si OK, 0 sinon (et libère AST en erreur).
+*/
+/*
+** parse_redirs : traite une redirection unique
+** @ctx   : contexte de parsing
+** @cmd   : adresse du pointeur vers l'AST de la commande
+** @curr  : pointeur sur le token courant (redir op)
+** Retourne 1 si OK, 0 sinon (et libère AST en erreur).
 */
 static int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 {
 	t_token	*tmp;
-	t_ast	*redir;
 	t_ast	*file_node;
+	t_ast	*redir;
 
-	while (*curr && (*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
+	if (!*curr)
+		return (1);
+	tmp = *curr;
+	*curr = (*curr)->next;
+	if (*curr && ((*curr)->type != TOKEN_WORD))
 	{
-		tmp = *curr;
-		*curr = (*curr)->next;
-		if (!*curr || (*curr)->type != TOKEN_WORD)
-		{
-			parsing_err(ctx, (*curr)->value, 2);
-			return (ctx->status);
-		}
-		cat_empty_heredoc(cmd, tmp);
-		file_node = new_ast(AST_COMMAND, (*curr)->value);
-		redir = new_ast(AST_REDIR, tmp->value);
-		ast_add_child(redir, file_node);
-		redir_priority(cmd, redir);
-		*curr = (*curr)->next;
+		free_ast(*cmd);
+		if ((*curr)->type != TOKEN_PIPE)
+			return (parsing_err(ctx, (*curr)->value, 2));
+		return (0);
 	}
+	if (!*curr || ((*curr)->type != TOKEN_WORD))
+	{
+		free_ast(*cmd);
+		return (parsing_err(ctx, "newline", 2));
+	}
+	cat_empty_heredoc(cmd, tmp);
+	file_node = new_ast(AST_COMMAND, (*curr)->value);
+	redir = new_ast(AST_REDIR, tmp->value);
+	ast_add_child(redir, file_node);
+	redir_priority(cmd, redir);
+	*curr = (*curr)->next;
 	return (1);
 }
 
 /*
-** parse_command : Parse une commande simple.
-** @curr: Adresse du pointeur sur le token courant.
-** Retourne un nœud AST_COMMAND ou NULL en cas d'erreur.
+** parse_command : Parse une commande simple avec redirections et arguments
+** Parcours en une seule passe jusqu'à TOKEN_PIPE ou fin.
 */
 static t_ast	*parse_command(t_ctx *ctx, t_token **curr)
 {
@@ -83,27 +96,29 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr)
 	t_ast	*stub;
 
 	cmd = NULL;
-	if (!parse_redirs(ctx, &cmd, curr))
+	while (*curr && (*curr)->type != TOKEN_PIPE)
 	{
-		parsing_err(ctx, (*curr)->value, 2);
-		return (free_ast(cmd));
-	}
-	if (*curr && (*curr)->type == TOKEN_WORD)
-	{
-		stub = overwrite_stub(curr, &cmd);
-		while (*curr && (*curr)->type == TOKEN_WORD) // Tant que c'est un argument
+		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
 		{
-			ast_add_child(stub, new_ast(AST_COMMAND, (*curr)->value));
-			*curr = (*curr)->next;
+			if (!parse_redirs(ctx, &cmd, curr))
+				return (NULL);
 		}
-	}
-	if (!parse_redirs(ctx, &cmd, curr))
-	{
-		parsing_err(ctx, (*curr)->value, 2);
-		return (free_ast(cmd));
+		else if ((*curr)->type == TOKEN_WORD)
+		{
+			if (!cmd)
+				stub = overwrite_stub(curr, &cmd);
+			else
+			{
+				ast_add_child(stub, new_ast(AST_COMMAND, (*curr)->value));
+				*curr = (*curr)->next;
+			}
+		}
+		else
+			break;
 	}
 	return (cmd);
 }
+
 
 /*
 ** parse_pipeline : Parse un ensemble de commandes séparées par des pipes.
@@ -121,20 +136,16 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 	t_ast	*pipe_node;
 
 	left = parse_command(ctx, curr);
-	if (!left || !left->value)
-	{
-		parsing_err(ctx, "pipe", 2);
+	if (!left)
+		return (NULL); // Erreur déjà affichée
+	if (!left->value)
 		return (free_ast(left));
-	}
 	while (*curr && (*curr)->type == TOKEN_PIPE)
 	{
 		*curr = (*curr)->next; // Consomme le token pipe
 		right = parse_command(ctx, curr);
 		if (!right || !right->value)
-		{
-			parsing_err(ctx, "pipe", 2);
 			return (double_free_ast(right, left));
-		}
 		pipe_node = new_ast(AST_PIPE, "|"); // Crée un nœud pipe rassemblant left et right
 		ast_add_child(pipe_node, left);
 		ast_add_child(pipe_node, right);
@@ -158,8 +169,7 @@ t_ast	*parse_input(t_ctx *ctx, t_token *tokens)
 	ast = parse_pipeline(ctx, &curr);
 	if (curr != NULL)
 	{
-		err("Erreur: tokens non consommés en fin de parsing\n");
-		ctx->status = 2;
+		parsing_err(ctx, "|", 2);
 		return (NULL);
 	}
 	return (ast);
