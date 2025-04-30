@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   secure_exit.c                                      :+:      :+:    :+:   */
+/*   utils_builtins.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:38:39 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/29 23:34:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-#include "minishell.h"
 
-// Fonction qui va permettre de sortir n'importe quand
-void	secure_exit(t_ctx *ctx, unsigned char code)
+int	count_args(char **args)
 {
-	free_env(&ctx->env);
-	close_all_fds(&ctx->fds); // close de tous les fds ouverts
-	close(ctx->stdin_fd);
-	close(ctx->stdout_fd);
-	exit(code);
+	int	i;
+
+	i = 0;
+	while (args[i])
+		i++;
+	return (i);
 }
 
-int	s_exec_exit(int status)
+char	*get_current_dir(void)
 {
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	else
-		return (1);
+	char	cwd[PATH_MAX];
+
+	if (!getcwd(cwd, sizeof(cwd)))
+	{
+		perror("cd: getcwd");
+		return (NULL);
+	}
+	return (ft_strdup(cwd));
 }

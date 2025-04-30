@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 20:42:33 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/29 23:55:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ int	exec_builtin(char **args, t_env *env)
 	if (!ft_strcmp(args[0], "pwd"))
 		return (ft_pwd());
 	if (!ft_strcmp(args[0], "export"))
-		return (ft_export(args, env));
+		return (ft_export(args, &env));
 	if (!ft_strcmp(args[0], "unset"))
 		return (ft_unset(args, env));
 	if (!ft_strcmp(args[0], "env"))
-		return (ft_env(env));
+		return (ft_env(env, count_args(args), args));
 	if (!ft_strcmp(args[0], "exit"))
-		return (ft_exit(args));
+		return (ft_exit(count_args(args), args));
 	return (-1);
 }

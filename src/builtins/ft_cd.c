@@ -6,14 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 13:46:19 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:33:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
-#include <stdio.h>
-#include <limits.h>
+#include "minishell.h"
 
 static int	update_env(t_env *env, const char *key, const char *value)
 {
@@ -27,59 +26,71 @@ static int	update_env(t_env *env, const char *key, const char *value)
 		}
 		env = env->next;
 	}
-	return (1); // non trouvé
+	return (1);
 }
 
-static char *get_env_value(t_env *env, const char *key)
+static char	*get_cd_path(char **args, t_env *env)
 {
-	while (env)
-	{
-		if (!ft_strcmp(env->key, key))
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL); // pas trouvé
-}
-
-int	ft_cd(char **args, t_env *env)
-{
-	char	cwd[PATH_MAX];
-	char	*oldpwd;
 	char	*path;
 
 	path = args[1];
-	if (args[2])
-	{
-		ft_printf("cd: too many arguments\n");
-		return (1);
-	}
 	if (!path)
-		path = get_env_value(env, "HOME");
-	if (args[2])
 	{
-		ft_printf("cd: HOME is not set\n");
-		return (1);
+		path = get_from_env(env, "HOME");
+		if (!path)
+		{
+			ft_printf("cd: HOME is not set\n");
+			return (NULL);
+		}
 	}
-	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("cd: getcwd");
-		return (1);
-	}
-	oldpwd = ft_strdup(cwd);
+	return (path);
+}
+
+static int	perform_cd(char *path, char *oldpwd, t_env *env)
+{
+	char	*cwd;
+	char	*perror_msg;
+
 	if (chdir(path) != 0)
 	{
-		perror("cd");
+		perror_msg = ft_strjoin("cd: ", path);
+		perror(perror_msg);
 		free(oldpwd);
 		return (1);
 	}
-	if (!getcwd(cwd, sizeof(cwd)))
+	cwd = get_current_dir();
+	if (!cwd)
 	{
-		perror("cd: getcwd (after chdir)");
 		free(oldpwd);
 		return (1);
 	}
 	update_env(env, "OLDPWD", oldpwd);
 	update_env(env, "PWD", cwd);
 	free(oldpwd);
+	free(cwd);
 	return (0);
+}
+
+int	ft_cd(char **args, t_env *env)
+{
+	char	*path;
+	char	*oldpwd;
+	int		result;
+	int		arg_count;
+
+	arg_count = count_args(args);
+	if (arg_count > 2)
+	{
+		ft_printf("cd: too many arguments\n");
+		return (1);
+	}
+	path = get_cd_path(args, env);
+	if (!path)
+		return (1);
+	oldpwd = get_current_dir();
+	if (!oldpwd)
+		return (1);
+	result = perform_cd(path, oldpwd, env);
+	double_free((void **)args, 0);
+	return (result);
 }

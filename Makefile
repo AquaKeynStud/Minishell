@@ -24,6 +24,7 @@ D_INC	=	inc/
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
 D_LFT	=	libft/
+
 D_EXE	=	$(D_SRC)exec/
 D_UTL	=	$(D_SRC)utils/
 D_TOK	=	$(D_SRC)token/
@@ -43,14 +44,16 @@ LST_TOK		=	add_token.c			\
 				utils_token.c		\
 				tokenisation.c
 
-LST_PAR		=	ast_adders.c		\
-				ast_setters.c
+LST_PAR		=	parser.c			\
+				ast_builders.c		\
+				ast_semantics.c
 
 LST_EXE		=	env.c				\
 				exec.c				\
-				heredoc.c			\
+				exec_err.c			\
 				exec_utils.c		\
-				builtin_exec.c
+				builtin_exec.c		\
+				exec_behaviors.c
 
 LST_BLT		=	ft_cd.c				\
 				ft_env.c			\
@@ -58,7 +61,10 @@ LST_BLT		=	ft_cd.c				\
 				ft_exit.c			\
 				ft_echo.c			\
 				ft_unset.c			\
-				ft_export.c
+				ft_export.c			\
+				utils_builtins.c	\
+				ft_export_print.c	\
+				ft_export_utils.c
 
 LST_UTL		=	printers.c			\
 				secure_exit.c		\

@@ -1,26 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   test_pwd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/20 14:24:54 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 23:22:47 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/22 11:09:36 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/22 11:10:35 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_pwd()
 {
-	char	cwd[PATH_MAX];
+	char cwd[PATH_MAX];
 
 	if (getcwd(cwd, sizeof(cwd)))
-	{
 		ft_printf("%s\n", cwd);
-		return (EXIT_SUCCESS);
-	}
-	perror("pwd");
-	return (EXIT_FAILURE);
+	else
+		perror("pwd");
+	return (0);
+}
+
+int	main(void)
+{
+	ft_printf("Test ft_pwd:\n");
+	ft_pwd(); // Affiche le répertoire courant
+
+	// Tu peux tester aussi un changement de dossier :
+	chdir("..");
+	ft_printf("Test ft_pwd après chdir(\"..\"):\n");
+	ft_pwd();
+
+	return 0;
 }

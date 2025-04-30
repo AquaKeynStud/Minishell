@@ -1,32 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   secure_exit.c                                      :+:      :+:    :+:   */
+/*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:38:39 by arocca           ###   ########.fr       */
+/*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
+/*   Updated: 2025/04/29 23:49:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-#include "minishell.h"
 
-// Fonction qui va permettre de sortir n'importe quand
-void	secure_exit(t_ctx *ctx, unsigned char code)
+int	env_size(t_env *env)
 {
-	free_env(&ctx->env);
-	close_all_fds(&ctx->fds); // close de tous les fds ouverts
-	close(ctx->stdin_fd);
-	close(ctx->stdout_fd);
-	exit(code);
+	int	size;
+
+	size = 0;
+	while (env)
+	{
+		size++;
+		env = env->next;
+	}
+	return (size);
 }
 
-int	s_exec_exit(int status)
+t_env	*copy_env_list(t_env *env)
 {
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	else
-		return (1);
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		append_env_node(&copy, create_env_node(env->key, env->value));
+		env = env->next;
+	}
+	return (copy);
 }

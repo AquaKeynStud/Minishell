@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 19:47:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:38:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include "lexing.h"
 # include <stdbool.h>
+# include "minishell.h"
 
 /* -- Structures -- */
 typedef enum e_ast_type
@@ -38,11 +39,17 @@ typedef struct s_ast
 }				t_ast;
 
 /* -- Functions -- */
+t_ast	*parse_input(t_ctx *ctx, t_token *tokens);
+
+void	*parsing_err(t_ctx *ctx, const char *msg, int code);
+
 void	*free_ast(t_ast *node);
-t_ast	*parse_input(t_token *tokens);
 void	ast_add_child(t_ast *parent, t_ast *child);
-void	cat_empty_heredoc(t_ast **cmd, t_token *tmp);
+void	*double_free_ast(t_ast *left, t_ast *right);
 t_ast	*new_ast(t_ast_type type, const char *value);
-void	*double_free_ast(t_ast *first, t_ast *second);
+
+void	redir_priority(t_ast **cmd, t_ast *redir);
+void	cat_empty_heredoc(t_ast **cmd, t_token *tmp);
+t_ast	*overwrite_stub(t_token **curr, t_ast **cmd);
 
 #endif

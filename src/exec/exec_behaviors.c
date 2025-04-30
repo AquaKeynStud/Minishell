@@ -1,37 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   exec_behaviors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 19:46:03 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 10:22:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
+#include <signal.h>
 #include "parsing.h"
 #include "minishell.h"
+#include "sigaction.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 
-static void	verif_redir(t_ctx *ctx, t_ast *node)
+void	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 {
-	int	fd;
+	int	pid;
 
-	if (!ft_strcmp(node->value, "<"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	else if (!ft_strcmp(node->value, ">"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
-	else if (!ft_strcmp(node->value, ">>"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-	if (fd < 0)
+	pid = fork();
+	if (pid == 0) // On est dans le child process
 	{
-		ft_dprintf(2, "minishell : ");
-		perr(node->childs[0]->value, 1);
-		return ;
+		sig_set(SIG_DFL);
+		if (is_l_side)
+			dup2(fds[1], STDOUT_FILENO);
+		else
+			dup2(fds[0], STDIN_FILENO);
+		close_fd(&ctx->fds, fds[0]);
+		close_fd(&ctx->fds, fds[1]);
+		ctx->status = execute_ast(ctx, node);
+		exit(ctx->status);
 	}
-	close_fd(&ctx->fds, fd);
 }
 
 /**
@@ -67,6 +70,25 @@ static int	here_doc(const char *limiter)
 	}
 	close(pipefd[1]); // On termine l'écriture et on renvoie le descripteur de lecture
 	return (pipefd[0]);
+}
+
+static void	verif_redir(t_ctx *ctx, t_ast *node)
+{
+	int	fd;
+
+	if (!ft_strcmp(node->value, "<"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
+	else if (!ft_strcmp(node->value, ">"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
+	else if (!ft_strcmp(node->value, ">>"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
+	if (fd < 0)
+	{
+		ft_dprintf(2, "minishell : ");
+		perr(node->childs[0]->value, 1);
+		return ;
+	}
+	close_fd(&ctx->fds, fd);
 }
 
 int	get_redir(t_ctx *ctx, t_ast *ast)
