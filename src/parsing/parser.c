@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:51:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 11:54:53 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,7 @@
 ** @curr: Adresse du pointeur sur le token courant.
 ** Retourne true si OK ou false en cas d'erreur.
 */
-<<<<<<< HEAD
-static int	parse_redirs(t_ast **cmd, t_token **curr)
-=======
 static int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
->>>>>>> exec
 {
 	t_token	*tmp;
 	t_ast	*redir;
