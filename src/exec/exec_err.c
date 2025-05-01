@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:56:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 10:14:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 10:35:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include "minishell.h"
 
-int execve_err(t_ctx *ctx, char **value)
+int	execve_err(t_ctx *ctx, char **value)
 {
 	ctx->status = 1;
 	if (errno == ENOENT)

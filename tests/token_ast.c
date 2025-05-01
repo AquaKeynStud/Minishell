@@ -73,7 +73,7 @@ static void	init_context(t_ctx *ctx, char **envp)
 	return ;
 }
 
-void run_tests(const char *label, const char **tests, int num_tests, t_ctx *ctx)
+void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 {
 	for (int i = 0; i < num_tests; i++)
 	{
@@ -105,7 +105,7 @@ int main(int argc, char **argv, char **envp)
 {
 	t_ctx ctx;
 	init_context(&ctx, envp);
-	const char *simple_tests[] = {
+	char *simple_tests[] = {
 		"ls -l",
 		"echo hello world",
 		"grep main *.c",
@@ -123,7 +123,7 @@ int main(int argc, char **argv, char **envp)
 		"ps aux | grep ssh | awk '{print $2}' | xargs -I {} ls -lh /proc/{}/fd | grep sock | sort | uniq | head -n 5 | sed '1d' | wc -l"
 	};
 
-	const char *pipe_redirect_tests[] = {
+	char *pipe_redirect_tests[] = {
 		"cat < input.txt | grep 'error'",
 		"grep keyword < input.txt | sort > sorted.txt",
 		"ls -l | tee files.txt > log.txt",
@@ -136,7 +136,7 @@ int main(int argc, char **argv, char **envp)
 		"grep TODO < notes.txt | wc -l > count.txt"
 	};
 
-	const char *my_tests[] = {
+	char *my_tests[] = {
 		// "cat Makefile > test.txt", // Test1
 		// "<< eof", // Test 2
 		// "Makefile < cat | echo > test.txt", // Test 3

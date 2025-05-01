@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 10:21:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 10:35:14 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,10 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr)
 			}
 		}
 		else
-			break;
+			break ;
 	}
 	return (cmd);
 }
-
 
 /*
 ** parse_pipeline : Parse un ensemble de commandes séparées par des pipes.

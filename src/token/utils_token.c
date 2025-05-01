@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 18:01:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 11:11:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,16 @@ void	free_tokens(t_token **list)
 		current = next;
 	}
 	*list = NULL;
+}
+
+/* Récupère le dernier token de la liste */
+t_token	*get_last_token(t_token *tokens)
+{
+	if (!tokens)
+		return (NULL);
+	while (tokens->next)
+		tokens = tokens->next;
+	return (tokens);
 }
 
 int	is_operator(char c)
