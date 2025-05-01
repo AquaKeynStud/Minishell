@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 19:12:14 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:38:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "lexing.h"
 #include <stdbool.h>
 
-static void handle_redir(t_lexing *s, t_token **tokens)
+static void	handle_redir(t_lexing *s, t_token **tokens)
 {
-	char op;
-	int len;
-	char *str;
-	t_token *token;
+	char	op;
+	int		len;
+	char	*str;
+	t_token	*token;
 
 	len = 1;
 	op = s->input[s->i];
@@ -43,12 +43,12 @@ static void handle_redir(t_lexing *s, t_token **tokens)
 	s->merge = false;
 }
 
-static void handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
+static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 {
-	int len;
-	int start;
-	char *content;
-	char *expanded;
+	int		len;
+	int		start;
+	char	*content;
+	char	*expanded;
 
 	(s->i)++;
 	start = s->i;
@@ -72,23 +72,23 @@ static void handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	s->merge = true;
 }
 
-static void handle_pipe(t_lexing *s, t_token **tokens)
+static void	handle_pipe(t_lexing *s, t_token **tokens)
 {
 	add_token(tokens, create_token("|", TOKEN_PIPE));
 	s->i++;
 	s->merge = false;
 }
 
-static void handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
+static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 {
-	int len;
-	char *str;
-	int start;
-	char *expanded;
+	int		len;
+	char	*str;
+	int		start;
+	char	*expanded;
 
 	start = s->i;
 	while (s->input[s->i] && !is_whitespace(s->input[s->i])
-			&& !is_operator(s->input[s->i]))
+		&& !is_operator(s->input[s->i]))
 	{
 		if (s->input[s->i] == '"' || s->input[s->i] == '\'')
 			break ;
@@ -108,7 +108,7 @@ static void handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	s->merge = true;
 }
 
-t_token *tokenize(t_ctx *ctx, char *input)
+t_token	*tokenize(t_ctx *ctx, char *input)
 {
 	t_lexing	s;
 	t_token		*tokens;

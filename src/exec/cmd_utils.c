@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 20:35:41 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:36:05 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,49 @@
 #include "minishell.h"
 #include "sigaction.h"
 
-char	**ast_to_argv(t_ctx *ctx, t_ast *node)
+static int	count_argv(t_ast *node)
 {
-	int		pos;
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (i < node->sub_count)
+	{
+		if (node->childs[i]->type == AST_REDIR)
+			i += 2;
+		else
+		{
+			count++;
+			i++;
+		}
+	}
+	return (count);
+}
+
+char	**ast_to_argv(t_ast *node)
+{
+	int		i;
+	int		argc;
 	char	**argv;
+	int		arg_idx;
 	t_ast	**childs;
 
-	(void)ctx;
 	if (!node)
 		return (NULL);
-	pos = node->sub_count;
+	i = 0;
+	arg_idx = 1;
 	childs = node->childs;
-	argv = s_malloc((pos + 2) * sizeof(char *));
-	argv[pos + 1] = NULL;
+	argc = count_argv(node);
+	argv = s_malloc((argc + 2) * sizeof(char *));
 	argv[0] = node->value;
-	if (!argv[0])
-		free(argv);
-	while (pos > 0)
+	argv[argc + 1] = NULL;
+	while (i < node->sub_count)
 	{
-		argv[pos] = childs[pos - 1]->value;
-		if (!argv[pos])
-			double_free((void **)argv, 0);
-		pos--;
+		if (childs[i]->type == AST_REDIR)
+			i += 2;
+		else
+			argv[arg_idx++] = childs[i++]->value;
 	}
 	return (argv);
 }

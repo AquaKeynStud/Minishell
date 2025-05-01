@@ -159,11 +159,13 @@ int main(int argc, char **argv, char **envp)
 		// "cat <\"./test_files/infile_big\" | echo hi",
 		// ">>>",
 		// "echo hi |  \"|\"",
-		"echo ceci'$USER'estuntest",
-		"echo ceci\"$USER\"estuntest",
-		"echo '$PWD'",
-		"echo \"$PWD\"",
-		"echo ceci\"$USER\"est un test",
+		// "echo ceci'$USER'estuntest",
+		// "echo ceci\"$USER\"estuntest",
+		// "echo '$PWD'",
+		// "echo \"$PWD\"",
+		// "echo ceci\"$USER\"est un test",
+		"echo <\"./test_files/infile_big\" | echo <\"./test_files/infile\"",
+		"echo hi | echo >>./outfiles/outfile01 bye",
 	// 	"cat << eof > outfile.txt",
 	// 	// Cas avec erreurs syntaxiques qu'il faudra détecter :
 	// 	"cat | | grep foo",       // erreur de syntaxe : double pipe

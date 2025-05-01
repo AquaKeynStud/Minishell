@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 16:59:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:36:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,30 +45,30 @@ int	exec_pipe(t_ctx *ctx, t_ast *node)
 int	exec_redir(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
+	int	pid;
+	int	ret;
 
-	if (!ft_strcmp(node->value, ">"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
-	else if (!ft_strcmp(node->value, ">>"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-	else if (!ft_strcmp(node->value, "<"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	else if (!ft_strcmp(node->value, "<<"))
-		fd = node->fd;
+	fd = pid_verification(ctx, node);
 	if (fd < 0)
+		return (ctx->status);
+	pid = fork();
+	if (pid < 0)
+		return (redir_err(ctx, node, 0));
+	else if (pid == 0)
 	{
-		ft_dprintf(2, "minishell: ");
-		perror(node->childs[0]->value);
-		return (exit_with_code(ctx, 1));
+		sig_set(SIG_DFL);
+		if (node->value[0] == '<')
+			dup2(fd, STDIN_FILENO);
+		else
+			dup2(fd, STDOUT_FILENO);
+		close(fd);
+		ret = execute_ast(ctx, node->childs[1]);
+		exit(ret);
 	}
-	if (node->value[0] == '<')
-		dup2(fd, STDIN_FILENO);
-	else
-		dup2(fd, STDOUT_FILENO);
-	ctx->status = execute_ast(ctx, node->childs[1]);
-	dup2(ctx->stdin_fd, STDIN_FILENO);
-	dup2(ctx->stdout_fd, STDOUT_FILENO);
 	close_fd(&ctx->fds, fd);
-	return (ctx->status);
+	waitpid(pid, &ctx->status, 0);
+	sig_init();
+	return (s_exec_exit(ctx->status));
 }
 
 int	exec_command(t_ctx *ctx, t_ast *node)
@@ -79,7 +79,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	char	**args;
 
 	envp = env_to_envp(ctx->env);
-	args = ast_to_argv(ctx, node);
+	args = ast_to_argv(node);
 	path = get_path(node->value, ctx->env);
 	if (!path || !args || !envp)
 		return (free_cmd(path, args, envp, execve_err(ctx, args)));
@@ -108,7 +108,7 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 	else if (node->type == AST_COMMAND && node->value)
 	{
 		if (is_builtin(node->value))
-			ctx->status = exec_builtin(ast_to_argv(ctx, node), ctx->env);
+			ctx->status = exec_builtin(ast_to_argv(node), ctx->env);
 		else
 			ctx->status = exec_command(ctx, node);
 	}

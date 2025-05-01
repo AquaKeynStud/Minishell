@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 20:22:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:41:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static char	*handle_env_var(t_ctx *ctx, size_t *i, char *s, char *res)
 	char	*val;
 	char	*key;
 	size_t	start;
-	
+
 	start = ++(*i);
 	if (s[start] == '?')
 	{
@@ -72,6 +72,16 @@ static char	*append_char(char *res, char c)
 	return (ft_strjoin_free(res, tmp));
 }
 
+static char	*handle_input_err(char *res)
+{
+	if (res[0] == '\0')
+	{
+		free(res);
+		return (NULL);
+	}
+	return (res);
+}
+
 char	*expand_args(t_ctx *ctx, char *s)
 {
 	size_t	i;
@@ -90,17 +100,12 @@ char	*expand_args(t_ctx *ctx, char *s)
 			res = handle_env_var(ctx, &i, s, res);
 			if (!res)
 				return (NULL);
-			continue;
+			continue ;
 		}
 		res = append_char(res, s[i]);
 		if (!res)
 			return (NULL);
 		i++;
 	}
-	if (res[0] == '\0')
-	{
-		free(res);
-		return (NULL);
-	}
-	return (res);
+	return (handle_input_err(res));
 }

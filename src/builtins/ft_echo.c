@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 20:36:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:21:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft.h"
 #include <stdbool.h>
 #include "minishell.h"
+#include "sigaction.h"
 
 bool	is_dash_n_flag(char *arg)
 {
@@ -32,22 +33,21 @@ int	ft_echo(char **args)
 	int		i;
 	bool	newline;
 
-	i = 1;
+	i = 0;
 	newline = true;
-	while (args[1] && is_dash_n_flag(args[i]))
-	{
+	if (args[0] && !*args[1])
+		return (ft_printf("\n") - 1);
+	while (args[i] && is_dash_n_flag(args[i++]))
 		newline = false;
-		i++;
-	}
 	while (args[i])
 	{
-		printf("%s", args[i]);
+		ft_printf("%s", args[i]);
 		if (args[i + 1])
-			printf(" ");
+			ft_printf(" ");
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		ft_printf("\n");
 	free(args);
 	return (EXIT_SUCCESS);
 }

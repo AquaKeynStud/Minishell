@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 19:17:37 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:22:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ void	free_tokens(t_token **list);
 t_token	*get_last_token(t_token *tokens);
 
 void	init_s(t_lexing *s, char *input);
-char 	*expand_args(t_ctx *ctx, char *s);
+char	*expand_args(t_ctx *ctx, char *s);
 
 #endif
