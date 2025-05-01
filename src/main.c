@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 23:02:44 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 17:48:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_ast	*ast;
 	t_token	*tokens;
 
-	tokens = tokenize(cmd);
+	tokens = tokenize(ctx, cmd);
 	ast = parse_input(ctx, tokens);
 	if (!get_redir(ctx, ast))
 		return ;

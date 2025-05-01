@@ -6,11 +6,18 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 11:11:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 19:12:23 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexing.h"
+
+void	init_s(t_lexing *s, char *input)
+{
+	s->i = 0;
+	s->merge = false;
+	s->input = input;
+}
 
 void	free_tokens(t_token **list)
 {

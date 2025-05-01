@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 11:16:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 19:17:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <stddef.h>
 # include <stdbool.h>
+# include "minishell.h"
 
 typedef enum e_token_type
 {
@@ -27,6 +28,13 @@ typedef enum e_token_type
 	TOKEN_HEREDOC
 }	t_token_type;
 
+typedef struct s_lexing
+{
+	int		i;
+	bool	merge;
+	char	*input;
+}				t_lexing;
+
 typedef struct s_token
 {
 	char			*value;
@@ -35,7 +43,7 @@ typedef struct s_token
 }	t_token;
 
 /* Tokenisation */
-t_token	*tokenize(char *input);
+t_token	*tokenize(t_ctx *ctx, char *input);
 
 /* Add token */
 void	add_token(t_token **head, t_token *new);
@@ -48,5 +56,8 @@ int		is_operator(char c);
 int		is_whitespace(char c);
 void	free_tokens(t_token **list);
 t_token	*get_last_token(t_token *tokens);
+
+void	init_s(t_lexing *s, char *input);
+char 	*expand_args(t_ctx *ctx, char *s);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 11:49:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 20:39:09 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ int	ft_exit(int argc, char **args)
 
 	if (argc > 2)
 	{
-		ft_printf("exit: %s: too many arguments\n", args[1]);
+		ft_dprintf(2, "exit: %s: too many arguments\n", args[1]);
 		return (1);
 	}
 	if (argc == 2)
 	{
 		if (str_is_numeric(args[1]) == 2)
 		{
-			ft_printf("exit: %s: numeric argument required\n", args[1]);
+			ft_dprintf(2, "exit: %s: numeric argument required\n", args[1]);
 			exit(2);
 		}
 		else
@@ -53,6 +53,6 @@ int	ft_exit(int argc, char **args)
 			exit(arg);
 		}
 	}
-	double_free((void **)args, 0);
+	free(args);
 	exit(0);
 }

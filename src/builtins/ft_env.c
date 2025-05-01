@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 11:48:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 20:36:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ int	ft_env(t_env *env, int argc, char **args)
 			ft_printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	double_free((void **)args, 0);
+	free(args);
 	return (0);
 }

@@ -83,7 +83,7 @@ void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 
 		// Tokenisation
 		printf("Tokenisation :\n");
-		t_token *tokens = tokenize(tests[i]);
+		t_token *tokens = tokenize(ctx, tests[i]);
 		print_token_list(tokens);
 
 		// Parsing en AST et affichage
@@ -158,7 +158,12 @@ int main(int argc, char **argv, char **envp)
 		// "cat < \"Hello\"'$USER'\"Wolrd !\"",
 		// "cat <\"./test_files/infile_big\" | echo hi",
 		// ">>>",
-		"echo hi |  \"|\"",
+		// "echo hi |  \"|\"",
+		"echo ceci'$USER'estuntest",
+		"echo ceci\"$USER\"estuntest",
+		"echo '$PWD'",
+		"echo \"$PWD\"",
+		"echo ceci\"$USER\"est un test",
 	// 	"cat << eof > outfile.txt",
 	// 	// Cas avec erreurs syntaxiques qu'il faudra détecter :
 	// 	"cat | | grep foo",       // erreur de syntaxe : double pipe

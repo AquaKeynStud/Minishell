@@ -41,6 +41,7 @@ LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
 
 LST_TOK		=	add_token.c			\
+				expand_arg.c		\
 				utils_token.c		\
 				tokenisation.c
 

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 11:54:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 20:36:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,6 @@ int	ft_echo(char **args)
 	}
 	if (newline)
 		printf("\n");
-	double_free((void **)args, 0);
+	free(args);
 	return (EXIT_SUCCESS);
 }
