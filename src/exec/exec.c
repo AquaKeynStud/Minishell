@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 23:35:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 10:13:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 	{
 		ft_dprintf(2, "minishell: ");
 		perror(node->childs[0]->value);
-		return (exec_err(ctx, false));
+		return (exit_with_code(ctx, 1));
 	}
 	if (node->value[0] == '<')
 		dup2(fd, STDIN_FILENO);
@@ -84,14 +84,14 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	envp = env_to_envp(ctx->env);
 	path = get_path(node->value, ctx->env);
 	if (!path || !args || !envp)
-		return (free_cmd(path, args, envp, 127));
+		return (free_cmd(path, args, envp, execve_err(ctx, args)));
 	sig_set(SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
 		sig_set(SIG_DFL);
 		execve(path, args, envp);
-		free_cmd(path, args, envp, exec_err(ctx, true));
+		free_cmd(path, args, envp, execve_err(ctx, args));
 		exit(ctx->status);
 	}
 	waitpid(pid, &ctx->status, 0);

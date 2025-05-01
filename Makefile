@@ -51,7 +51,7 @@ LST_PAR		=	parser.c			\
 LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
-				exec_utils.c		\
+				cmd_utils.c			\
 				builtin_exec.c		\
 				exec_behaviors.c
 

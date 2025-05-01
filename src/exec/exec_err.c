@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:56:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 21:23:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 10:14:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,25 @@
 #include <stdio.h>
 #include "minishell.h"
 
-int exec_err(t_ctx *ctx, bool is_cmd)
+int execve_err(t_ctx *ctx, char **value)
 {
 	ctx->status = 1;
-	if (is_cmd)
+	if (errno == ENOENT)
 	{
-		if (errno == ENOENT)
-			ctx->status = 127;
+		ctx->status = 127;
+		if (value && *value)
+			ft_dprintf(2, "minishell: %s: command not found\n", *value);
+		else
+			ft_dprintf(2, "minishell: command not found\n");
+	}
+	else
+	{
 		if (errno == EACCES || errno == EISDIR)
 			ctx->status = 126;
+		if (value && *value)
+			perror(*value);
+		else
+			perror("minishell");
 	}
 	return (ctx->status);
 }

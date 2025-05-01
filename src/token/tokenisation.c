@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:37:59 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 18:08:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 10:29:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ static void add_or_merge_word(t_token **tokens, char *content, bool merge_allowe
     t_token *tok = create_token(content, TOKEN_WORD);
     if (tok)
         add_token(tokens, tok);
+	else
+		free(content);
     /* create_token prend possession de content */
 }
 

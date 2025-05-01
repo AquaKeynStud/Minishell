@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 23:33:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 10:21:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,12 @@ static int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 	*curr = (*curr)->next;
 	if (*curr && ((*curr)->type != TOKEN_WORD))
 	{
-		free_ast(*cmd);
 		if ((*curr)->type != TOKEN_PIPE)
 			return (parsing_err(ctx, (*curr)->value, 2));
 		return (0);
 	}
 	if (!*curr || ((*curr)->type != TOKEN_WORD))
-	{
-		free_ast(*cmd);
 		return (parsing_err(ctx, "newline", 2));
-	}
 	cat_empty_heredoc(cmd, tmp);
 	file_node = new_ast(AST_COMMAND, (*curr)->value);
 	redir = new_ast(AST_REDIR, tmp->value);
