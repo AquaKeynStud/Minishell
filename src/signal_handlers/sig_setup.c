@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 22:40:07 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:34:23 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,9 @@
 #include <stddef.h>
 #include "sigaction.h"
 
-/*
- * Gives a status to all the signals :
- *				ex : SIG_IGN, SIG_DFL to restore them to default...
- * The status is the handler.
- */
 void	sig_set(void (*handler)(int))
 {
-	set_sigaction(SIGINT, handler, NULL); // Désactive mes fonctions sigaction de signal
+	set_sigaction(SIGINT, handler, NULL);
 	set_sigaction(SIGQUIT, handler, NULL);
 }
 
@@ -76,8 +71,8 @@ bool	set_sigaction(int signum, void (*handler)(int), char *flags)
 	if (!flags)
 		flags = "\0";
 	sa.sa_handler = handler;
-	sigemptyset(&sa.sa_mask); // Masque vide
-	get_sa_flags(&sa, flags); // Prend les flags avec une série de 7 fois 0 ou 1 qui correspondent chacun à un flag (ex : "0110010")
+	sigemptyset(&sa.sa_mask);
+	get_sa_flags(&sa, flags);
 	if (sigaction(signum, &sa, NULL))
 		return (true);
 	return (false);

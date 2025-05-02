@@ -6,13 +6,12 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:17:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 19:35:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:36:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexing.h"
 
-/* Si le dernier token est un mot, on le fusionne; sinon on en recrée un */
 void	add_or_merge_word(t_token **tokens, char *content, bool merge)
 {
 	t_token	*tok;
@@ -36,9 +35,9 @@ void	add_or_merge_word(t_token **tokens, char *content, bool merge)
 			return ;
 		}
 	}
-	tok = create_token(content, TOKEN_WORD); /* sinon on crée un nouveau token */
+	tok = create_token(content, TOKEN_WORD);
 	if (tok)
-		add_token(tokens, tok); /* create_token prend possession de content */
+		add_token(tokens, tok);
 	free(content);
 }
 

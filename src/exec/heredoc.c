@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 19:46:03 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:33:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,6 @@ static void	verif_redir(t_ctx *ctx, t_ast *node)
 	close_fd(&ctx->fds, fd);
 }
 
-/**
- * here_doc: lit un here-document via readline, sans expansion
- * @limiter: chaîne de fin du heredoc
- *
- * Retourne la borne de lecture du pipe (à dupliquer sur STDIN),
- * ou -1 en cas d'erreur.
- */
 static int	here_doc(const char *limiter)
 {
 	char	*line;
@@ -50,22 +43,22 @@ static int	here_doc(const char *limiter)
 	if (pipe(pipefd) < 0)
 		return (-1);
 	prompt = NULL;
-	if (isatty(STDIN_FILENO)) // Prompt seulement si on est en interractif
+	if (isatty(STDIN_FILENO))
 		prompt = "> ";
 	while (1)
 	{
 		line = readline(prompt);
 		if (!line)
 			break ;
-		if (!ft_strcmp(line, limiter)) // Fin de heredoc
+		if (!ft_strcmp(line, limiter))
 		{
 			free(line);
 			break ;
 		}
-		ft_dprintf(pipefd[1], "%s\n", line); // Écrire la ligne dans le pipe, en restaurant le '\n'
+		ft_dprintf(pipefd[1], "%s\n", line);
 		free(line);
 	}
-	close(pipefd[1]); // On termine l'écriture et on renvoie le descripteur de lecture
+	close(pipefd[1]);
 	return (pipefd[0]);
 }
 

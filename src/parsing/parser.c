@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/01 23:33:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:39:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,19 +78,19 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 
 	left = parse_command(ctx, curr);
 	if (!left)
-		return (NULL); // Erreur déjà affichée
+		return (NULL);
 	if (!left->value)
 		return (free_ast(left));
 	while (*curr && (*curr)->type == TOKEN_PIPE)
 	{
-		*curr = (*curr)->next; // Consomme le token pipe
+		*curr = (*curr)->next;
 		right = parse_command(ctx, curr);
 		if (!right || !right->value)
 			return (double_free_ast(right, left));
-		pipe_node = new_ast(AST_PIPE, "|"); // Crée un nœud pipe rassemblant left et right
+		pipe_node = new_ast(AST_PIPE, "|");
 		ast_add_child(pipe_node, left);
 		ast_add_child(pipe_node, right);
-		left = pipe_node; // Le nouveau noeud pipe devient le nœud de gauche pour un pipeline plus long
+		left = pipe_node;
 	}
 	return (left);
 }

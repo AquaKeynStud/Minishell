@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 19:12:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:37:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	free_tokens(t_token **list)
 	*list = NULL;
 }
 
-/* Récupère le dernier token de la liste */
 t_token	*get_last_token(t_token *tokens)
 {
 	if (!tokens)

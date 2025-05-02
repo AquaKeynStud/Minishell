@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 00:22:37 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:39:36 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 	int	pid;
 
 	pid = fork();
-	if (pid == 0) // On est dans le child process
+	if (pid == 0)
 	{
 		sig_set(SIG_DFL);
 		if (is_l_side)
@@ -53,7 +53,7 @@ int	pid_verification(t_ctx *ctx, t_ast *node)
 		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
 	else if (!ft_strcmp(node->value, "<"))
 		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	else /* "<<” */
+	else
 		fd = node->fd;
 	if (fd < 0)
 		return (redir_err(ctx, node, -1));
@@ -69,22 +69,22 @@ static int	here_doc(const char *limiter)
 	if (pipe(pipefd) < 0)
 		return (-1);
 	prompt = NULL;
-	if (isatty(STDIN_FILENO)) // Prompt seulement si on est en interractif
+	if (isatty(STDIN_FILENO))
 		prompt = "> ";
 	while (1)
 	{
 		line = readline(prompt);
 		if (!line)
 			break ;
-		if (!ft_strcmp(line, limiter)) // Fin de heredoc
+		if (!ft_strcmp(line, limiter))
 		{
 			free(line);
 			break ;
 		}
-		ft_dprintf(pipefd[1], "%s\n", line); // Écrire la ligne dans le pipe, en restaurant le '\n'
+		ft_dprintf(pipefd[1], "%s\n", line);
 		free(line);
 	}
-	close(pipefd[1]); // On termine l'écriture et on renvoie le descripteur de lecture
+	close(pipefd[1]);
 	return (pipefd[0]);
 }
 

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 18:39:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:29:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 
 static int	parse_env_assignment(char *arg, char **key, char **value)
 {
-	char *equal_pos;
+	char	*equal_pos;
 
 	equal_pos = ft_strchr(arg, '=');
 	if (!equal_pos)
@@ -59,10 +59,13 @@ static int	parse_env_assignment(char *arg, char **key, char **value)
 
 int	process_env_arg(char *arg, t_env **env)
 {
-	char	*key = NULL;
-	char	*value = NULL;
-	int		exit_code = 0;
+	char	*key;
+	char	*value;
+	int		exit_code;
 
+	key = NULL;
+	value = NULL;
+	exit_code = 0;
 	if (!parse_env_assignment(arg, &key, &value))
 		return (1);
 	if (!key || key[0] == '\0')
@@ -70,8 +73,12 @@ int	process_env_arg(char *arg, t_env **env)
 		ft_dprintf(2, "export: '%s': not a valid identifier\n", arg);
 		exit_code = 1;
 	}
-	else if ((exit_code = is_valid_key(key)) == 0)
-		add_or_update_env(env, key, value);
+	else
+	{
+		exit_code = is_valid_key(key);
+		if (exit_code == 0)
+			add_or_update_env(env, key, value);
+	}
 	free(key);
 	free(value);
 	return (exit_code);
