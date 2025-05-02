@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 11:49:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:39:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,6 @@ int	ft_unset(char **args, t_env *env)
 		remove_env_var(args[i], &env);
 		i++;
 	}
-	double_free((void **)args, 0);
+	free(args);
 	return (exit_code);
 }

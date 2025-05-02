@@ -41,6 +41,7 @@ LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
 
 LST_TOK		=	add_token.c			\
+				expand_arg.c		\
 				utils_token.c		\
 				tokenisation.c
 
@@ -51,7 +52,7 @@ LST_PAR		=	parser.c			\
 LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
-				exec_utils.c		\
+				cmd_utils.c			\
 				builtin_exec.c		\
 				exec_behaviors.c
 

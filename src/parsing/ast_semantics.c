@@ -6,29 +6,28 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 22:37:20 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:50:33 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:39:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include "minishell.h"
 
-void	*parsing_err(t_ctx *ctx, const char *msg, int code)
+int	parsing_err(t_ctx *ctx, const char *msg, int code)
 {
+	char	*err;
+
+	err = "minishell: syntax error near unexpected token `";
 	if (code >= 0)
 		ctx->status = code;
-	ft_dprintf(2, "minishell: syntax error near unexpected token `%s'\n", msg);
-	return (NULL);
+	if (!ctx->has_found_err)
+	{
+		ft_dprintf(2, "%s%s'\n", err, msg);
+		ctx->has_found_err = true;
+	}
+	return (0);
 }
 
-/*
-** redir_priority : Assure la hiérarchie des redirections.
-** @cmd: Adresse du pointeur sur l'ast courant.
-** @redir: Adresse du noeud ast de la nouvelle redirection.
-** Imbrique la nouvelle redirection après les précédentes,
-** ou imbrique la commande dans la redirection si c'est la
-** première 
-*/
 void	redir_priority(t_ast **cmd, t_ast *redir)
 {
 	t_ast	*leaf;
@@ -55,13 +54,6 @@ void	redir_priority(t_ast **cmd, t_ast *redir)
 	}
 }
 
-/*
-** overwrite_stub : Overwrite le potentiel stub des redirections orphelines.
-** @curr: Adresse du pointeur sur le token courant.
-** @stub: Adresse du stub (Noeud vide nécessaire pour créer les redirections).
-** @cmd: La commande qui va remplacer le stub
-** Remplace le contenu vide dans le stub pour le transformer en commande.
-*/
 t_ast	*overwrite_stub(t_token **curr, t_ast **cmd)
 {
 	t_ast	*stub;

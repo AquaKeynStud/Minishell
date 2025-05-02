@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 10:28:00 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/01 17:48:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void	init_context(t_ctx *ctx, char **envp)
 	ctx->env = init_env(envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
+	ctx->has_found_err = false;
 	return ;
 }
 
@@ -36,12 +37,15 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_ast	*ast;
 	t_token	*tokens;
 
-	tokens = tokenize(cmd);
+	tokens = tokenize(ctx, cmd);
 	ast = parse_input(ctx, tokens);
+	if (!get_redir(ctx, ast))
+		return ;
 	execute_ast(ctx, ast);
 	free_tokens(&tokens);
 	free_ast(ast);
 	ast = NULL;
+	ctx->has_found_err = false;
 }
 
 static void	get_input_loop(t_ctx *ctx)
@@ -57,6 +61,7 @@ static void	get_input_loop(t_ctx *ctx)
 			add_history(input);
 		ft_trim(&input, " \t"); // On enleve les espaces au début et à la fin
 		command_handler(ctx, input);
+		// ft_printf("Retour de tout tout tout : %i\n", ctx->status);
 		free(input);
 	}
 	rl_clear_history();
@@ -71,6 +76,6 @@ int	main(int argc, char **argv, char **envp)
 	init_context(&ctx, envp); // Remplit la structure contexte
 	sig_init();
 	get_input_loop(&ctx); // Lance la détection des inputs avec readline
-	secure_exit(&ctx, 0);
+	secure_exit(&ctx);
 	return (0);
 }

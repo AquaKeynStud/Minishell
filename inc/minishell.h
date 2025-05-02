@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:47:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:40:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_ctx
 	int		status;
 	int		stdin_fd;
 	int		stdout_fd;
+	bool	has_found_err;
 }			t_ctx;
 
 /* -- Macros -- */
@@ -56,6 +57,6 @@ void	*s_realloc(void *ptr, size_t old_size, size_t new_size);
 char	*join_with_delim(const char *s1, const char *s2, const char *delimiter);
 
 int		s_exec_exit(int status);
-void	secure_exit(t_ctx *ctx, unsigned char code);
+void	secure_exit(t_ctx *ctx);
 
 #endif

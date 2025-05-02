@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 23:52:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 12:56:06 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,15 @@ int		ft_env(t_env *env, int argc, char **args);
 void	free_env(t_env **env);
 t_env	*init_env(char **envp);
 
-char	*get_current_dir(void);
 int		count_args(char **args);
-t_env	*copy_env_list(t_env *env);
-void	print_sorted_env(t_env *env);
+int		is_valid_key(char *key);
+char	*get_current_dir(void);
 char	*get_from_env(t_env *env, const char *key);
+void	print_sorted_env(t_env *env);
 void	append_env_node(t_env **env, t_env *new_node);
+void	append_env_node(t_env **env, t_env *new_node);
+t_env	*copy_env_list(t_env *env);
+t_env	*create_env_node(const char *key, const char *value);
 t_env	*create_env_node(const char *key, const char *value);
 
 #endif

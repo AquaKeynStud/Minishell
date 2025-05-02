@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 10:22:24 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 00:22:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-void	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
+int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 {
 	int	pid;
 
@@ -35,15 +35,31 @@ void	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 		ctx->status = execute_ast(ctx, node);
 		exit(ctx->status);
 	}
+	else if (pid < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	return (pid);
 }
 
-/**
- * here_doc: lit un here-document via readline, sans expansion
- * @limiter: chaîne de fin du heredoc
- *
- * Retourne la borne de lecture du pipe (à dupliquer sur STDIN),
- * ou -1 en cas d'erreur.
- */
+int	pid_verification(t_ctx *ctx, t_ast *node)
+{
+	int	fd;
+
+	if (!ft_strcmp(node->value, ">"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
+	else if (!ft_strcmp(node->value, ">>"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
+	else if (!ft_strcmp(node->value, "<"))
+		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
+	else /* "<<” */
+		fd = node->fd;
+	if (fd < 0)
+		return (redir_err(ctx, node, -1));
+	return (fd);
+}
+
 static int	here_doc(const char *limiter)
 {
 	char	*line;
@@ -72,25 +88,6 @@ static int	here_doc(const char *limiter)
 	return (pipefd[0]);
 }
 
-static void	verif_redir(t_ctx *ctx, t_ast *node)
-{
-	int	fd;
-
-	if (!ft_strcmp(node->value, "<"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, O_RDONLY, 0);
-	else if (!ft_strcmp(node->value, ">"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, TRUNC_FLAGS, 0644);
-	else if (!ft_strcmp(node->value, ">>"))
-		fd = open_fd(&ctx->fds, node->childs[0]->value, APPEND_FLAGS, 0644);
-	if (fd < 0)
-	{
-		ft_dprintf(2, "minishell : ");
-		perr(node->childs[0]->value, 1);
-		return ;
-	}
-	close_fd(&ctx->fds, fd);
-}
-
 int	get_redir(t_ctx *ctx, t_ast *ast)
 {
 	int	fd;
@@ -112,10 +109,15 @@ int	get_redir(t_ctx *ctx, t_ast *ast)
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		else
-			verif_redir(ctx, ast);
 		if (!get_redir(ctx, ast->childs[1]))
 			return (0);
 	}
 	return (1);
+}
+
+int	exit_with_code(t_ctx *ctx, int code)
+{
+	if (code >= 0)
+		ctx->status = code;
+	return (ctx->status);
 }

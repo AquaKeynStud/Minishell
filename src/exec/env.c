@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 21:44:30 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 13:39:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,26 +91,28 @@ void	free_env(t_env **env)
 
 t_env	*init_env(char **envp)
 {
-	int		i;
-	t_env	*node;
-	char	**split;
 	t_env	*env_list;
+	t_env	*node;
+	char	*eq;
 
 	env_list = NULL;
-	i = 0;
-	while (envp[i])
+	while (*envp)
 	{
-		split = ft_split(envp[i], '='); // "VAR=VALUE"
-		node = (t_env *)s_malloc(sizeof(t_env));
-		node->key = ft_strdup(split[0]);
-		if (split[1])
-			node->value = ft_strdup(split[1]);
+		node = s_malloc(sizeof(t_env));
+		eq = ft_strchr(*envp, '=');
+		if (eq)
+		{
+			node->key = ft_substr(*envp, 0, eq - *envp);
+			node->value = ft_strdup(eq + 1);
+		}
 		else
-			node->value = ft_strdup(""); // ou NULL
+		{
+			node->key = ft_strdup(*envp);
+			node->value = NULL;
+		}
 		node->next = env_list;
 		env_list = node;
-		double_free((void **)split, 0);
-		i++;
+		envp++;
 	}
 	return (env_list);
 }

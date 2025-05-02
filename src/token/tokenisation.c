@@ -5,26 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 08:37:59 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/22 15:15:26 by arocca           ###   ########.fr       */
+/*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
+/*   Updated: 2025/05/02 00:38:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "lexing.h"
+#include <stdbool.h>
 
-static void	handle_redirection(const char *input, int *i, t_token **tokens)
+static void	handle_redir(t_lexing *s, t_token **tokens)
 {
 	char	op;
-	char	*str;
 	int		len;
+	char	*str;
 	t_token	*token;
 
 	len = 1;
-	op = input[*i];
-	if (input[*i + 1] == op)
+	op = s->input[s->i];
+	if (s->input[s->i + 1] == op)
 		len = 2;
-	str = ft_strndup(&input[*i], len);
+	str = ft_strndup(&s->input[s->i], len);
 	if (!str)
 		return ;
 	if (op == '>' && len == 2)
@@ -38,87 +39,97 @@ static void	handle_redirection(const char *input, int *i, t_token **tokens)
 	if (token)
 		add_token(tokens, token);
 	free(str);
-	*i += len;
+	s->i += len;
+	s->merge = false;
 }
 
-static void	handle_quotes(const char *input, int *i, t_token **tokens)
+static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 {
-	char	quote;
-	char	*str;
-	int		start;
 	int		len;
-	t_token	*token;
+	int		start;
+	char	*content;
+	char	*expanded;
 
-	quote = input[*i];
-	(*i)++;
-	start = *i;
-	while (input[*i] && input[*i] != quote)
-		(*i)++;
-	len = *i - start;
-	str = ft_strndup(&input[start], len);
-	if (str)
+	(s->i)++;
+	start = s->i;
+	while (s->input[s->i] && s->input[s->i] != quote)
+		(s->i)++;
+	if (s->input[s->i] != quote)
+		return ;
+	len = s->i - start;
+	content = ft_strndup(&s->input[start], len);
+	(s->i)++;
+	if (!content)
+		return ;
+	if (quote == '"')
 	{
-		token = create_token(str, TOKEN_WORD);
-		if (token)
-			add_token(tokens, token);
-		free(str);
+		expanded = expand_args(ctx, content);
+		free(content);
 	}
-	if (input[*i] == quote)
-		(*i)++;
+	else
+		expanded = content;
+	add_or_merge_word(tokens, expanded, s->merge);
+	s->merge = true;
 }
 
-static void	handle_word(const char *input, int *i, t_token **tokens)
+static void	handle_pipe(t_lexing *s, t_token **tokens)
 {
-	int		start;
+	add_token(tokens, create_token("|", TOKEN_PIPE));
+	s->i++;
+	s->merge = false;
+}
+
+static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
+{
 	int		len;
 	char	*str;
-	t_token	*token;
+	int		start;
+	char	*expanded;
 
-	start = *i;
-	while (input[*i] && !is_whitespace(input[*i]) && !is_operator(input[*i]))
+	start = s->i;
+	while (s->input[s->i] && !is_whitespace(s->input[s->i])
+		&& !is_operator(s->input[s->i]))
 	{
-		if (input[*i] == '\'' || input[*i] == '"')
+		if (s->input[s->i] == '"' || s->input[s->i] == '\'')
 			break ;
-		(*i)++;
+		(s->i)++;
 	}
-	len = *i - start;
+	len = s->i - start;
 	if (len > 0)
 	{
-		str = ft_strndup(&input[start], len);
-		if (str)
-		{
-			token = create_token(str, TOKEN_WORD);
-			if (token)
-				add_token(tokens, token);
-			free(str);
-		}
+		str = ft_strndup(&s->input[start], len);
+		if (!str)
+			return ;
+		expanded = expand_args(ctx, str);
+		free(str);
+		if (expanded)
+			add_or_merge_word(tokens, expanded, s->merge);
 	}
+	s->merge = true;
 }
 
-t_token	*tokenize(const char *input)
+t_token	*tokenize(t_ctx *ctx, char *input)
 {
-	t_token	*tokens;
-	int		i;
+	t_lexing	s;
+	t_token		*tokens;
 
 	tokens = NULL;
-	i = 0;
-	while (input[i])
+	init_s(&s, input);
+	while (input[s.i])
 	{
-		while (is_whitespace(input[i]))
-			i++;
-		if (input[i] == '\0')
-			break ;
-		if (input[i] == '\'' || input[i] == '"')
-			handle_quotes(input, &i, &tokens);
-		else if (input[i] == '|')
+		if (is_whitespace(input[s.i]))
 		{
-			add_token(&tokens, create_token("|", TOKEN_PIPE));
-			i++;
+			s.i++;
+			s.merge = false;
 		}
-		else if (input[i] == '>' || input[i] == '<')
-			handle_redirection(input, &i, &tokens);
+		if (input[s.i] == '"' || input[s.i] == '\'')
+			handle_quotes(ctx, &s, &tokens, input[s.i]);
+		else if (input[s.i] == '|')
+			handle_pipe(&s, &tokens);
+		else if (input[s.i] == '>' || input[s.i] == '<')
+			handle_redir(&s, &tokens);
 		else
-			handle_word(input, &i, &tokens);
+			handle_word(ctx, &s, &tokens);
 	}
 	return (tokens);
 }

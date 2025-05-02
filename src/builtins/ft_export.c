@@ -6,55 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 11:49:38 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:39:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 #include "minishell.h"
-
-t_env	*create_env_node(const char *key, const char *value)
-{
-	t_env	*new;
-
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return (NULL);
-	new->key = ft_strdup(key);
-	if (!new->key)
-	{
-		free(new);
-		return (NULL);
-	}
-	if (value)
-		new->value = ft_strdup(value);
-	else
-		new->value = NULL;
-	if (value && !new->value)
-	{
-		free(new->key);
-		free(new);
-		return (NULL);
-	}
-	new->next = NULL;
-	return (new);
-}
-
-void	append_env_node(t_env **env, t_env *new_node)
-{
-	t_env	*current;
-
-	if (!*env)
-		*env = new_node;
-	else
-	{
-		current = *env;
-		while (current->next)
-			current = current->next;
-		current->next = new_node;
-	}
-}
 
 static void	add_or_update_env(t_env **env, char *key, char *value)
 {
@@ -79,31 +37,53 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 	}
 }
 
-static void	process_env_arg(char *arg, t_env **env)
+static int	parse_env_assignment(char *arg, char **key, char **value)
 {
-	char	**split;
+	char *equal_pos;
 
-	if (ft_strchr(arg, '='))
+	equal_pos = ft_strchr(arg, '=');
+	if (!equal_pos)
 	{
-		split = ft_split(arg, '=');
-		if (split && split[0])
-		{
-			if (split[1] && *split[1])
-				add_or_update_env(env, split[0], split[1]);
-			else
-				add_or_update_env(env, split[0], NULL);
-		}
-		double_free((void **)split, 0);
+		*key = ft_strdup(arg);
+		*value = NULL;
 	}
 	else
-		add_or_update_env(env, arg, NULL);
+	{
+		*key = ft_substr(arg, 0, equal_pos - arg);
+		*value = ft_strdup(equal_pos + 1);
+	}
+	if (!(*key))
+		return (0);
+	return (1);
+}
+
+int	process_env_arg(char *arg, t_env **env)
+{
+	char	*key = NULL;
+	char	*value = NULL;
+	int		exit_code = 0;
+
+	if (!parse_env_assignment(arg, &key, &value))
+		return (1);
+	if (!key || key[0] == '\0')
+	{
+		ft_dprintf(2, "export: '%s': not a valid identifier\n", arg);
+		exit_code = 1;
+	}
+	else if ((exit_code = is_valid_key(key)) == 0)
+		add_or_update_env(env, key, value);
+	free(key);
+	free(value);
+	return (exit_code);
 }
 
 int	ft_export(char **args, t_env **env)
 {
 	int	arg_count;
 	int	i;
+	int	exit_code;
 
+	exit_code = 0;
 	arg_count = count_args(args);
 	if (arg_count == 1)
 	{
@@ -113,9 +93,9 @@ int	ft_export(char **args, t_env **env)
 	i = 1;
 	while (i < arg_count)
 	{
-		process_env_arg(args[i], env);
+		exit_code = process_env_arg(args[i], env);
 		i++;
 	}
-	double_free((void **)args, 0);
-	return (0);
+	free(args);
+	return (exit_code);
 }

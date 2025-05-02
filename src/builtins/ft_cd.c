@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/30 11:54:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:38:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*get_cd_path(char **args, t_env *env)
 		path = get_from_env(env, "HOME");
 		if (!path)
 		{
-			ft_printf("cd: HOME is not set\n");
+			ft_dprintf(2, "cd: HOME is not set\n");
 			return (NULL);
 		}
 	}
@@ -81,7 +81,7 @@ int	ft_cd(char **args, t_env *env)
 	arg_count = count_args(args);
 	if (arg_count > 2)
 	{
-		ft_printf("cd: too many arguments\n");
+		ft_dprintf(2, "cd: too many arguments\n");
 		return (1);
 	}
 	path = get_cd_path(args, env);
@@ -91,6 +91,6 @@ int	ft_cd(char **args, t_env *env)
 	if (!oldpwd)
 		return (1);
 	result = perform_cd(path, oldpwd, env);
-	double_free((void **)args, 0);
+	free(args);
 	return (result);
 }

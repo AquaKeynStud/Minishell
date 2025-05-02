@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:50:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:39:29 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,51 +16,49 @@
 #include "minishell.h"
 #include "sigaction.h"
 
-/**
-** expand_arg: duplique la chaîne d'entrée en remplaçant les variables shell.
-** - "$?" → code de retour ctx->status
-** - "$VAR" → valeur de la variable d'environnement, ou chaîne vide
-** - sinon    → copie brute
-**/
-static char	*expand_arg(t_ctx *ctx, char *s)
+static int	count_argv(t_ast *node)
 {
-	char	*val;
+	int	i;
+	int	count;
 
-	if (!s)
-		return (ft_strdup(""));
-	if (!ft_strcmp(s, "$?"))
-		return (ft_itoa(ctx->status));
-	if (s[0] == '$' && s[1])
+	i = 0;
+	count = 0;
+	while (i < node->sub_count)
 	{
-		val = get_from_env(ctx->env, s + 1);
-		if (val)
-			return (ft_strdup(val));
-		return (ft_strdup(""));
+		if (node->childs[i]->type == AST_REDIR)
+			i += 2;
+		else
+		{
+			count++;
+			i++;
+		}
 	}
-	return (ft_strdup(s));
+	return (count);
 }
 
-char	**ast_to_argv(t_ctx *ctx, t_ast *node)
+char	**ast_to_argv(t_ast *node)
 {
-	int		pos;
+	int		i;
+	int		argc;
 	char	**argv;
+	int		arg_idx;
 	t_ast	**childs;
 
 	if (!node)
 		return (NULL);
-	pos = node->sub_count;
+	i = 0;
+	arg_idx = 1;
 	childs = node->childs;
-	argv = s_malloc((pos + 2) * sizeof(char *));
-	argv[pos + 1] = NULL;
-	argv[0] = expand_arg(ctx, node->value);
-	if (!argv[0])
-		free(argv);
-	while (pos > 0)
+	argc = count_argv(node);
+	argv = s_malloc((argc + 2) * sizeof(char *));
+	argv[0] = node->value;
+	argv[argc + 1] = NULL;
+	while (i < node->sub_count)
 	{
-		argv[pos] = expand_arg(ctx, childs[pos - 1]->value);
-		if (!argv[pos])
-			double_free((void **)argv, 0);
-		pos--;
+		if (childs[i]->type == AST_REDIR)
+			i += 2;
+		else
+			argv[arg_idx++] = childs[i++]->value;
 	}
 	return (argv);
 }
@@ -98,7 +96,7 @@ int	free_cmd(char *path, char **args, char **envp, int exit_code)
 	if (path)
 		free(path);
 	if (args)
-		double_free((void **)args, 0);
+		free(args);
 	if (envp)
 		double_free((void **)envp, 0);
 	return (exit_code);

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 11:47:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:37:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_ast
 /* -- Functions -- */
 t_ast	*parse_input(t_ctx *ctx, t_token *tokens);
 
-void	*parsing_err(t_ctx *ctx, const char *msg, int code);
+int		parsing_err(t_ctx *ctx, const char *msg, int code);
 
 void	*free_ast(t_ast *node);
 void	ast_add_child(t_ast *parent, t_ast *child);
