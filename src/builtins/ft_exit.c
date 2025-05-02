@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 18:39:02 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 10:22:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,22 @@ static int	str_is_numeric(char *arg)
 
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
-	{
 		i++;
-	}
 	while (arg[i])
 	{
-		if (ft_isdigit(arg[i]) == 0)
-			return (2);
+		if (!ft_isdigit(arg[i]))
+			return (1);
 		i++;
 	}
 	return (0);
+}
+
+void	handle_exit_err(char *arg, char *format)
+{
+	ft_dprintf(2, "minishell: exit: ");
+	if (arg && *arg)
+		ft_dprintf(2, "%s: ", arg);
+	ft_dprintf(2, "%s\n", format);
 }
 
 int	ft_exit(int argc, char **args)
@@ -37,14 +43,14 @@ int	ft_exit(int argc, char **args)
 
 	if (argc > 2)
 	{
-		ft_dprintf(2, "exit: %s: too many arguments\n", args[1]);
+		handle_exit_err(NULL, "too many arguments");
 		return (1);
 	}
 	if (argc == 2)
 	{
-		if (str_is_numeric(args[1]) == 2)
+		if (str_is_numeric(args[1]))
 		{
-			ft_dprintf(2, "exit: %s: numeric argument required\n", args[1]);
+			handle_exit_err(args[1], "numeric argument required");
 			exit(2);
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 18:37:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/30 22:36:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,6 @@ void	*free_ast(t_ast *node);
 void	ast_add_child(t_ast *parent, t_ast *child);
 void	*double_free_ast(t_ast *left, t_ast *right);
 t_ast	*new_ast(t_ast_type type, const char *value);
-
-void	redir_priority(t_ast **cmd, t_ast *redir);
-void	cat_empty_heredoc(t_ast **cmd, t_token *tmp);
-t_ast	*overwrite_stub(t_token **curr, t_ast **cmd);
 
 void	redir_priority(t_ast **cmd, t_ast *redir);
 void	cat_empty_heredoc(t_ast **cmd, t_token *tmp);
