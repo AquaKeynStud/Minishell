@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 00:38:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/03 01:14:04 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	len = s->i - start;
 	content = ft_strndup(&s->input[start], len);
 	(s->i)++;
-	if (!content)
+	if (!content || len <= 0)
 		return ;
 	if (quote == '"')
 	{
