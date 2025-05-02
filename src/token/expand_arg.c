@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 00:41:35 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 10:06:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,30 @@ static char	*ft_strjoin_free(char *s1, char *s2)
 	return (final);
 }
 
-static char	*handle_env_var(t_ctx *ctx, size_t *i, char *s, char *res)
+static char	*handle_env_var(t_ctx *ctx, char **str, char *res)
 {
+	char	*s;
 	char	*val;
 	char	*key;
-	size_t	start;
 
-	start = ++(*i);
-	if (s[start] == '?')
+	s = *str + 1;
+	if (*s == '?')
 	{
-		(void)key;
-		(*i)++;
+		s++;
 		val = ft_itoa(ctx->status);
+		*str = s;
 		return (ft_strjoin_free(res, val));
 	}
+	while (ft_isalnum(*s) || *s == '_')
+		s++;
+	key = ft_strndup(*str + 1, s - (*str + 1));
+	if (get_from_env(ctx->env, key))
+		val = ft_strdup(get_from_env(ctx->env, key));
 	else
-	{
-		while (ft_isalnum((unsigned char)s[*i]) || s[*i] == '_')
-			(*i)++;
-		key = ft_strndup(&s[start], *i - start);
-		if (get_from_env(ctx->env, key))
-			val = ft_strdup(get_from_env(ctx->env, key));
-		else
-			val = ft_strdup("");
-		free(key);
-		return (ft_strjoin_free(res, val));
-	}
+		val = ft_strdup("");
+	free(key);
+	*str = s;
+	return (ft_strjoin_free(res, val));
 }
 
 static char	*append_char(char *res, char c)
@@ -82,30 +80,29 @@ static char	*handle_input_err(char *res)
 	return (res);
 }
 
-char	*expand_args(t_ctx *ctx, char *s)
+char	*expand_args(t_ctx *ctx, char *str)
 {
-	size_t	i;
+	char	*s;
 	char	*res;
 
-	i = 0;
-	if (!s)
+	if (!str)
 		return (NULL);
+	s = str;
 	res = ft_strdup("");
 	if (!res)
 		return (NULL);
-	while (s[i])
+	while (*s)
 	{
-		if (s[i] == '$' && s[i + 1])
+		if (*s == '$' && (s[1] == '?' || ft_isalnum(s[1]) || s[1] == '_'))
 		{
-			res = handle_env_var(ctx, &i, s, res);
+			res = handle_env_var(ctx, &s, res);
 			if (!res)
 				return (NULL);
 			continue ;
 		}
-		res = append_char(res, s[i]);
+		res = append_char(res, *s++);
 		if (!res)
 			return (NULL);
-		i++;
 	}
 	return (handle_input_err(res));
 }
