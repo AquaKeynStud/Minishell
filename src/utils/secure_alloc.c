@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/27 15:09:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:37:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*s_malloc(size_t size)
 	void	*alloc;
 
 	if (!size)
-		exit(1); // Trouver un moyen de secure exit
+		exit(1);
 	alloc = malloc(size);
 	if (!alloc)
 	{
@@ -34,7 +34,7 @@ void	*s_calloc(size_t nmemb, size_t size)
 	void	*alloc;
 
 	if (!nmemb || !size || nmemb > SIZE_MAX / size)
-		return (NULL); // vérifier si c'est pas mieux d'exit
+		return (NULL);
 	alloc = ft_calloc(nmemb, size);
 	if (!alloc)
 	{

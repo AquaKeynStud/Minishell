@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/25 14:02:01 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:37:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	err(char *message) // Potentiellement ajouter un retour a la ligne si messages trop longs
+int	err(char *message)
 {
 	ssize_t	count;
 
@@ -24,7 +24,7 @@ int	err(char *message) // Potentiellement ajouter un retour a la ligne si messag
 	return (count);
 }
 
-int	err_value(char *message, char *value) // A remplacer par un dprintf
+int	err_value(char *message, char *value)
 {
 	ssize_t	count;
 

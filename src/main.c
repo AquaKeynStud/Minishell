@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/28 13:31:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:38:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void	init_context(t_ctx *ctx, char **envp)
 	ctx->env = init_env(envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
+	ctx->has_found_err = false;
 	return ;
 }
 
@@ -36,12 +37,15 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_ast	*ast;
 	t_token	*tokens;
 
-	tokens = tokenize(cmd);
-	ast = parse_input(tokens);
+	tokens = tokenize(ctx, cmd);
+	ast = parse_input(ctx, tokens);
+	if (!get_redir(ctx, ast))
+		return ;
 	execute_ast(ctx, ast);
 	free_tokens(&tokens);
 	free_ast(ast);
 	ast = NULL;
+	ctx->has_found_err = false;
 }
 
 static void	get_input_loop(t_ctx *ctx)
@@ -53,9 +57,9 @@ static void	get_input_loop(t_ctx *ctx)
 		input = readline("minishell => ");
 		if (!input)
 			break ;
-		if (*input) // On ajoute la chaine a l'historique si elle n'est pas vide
+		if (*input)
 			add_history(input);
-		ft_trim(&input, " \t"); // On enleve les espaces au début et à la fin
+		ft_trim(&input, " \t");
 		command_handler(ctx, input);
 		free(input);
 	}
@@ -68,9 +72,9 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	init_context(&ctx, envp); // Remplit la structure contexte
+	init_context(&ctx, envp);
 	sig_init();
-	get_input_loop(&ctx); // Lance la détection des inputs avec readline
-	secure_exit(&ctx, 0);
+	get_input_loop(&ctx);
+	secure_exit(&ctx);
 	return (0);
 }

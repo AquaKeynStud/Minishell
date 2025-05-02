@@ -5,81 +5,102 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/25 13:46:19 by arocca           ###   ########.fr       */
+/*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
+/*   Updated: 2025/05/02 18:21:26 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
-#include "libft.h"
-#include <stdio.h>
-#include <limits.h>
+#include "minishell.h"
 
-static int	update_env(t_env *env, const char *key, const char *value)
+static char	*ensure_target_dir(char **args, t_env *env)
+{
+	char	*path;
+
+	if (args[1])
+		path = args[1];
+	else
+	{
+		path = get_from_env(env, "HOME");
+		if (!path)
+		{
+			ft_dprintf(2, "cd: HOME not set\n");
+			return (NULL);
+		}
+	}
+	return (path);
+}
+
+char	*get_working_dir(char *cmd_request)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		ft_dprintf(2, "%s: error retrieving current directory: ", cmd_request);
+		perror("getcwd: cannot access parent directories");
+		return (NULL);
+	}
+	return (cwd);
+}
+
+static int	update_env(t_env *env, char *key, char *value)
 {
 	while (env)
 	{
 		if (!ft_strcmp(env->key, key))
 		{
 			free(env->value);
-			env->value = ft_strdup(value);
+			env->value = value;
 			return (0);
 		}
 		env = env->next;
 	}
-	return (1); // non trouvé
+	return (1);
 }
 
-static char *get_env_value(t_env *env, const char *key)
+static int	process_cd(char *path, char *oldpwd, t_env *env)
 {
-	while (env)
+	char	*newpwd;
+
+	if (chdir(path))
 	{
-		if (!ft_strcmp(env->key, key))
-			return (env->value);
-		env = env->next;
+		ft_dprintf(2, "minishell: cd: ");
+		perror(path);
+		return (EXIT_FAILURE);
 	}
-	return (NULL); // pas trouvé
+	newpwd = get_working_dir("chdir");
+	if (!newpwd)
+	{
+		if (path[0] == '/')
+			newpwd = ft_strdup(path);
+		else
+			newpwd = join_with_delim((char *)oldpwd, (char *)path, "/");
+	}
+	if (oldpwd)
+		update_env(env, "OLDPWD", oldpwd);
+	if (newpwd)
+		update_env(env, "PWD", newpwd);
+	return (EXIT_SUCCESS);
 }
 
 int	ft_cd(char **args, t_env *env)
 {
-	char	cwd[PATH_MAX];
-	char	*oldpwd;
 	char	*path;
+	char	*oldpwd;	
 
-	path = args[1];
-	if (args[2])
+	if (count_args(args) > 2)
 	{
-		ft_printf("cd: too many arguments\n");
+		ft_dprintf(2, "cd: too many arguments\n");
+		free(args);
 		return (1);
 	}
+	path = ensure_target_dir(args, env);
 	if (!path)
-		path = get_env_value(env, "HOME");
-	if (args[2])
-	{
-		ft_printf("cd: HOME is not set\n");
 		return (1);
-	}
-	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("cd: getcwd");
-		return (1);
-	}
-	oldpwd = ft_strdup(cwd);
-	if (chdir(path) != 0)
-	{
-		perror("cd");
-		free(oldpwd);
-		return (1);
-	}
-	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("cd: getcwd (after chdir)");
-		free(oldpwd);
-		return (1);
-	}
-	update_env(env, "OLDPWD", oldpwd);
-	update_env(env, "PWD", cwd);
-	free(oldpwd);
-	return (0);
+	oldpwd = ft_strdup(get_from_env(env, "PWD"));
+	if (!oldpwd)
+		oldpwd = get_working_dir("cd");
+	free(args);
+	return (process_cd(path, oldpwd, env));
 }

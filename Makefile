@@ -24,6 +24,7 @@ D_INC	=	inc/
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
 D_LFT	=	libft/
+
 D_EXE	=	$(D_SRC)exec/
 D_UTL	=	$(D_SRC)utils/
 D_TOK	=	$(D_SRC)token/
@@ -40,16 +41,20 @@ LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
 
 LST_TOK		=	add_token.c			\
+				expand_arg.c		\
 				utils_token.c		\
 				tokenisation.c
 
-LST_PAR		=	ast_adders.c		\
-				ast_setters.c
+LST_PAR		=	parser.c			\
+				ast_builders.c		\
+				ast_semantics.c
 
 LST_EXE		=	env.c				\
 				exec.c				\
-				exec_utils.c		\
-				builtin_exec.c
+				exec_err.c			\
+				cmd_utils.c			\
+				builtin_exec.c		\
+				exec_behaviors.c
 
 LST_BLT		=	ft_cd.c				\
 				ft_env.c			\
@@ -57,7 +62,9 @@ LST_BLT		=	ft_cd.c				\
 				ft_exit.c			\
 				ft_echo.c			\
 				ft_unset.c			\
-				ft_export.c
+				ft_export.c			\
+				ft_export_print.c	\
+				ft_export_utils.c
 
 LST_UTL		=	printers.c			\
 				secure_exit.c		\
@@ -89,6 +96,7 @@ all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	@clear
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 debug:	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
@@ -124,6 +132,7 @@ fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(MAKE) -s -C $(D_LFT) fclean
 	@$(RM) $(NAME)
+	@clear
 	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
 re:
