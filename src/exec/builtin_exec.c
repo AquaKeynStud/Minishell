@@ -6,12 +6,22 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 23:55:28 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:26:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "minishell.h"
+
+int	count_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+		i++;
+	return (i);
+}
 
 int	is_builtin(char *cmd)
 {
@@ -39,7 +49,7 @@ int	exec_builtin(char **args, t_env *env)
 	if (!ft_strcmp(args[0], "echo"))
 		return (ft_echo(args));
 	if (!ft_strcmp(args[0], "pwd"))
-		return (ft_pwd());
+		return (ft_pwd(args, env));
 	if (!ft_strcmp(args[0], "export"))
 		return (ft_export(args, &env));
 	if (!ft_strcmp(args[0], "unset"))
