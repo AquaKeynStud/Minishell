@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 00:21:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/02 08:50:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@ int	ft_echo(char **args)
 
 	i = 0;
 	newline = true;
-	if (args[0] && !*args[1])
-		return (ft_printf("\n") - 1);
+	if (!args[1])
+	{
+		ft_printf("\n");
+		return (EXIT_SUCCESS);
+	}
 	while (args[i] && is_dash_n_flag(args[i++]))
 		newline = false;
 	while (args[i])
