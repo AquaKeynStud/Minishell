@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 12:55:27 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:56:34 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ int	process_env_arg(char *arg, t_env **env)
 		return (1);
 	if (!key || key[0] == '\0')
 	{
-		ft_dprintf(2, "export: '%s': not a valid identifier\n", arg);
+		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
 		exit_code = 1;
 	}
-	else if ((exit_code = is_valid_key(key)) == 0)
+	else if ((exit_code = is_valid_key(key, arg)) == 0)
 		add_or_update_env(env, key, value);
 	free(key);
 	free(value);

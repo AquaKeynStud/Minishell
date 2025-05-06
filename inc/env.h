@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 12:56:06 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:54:40 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	free_env(t_env **env);
 t_env	*init_env(char **envp);
 
 int		count_args(char **args);
-int		is_valid_key(char *key);
+int		is_valid_key(char *key, char *arg);
 char	*get_current_dir(void);
 char	*get_from_env(t_env *env, const char *key);
 void	print_sorted_env(t_env *env);
