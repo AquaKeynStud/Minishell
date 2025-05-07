@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
+#    By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/05/01 18:32:41 by arocca           ###   ########.fr        #
+#    Updated: 2025/05/07 11:35:32 by abouclie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ MKDIR	=	mkdir -p
 OBJ_DIR	=	./obj
 DEP_DIR	=	./dep
 
-SRCS	=	ft_atoi.c ft_bzero.c ft_calloc.c ft_abs.c\
+SRCS	=	ft_atoi.c ft_atoll.c ft_bzero.c ft_calloc.c ft_abs.c\
 			ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
 			ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c \
 			ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_realloc.c \

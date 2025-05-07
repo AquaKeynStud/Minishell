@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 20:39:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/07 11:54:15 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,54 @@ static int	str_is_numeric(char *arg)
 	return (0);
 }
 
-int	ft_exit(int argc, char **args)
+static int	check_exit_args(int argc, char **args)
 {
-	int	arg;
-
-	if (argc > 2)
+	if (argc > 2 && str_is_numeric(args[1]) == 0)
 	{
-		ft_dprintf(2, "exit: %s: too many arguments\n", args[1]);
+		ft_dprintf(2, "exit: too many arguments\n");
 		return (1);
 	}
-	if (argc == 2)
+	if (argc > 1)
 	{
 		if (str_is_numeric(args[1]) == 2)
 		{
 			ft_dprintf(2, "exit: %s: numeric argument required\n", args[1]);
-			exit(2);
+			return (2);
 		}
-		else
+	}
+	return (0);
+}
+
+void	handle_exit(int argc, char **args)
+{
+	long long	arg;
+	int			error;
+
+	if (argc > 1)
+	{
+		arg = ft_atoll(args[1], &error) % 256;
+		if (error == 2)
 		{
-			arg = ft_atoi(args[1]) % 256;
-			exit(arg);
+			ft_dprintf(2, "exit: %s: numeric argument required\n", args[1]);
+			exit(error);
 		}
+		exit(arg);
 	}
 	free(args);
 	exit(0);
+}
+
+int	ft_exit(int argc, char **args)
+{
+	int	error;
+
+	error = check_exit_args(argc, args);
+	if (error)
+	{
+		if (error == 2)
+			exit(2);
+		return (1);
+	}
+	handle_exit(argc, args);
+	return (0);
 }

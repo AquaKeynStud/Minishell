@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/06 10:56:34 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:38:50 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 
 static int	parse_env_assignment(char *arg, char **key, char **value)
 {
-	char *equal_pos;
+	char	*equal_pos;
 
 	equal_pos = ft_strchr(arg, '=');
 	if (!equal_pos)
@@ -59,18 +59,22 @@ static int	parse_env_assignment(char *arg, char **key, char **value)
 
 int	process_env_arg(char *arg, t_env **env)
 {
-	char	*key = NULL;
-	char	*value = NULL;
-	int		exit_code = 0;
+	char	*key;
+	char	*value;
+	int		exit_code;
 
+	key = NULL;
+	value = NULL;
+	exit_code = 0;
 	if (!parse_env_assignment(arg, &key, &value))
 		return (1);
+	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')
 	{
 		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
 		exit_code = 1;
 	}
-	else if ((exit_code = is_valid_key(key, arg)) == 0)
+	else if (exit_code == 0)
 		add_or_update_env(env, key, value);
 	free(key);
 	free(value);
