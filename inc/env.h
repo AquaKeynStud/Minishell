@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/07 11:36:21 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:18:27 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_env
 }				t_env;
 
 /* -- Functions -- */
-int			ft_pwd(void);
+int			ft_pwd(char **args);
 int			ft_echo(char **args);
 int			ft_cd(char **args, t_env *env);
 int			ft_exit(int argc, char **args);
@@ -40,6 +40,7 @@ void		free_env(t_env **env);
 t_env		*init_env(char **envp);
 
 int			count_args(char **args);
+int			is_option(char *command, char **args);
 int			is_valid_key(char *key, char *arg);
 char		*get_current_dir(void);
 char		*get_from_env(t_env *env, const char *key);

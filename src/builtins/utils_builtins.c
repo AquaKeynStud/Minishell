@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 12:39:37 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/07 11:33:28 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:17:25 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,21 @@ char	*get_current_dir(void)
 		return (NULL);
 	}
 	return (ft_strdup(cwd));
+}
+
+int	is_option(char *command, char **args)
+{
+	int		i;
+
+	i = 1;
+	while (args[i])
+	{
+		if (args[i][0] == '-')
+		{
+			ft_printf("%s: %s: no option allowed\n", command, args[i]);
+			return (2);
+		}
+		i++;
+	}
+	return (0);
 }

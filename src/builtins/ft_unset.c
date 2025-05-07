@@ -3,33 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 20:36:42 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:17:12 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
 #include "minishell.h"
-
-static int	is_option(char **args)
-{
-	int		i;
-
-	i = 1;
-	while (args[i])
-	{
-		if (args[i][0] == '-')
-		{
-			ft_printf("unset: %s: no option allowed\n", args[i]);
-			return (2);
-		}
-		i++;
-	}
-	return (0);
-}
 
 static void	remove_env_var(char *key, t_env **env)
 {
@@ -62,7 +45,7 @@ int	ft_unset(char **args, t_env *env)
 	int		exit_code;
 
 	i = 1;
-	exit_code = is_option(args);
+	exit_code = is_option("unset", args);
 	while (args[i])
 	{
 		remove_env_var(args[i], &env);
