@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:59:46 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/01 20:38:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:58:03 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ static int	perform_cd(char *path, char *oldpwd, t_env *env)
 	free(oldpwd);
 	free(cwd);
 	return (0);
+}
+
+void	is_tilde()
+{
+	
 }
 
 int	ft_cd(char **args, t_env *env)
