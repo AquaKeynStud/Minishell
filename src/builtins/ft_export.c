@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/06 15:20:44 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/07 11:38:50 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-void	add_or_update_env(t_env **env, char *key, char *value)
+static void	add_or_update_env(t_env **env, char *key, char *value)
 {
 	char	*existing;
 	t_env	*new_node;
@@ -68,17 +68,14 @@ int	process_env_arg(char *arg, t_env **env)
 	exit_code = 0;
 	if (!parse_env_assignment(arg, &key, &value))
 		return (1);
+	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')
 	{
-		ft_dprintf(2, "export: '%s': not a valid identifier\n", arg);
+		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
 		exit_code = 1;
 	}
-	else
-	{
-		exit_code = is_valid_key(key);
-		if (exit_code == 0)
-			add_or_update_env(env, key, value);
-	}
+	else if (exit_code == 0)
+		add_or_update_env(env, key, value);
 	free(key);
 	free(value);
 	return (exit_code);

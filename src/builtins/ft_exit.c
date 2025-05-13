@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 18:35:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:36:09 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,57 +22,63 @@ static int	str_is_numeric(char *arg)
 		i++;
 	while (arg[i])
 	{
-		if (!ft_isdigit(arg[i]))
-			return (1);
+		if (ft_isdigit(arg[i]) == 0)
+			return (2);
 		i++;
 	}
 	return (0);
 }
 
-void	handle_exit_err(char *arg, char *format)
+static int	check_exit_args(int argc, char **args)
 {
-	ft_dprintf(2, "minishell: exit: ");
-	if (arg && *arg)
-		ft_dprintf(2, "%s: ", arg);
-	ft_dprintf(2, "%s\n", format);
-}
-
-static bool	check_argc(t_ctx *ctx, int argc, char **args)
-{
-	if (argc > 2)
+	if (argc > 2 && str_is_numeric(args[1]) == 0)
 	{
-		handle_exit_err(NULL, "too many arguments");
-		free(args);
-		ctx->status = 1;
-		return (false);
+		ft_dprintf(2, "minishell: exit: too many arguments\n");
+		return (1);
 	}
-	return (true);
+	if (argc > 1)
+	{
+		if (str_is_numeric(args[1]) == 2)
+		{
+			ft_dprintf(2, "minishell: exit: ");
+			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
+			return (2);
+		}
+	}
+	return (0);
 }
 
-void	ft_exit(t_ctx *ctx, int argc, char **args)
+void	handle_exit(int argc, char **args)
 {
-	int	arg;
+	long long	arg;
+	int			error;
 
-	if (!check_argc(ctx, argc, args))
-		return ;
-	if (argc == 2)
+	if (argc > 1)
 	{
-		if (str_is_numeric(args[1]))
+		arg = ft_atoll(args[1], &error) % 256;
+		if (error == 2)
 		{
-			handle_exit_err(args[1], "numeric argument required");
-			ctx->status = 2;
-			free(args);
-			secure_exit(ctx);
+			ft_dprintf(2, "minishell: exit: ");
+			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
+			exit(error);
 		}
-		else
-		{
-			arg = ft_atoi(args[1]) % 256;
-			free(args);
-			ctx->status = arg;
-			secure_exit(ctx);
-		}
+		exit(arg);
 	}
 	free(args);
-	ctx->status = 0;
-	secure_exit(ctx);
+	exit(0);
+}
+
+int	ft_exit(int argc, char **args)
+{
+	int	error;
+
+	error = check_exit_args(argc, args);
+	if (error)
+	{
+		if (error == 2)
+			exit(2);
+		return (1);
+	}
+	handle_exit(argc, args);
+	return (0);
 }

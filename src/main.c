@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 18:45:59 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 23:12:05 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,32 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	ctx->err_in_tokens = false;
 }
 
+// char *get_input(void) {
+//     char *input;
+
+//     if (isatty(STDIN_FILENO)) {
+//         // Mode interactif : on affiche le prompt
+//         input = readline("minishell => ");
+//     } else {
+//         // Mode non-interactif : on masque tout ce que readline écrit
+//         FILE *devnull = fopen("/dev/null", "w");
+//         if (!devnull)
+//             return NULL;  // erreur d’ouverture
+//         rl_outstream = devnull;
+//         input = readline(NULL);
+//         fclose(devnull);
+//         // rl_outstream revient tout seul au stdio après fclose
+//     }
+//     return input;
+// }
+
 static void	get_input_loop(t_ctx *ctx)
 {
 	char	*input;
 
 	while (1)
 	{
-		// if (isatty(STDIN_FILENO))
 		input = readline("minishell => ");
-		// else
-		// 	input = readline(NULL);
 		if (!input)
 			break ;
 		if (*input)

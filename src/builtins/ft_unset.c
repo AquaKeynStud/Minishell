@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 18:39:20 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:02:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-static int	is_option(char **args)
+static int	is_option(char *command, char **args)
 {
 	int		i;
 
@@ -23,7 +23,7 @@ static int	is_option(char **args)
 	{
 		if (args[i][0] == '-')
 		{
-			ft_printf("unset: %s: no option allowed\n", args[i]);
+			ft_printf("%s: %s: no option allowed\n", command, args[i]);
 			return (2);
 		}
 		i++;
@@ -62,7 +62,7 @@ int	ft_unset(char **args, t_env *env)
 	int		exit_code;
 
 	i = 1;
-	exit_code = is_option(args);
+	exit_code = is_option("unset", args);
 	while (args[i])
 	{
 		remove_env_var(args[i], &env);

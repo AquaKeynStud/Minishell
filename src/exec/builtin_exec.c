@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 18:32:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 20:16:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	is_builtin(char *cmd)
 
 int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 {
+	(void)ctx;
 	if (!args)
 	{
 		ft_dprintf(2, "minishell: builtin: Invalid arguments\n");
@@ -58,10 +59,7 @@ int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 	if (!ft_strcmp(args[0], "env"))
 		return (ft_env(env, count_args(args), args));
 	if (!ft_strcmp(args[0], "exit"))
-	{
-		ft_exit(ctx, count_args(args), args);
-		return (ctx->status);
-	}
+		return (ft_exit(count_args(args), args));
 	if (!ft_strcmp(args[0], ":"))
 		return (double_dot(args));
 	return (-1);

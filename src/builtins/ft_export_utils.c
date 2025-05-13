@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 19:30:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/07 11:36:49 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,21 @@ t_env	*copy_env_list(t_env *env)
 	return (copy);
 }
 
-int	is_valid_key(char *key)
+int	is_valid_key(char *key, char *arg)
 {
 	int	i;
 
 	i = 0;
 	if (ft_isdigit(key[i]))
 	{
-		ft_dprintf(2, "export: '%s': not a valid identifier\n", key);
+		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
 		return (1);
 	}
 	while (key[i])
 	{
 		if (!ft_isalnum(key[i]) && key[i] != '_')
 		{
-			ft_dprintf(2, "export: '%s': not a valid identifier\n", key);
+			ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
 			return (1);
 		}
 		i++;
