@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:27:01 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 09:22:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/04/27 13:12:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ int	handle_nbr_fd(int fd, va_list *args, ssize_t *total_len, int isInt)
 	if (isInt)
 	{
 		arg = (int)va_arg(*args, int);
-		ft_putnbr_pt(arg, fd, total_len, NULL);
+		if (arg)
+			ft_putnbr_pt(arg, fd, total_len, NULL);
 	}
 	else
 	{
 		arg = (unsigned int)va_arg(*args, unsigned int);
-		ft_putunbr_fd(arg, fd, total_len, NULL);
+		if (arg)
+			ft_putunbr_fd(arg, fd, total_len, NULL);
 	}
 	return (0);
 }

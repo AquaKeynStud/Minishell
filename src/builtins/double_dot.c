@@ -1,33 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   double_dot.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 09:45:22 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/05 19:37:55 by arocca           ###   ########.fr       */
+/*   Created: 2025/05/06 14:36:32 by arocca            #+#    #+#             */
+/*   Updated: 2025/05/13 18:30:15 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strdup(const char *s)
+int	double_dot(char **args)
 {
-	int		i;
-	char	*dest;
-
-	if (!s)
-		return (NULL);
-	dest = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
-	if (dest == 0)
-		return (0);
-	i = 0;
-	while (s[i] != '\0')
-	{
-		dest[i] = s[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
+	free(args);
+	return (0);
 }

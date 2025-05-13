@@ -6,27 +6,48 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/02 18:21:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:26:51 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ensure_target_dir(char **args, t_env *env)
+static char	*check_env(t_env *env, char *req)
 {
 	char	*path;
 
-	if (args[1])
-		path = args[1];
-	else
+	path = get_from_env(env, req);
+	if (!path)
 	{
-		path = get_from_env(env, "HOME");
-		if (!path)
-		{
-			ft_dprintf(2, "cd: HOME not set\n");
-			return (NULL);
-		}
+		ft_dprintf(2, "cd: %s not set\n", req);
+		return (NULL);
 	}
+	return (path);
+}
+
+static char	*ensure_target_dir(char *args, t_env *env)
+{
+	char	*path;
+
+	if (args[1] && ((*args == '~' && args[1]) || !ft_strcmp(args, "-")))
+	{
+		if (*args == '~' && args[1] == '/')
+		{
+			path = join_with_delim(check_env(env, "HOME"), args + 2, "/");
+		}
+		else if (!ft_strcmp(args, "-"))
+		{
+			path = check_env(env, "OLDPWD");
+			ft_printf("%s\n", path);
+		}
+		else
+			path = args;
+		return (path);
+	}
+	else if (args && (*args != '~' || args[1]) && ft_strcmp(args, "--"))
+		path = args;
+	else
+		path = check_env(env, "HOME");
 	return (path);
 }
 
@@ -44,21 +65,6 @@ char	*get_working_dir(char *cmd_request)
 	return (cwd);
 }
 
-static int	update_env(t_env *env, char *key, char *value)
-{
-	while (env)
-	{
-		if (!ft_strcmp(env->key, key))
-		{
-			free(env->value);
-			env->value = value;
-			return (0);
-		}
-		env = env->next;
-	}
-	return (1);
-}
-
 static int	process_cd(char *path, char *oldpwd, t_env *env)
 {
 	char	*newpwd;
@@ -67,6 +73,8 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 	{
 		ft_dprintf(2, "minishell: cd: ");
 		perror(path);
+		if (path[0] == '~' && path[1] == '/')
+			free(path);
 		return (EXIT_FAILURE);
 	}
 	newpwd = get_working_dir("chdir");
@@ -81,6 +89,8 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 		update_env(env, "OLDPWD", oldpwd);
 	if (newpwd)
 		update_env(env, "PWD", newpwd);
+	if (path[0] == '~' && path[1] == '/')
+		free(path);
 	return (EXIT_SUCCESS);
 }
 
@@ -89,15 +99,20 @@ int	ft_cd(char **args, t_env *env)
 	char	*path;
 	char	*oldpwd;	
 
-	if (count_args(args) > 2)
+	if (count_args(args) > 2 && ft_strcmp(args[1], "--"))
 	{
 		ft_dprintf(2, "cd: too many arguments\n");
 		free(args);
 		return (1);
 	}
-	path = ensure_target_dir(args, env);
+	path = ensure_target_dir(args[1], env);
 	if (!path)
 		return (1);
+	if (path[0] == '-' && path[1])
+	{
+		ft_dprintf(2, "cd: %c%c: invalid option\n", path[0], path[1]);
+		return (1);
+	}
 	oldpwd = ft_strdup(get_from_env(env, "PWD"));
 	if (!oldpwd)
 		oldpwd = get_working_dir("cd");

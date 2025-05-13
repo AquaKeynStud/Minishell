@@ -45,9 +45,9 @@ LST_TOK		=	add_token.c			\
 				utils_token.c		\
 				tokenisation.c
 
-LST_PAR		=	parser.c			\
-				ast_builders.c		\
-				ast_semantics.c
+LST_PAR		=	redir.c				\
+				parser.c			\
+				ast_builders.c
 
 LST_EXE		=	env.c				\
 				exec.c				\
@@ -63,10 +63,12 @@ LST_BLT		=	ft_cd.c				\
 				ft_echo.c			\
 				ft_unset.c			\
 				ft_export.c			\
+				double_dot.c		\
 				ft_export_print.c	\
 				ft_export_utils.c
 
-LST_UTL		=	printers.c			\
+LST_UTL		=	joins.c				\
+				printers.c			\
 				secure_exit.c		\
 				secure_alloc.c		\
 				fd_collector.c
@@ -96,8 +98,9 @@ all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
-	@clear
+	@$(MAKE) clean
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
+	@clear
 
 debug:	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) -g3 $(OBJ) $(LIBS) -o $(NAME)
@@ -113,7 +116,7 @@ vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
 # @echo "Compiling $< → $@"
-	@$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	@$(CC) $(CFLAGS) -g3 $(INCS) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
@@ -157,6 +160,7 @@ supp_file: | $(D_OBJ)
 
 valgrind: supp_file
 	@$(MAKE) debug
+	@clear
 	valgrind							\
 		--leak-check=full					\
 		--show-leak-kinds=all				\

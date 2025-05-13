@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 18:26:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:32:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ int	is_builtin(char *cmd)
 		|| !ft_strcmp(cmd, "exit")
 		|| !ft_strcmp(cmd, "unset")
 		|| !ft_strcmp(cmd, "export")
+		|| !ft_strcmp(cmd, ":")
 	);
 }
 
-int	exec_builtin(char **args, t_env *env)
+int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 {
 	if (!args)
 	{
@@ -57,6 +58,11 @@ int	exec_builtin(char **args, t_env *env)
 	if (!ft_strcmp(args[0], "env"))
 		return (ft_env(env, count_args(args), args));
 	if (!ft_strcmp(args[0], "exit"))
-		return (ft_exit(count_args(args), args));
+	{
+		ft_exit(ctx, count_args(args), args);
+		return (ctx->status);
+	}
+	if (!ft_strcmp(args[0], ":"))
+		return (double_dot(args));
 	return (-1);
 }

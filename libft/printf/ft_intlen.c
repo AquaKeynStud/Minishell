@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_intlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 09:45:22 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/05 19:37:55 by arocca           ###   ########.fr       */
+/*   Created: 2025/02/20 10:49:03 by abouclie          #+#    #+#             */
+/*   Updated: 2025/02/20 17:25:19 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
-char	*ft_strdup(const char *s)
+int	ft_intlen(long n, int bsize)
 {
-	int		i;
-	char	*dest;
+	int	i;
 
-	if (!s)
-		return (NULL);
-	dest = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
-	if (dest == 0)
-		return (0);
 	i = 0;
-	while (s[i] != '\0')
+	if (n < 0)
 	{
-		dest[i] = s[i];
+		n = n * -1;
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	while (n >= bsize)
+	{
+		n = n / bsize;
+		i++;
+	}
+	if (n < bsize)
+		i++;
+	return (i);
 }

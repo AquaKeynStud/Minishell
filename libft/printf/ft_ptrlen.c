@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_ptrlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 09:45:22 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/05 19:37:55 by arocca           ###   ########.fr       */
+/*   Created: 2025/02/20 10:50:16 by abouclie          #+#    #+#             */
+/*   Updated: 2025/02/20 11:19:26 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
-char	*ft_strdup(const char *s)
+int	ft_ptrlen(uintptr_t n)
 {
-	int		i;
-	char	*dest;
+	int	i;
 
-	if (!s)
-		return (NULL);
-	dest = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
-	if (dest == 0)
-		return (0);
 	i = 0;
-	while (s[i] != '\0')
+	while (n >= 16)
 	{
-		dest[i] = s[i];
+		n = n / 16;
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	if (n < 16)
+		i++;
+	return (i);
 }

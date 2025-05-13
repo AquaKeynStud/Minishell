@@ -6,16 +6,22 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 19:37:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:44:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "parsing.h"
 #include "minishell.h"
 
 void	secure_exit(t_ctx *ctx)
 {
 	free_env(&ctx->env);
+	// if (ctx->ast)
+	// 	free_ast(ctx->ast);
+	// if (ctx->tokens)
+	// 	free_tokens(&ctx->tokens);
+	// free(ctx->input);
 	close_all_fds(&ctx->fds);
 	close(ctx->stdin_fd);
 	close(ctx->stdout_fd);

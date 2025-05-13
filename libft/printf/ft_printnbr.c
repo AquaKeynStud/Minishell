@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_printnbr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 09:12:07 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/05 21:04:47 by arocca           ###   ########.fr       */
+/*   Created: 2025/02/20 11:10:22 by abouclie          #+#    #+#             */
+/*   Updated: 2025/02/20 11:10:35 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_printnbr(long int n, char *base)
 {
-	size_t	i;
+	char	*nb;
+	int		len;
 
-	i = 0;
-	if (!s || !*s)
-		return (0);
-	while (s[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
+	len = 0;
+	nb = ft_itoa_base(n, base);
+	len = ft_printstr(nb);
+	free(nb);
+	return (len);
 }

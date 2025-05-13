@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 18:47:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:39:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,23 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include "lexing.h"
+#include "parsing.h"
 #include "minishell.h"
 
-char	*ft_strjoin_free(char *s1, char *s2)
+static char	*expand_status(t_ctx *ctx, t_lexing *lx, char **str, char **res)
 {
-	char	*final;
+	char	*s;
+	char	*val;
 
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-		return (s2);
-	if (!s2)
-		return (s1);
-	final = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (final);
+	s = *str + 2;
+	val = ft_itoa(ctx->status);
+	lx->i -= (ft_strlen(s) + (lx->quoted));
+	*str = s;
+	return (ft_strjoin_free(*res, val));
 }
 
-static char	*handle_env_var(t_ctx *ctx, char **str, char *res)
+static char	*handle_env_var(t_ctx *ctx, t_lexing *lx, char **str, char *res)
 {
 	char	*s;
 	char	*val;
@@ -40,69 +38,95 @@ static char	*handle_env_var(t_ctx *ctx, char **str, char *res)
 
 	s = *str + 1;
 	if (*s == '?')
-	{
+		return (expand_status(ctx, lx, str, &res));
+	else if (ft_isdigit(*s))
 		s++;
-		val = ft_itoa(ctx->status);
-		*str = s;
-		return (ft_strjoin_free(res, val));
-	}
-	while (ft_isalnum(*s) || *s == '_')
-		s++;
-	key = ft_strndup(*str + 1, s - (*str + 1));
-	if (get_from_env(ctx->env, key))
-		val = ft_strdup(get_from_env(ctx->env, key));
 	else
-		val = ft_strdup("");
+	{
+		while (ft_isalnum(*s) || *s == '_')
+			s++;
+	}
+	key = ft_strndup(*str + 1, s - (*str + 1));
+	val = ft_strdup(get_from_env(ctx->env, key));
 	free(key);
+	lx->i -= ft_strlen(s);
+	if (lx->quoted)
+		lx->i--;
 	*str = s;
 	return (ft_strjoin_free(res, val));
 }
 
-static char	*append_char(char *res, char c)
+t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
 {
-	char	*tmp;
+	t_token	*tok;
 
-	tmp = malloc(2);
-	if (!tmp)
+	if (*res && **res)
+	{
+		if (lx->quoted)
+			lx->i--;
+		return (simple_tok(lx, res, ft_strlen(*s)));
+	}
+	*res = handle_env_var(ctx, lx, s, *res);
+	if (!*res)
 		return (NULL);
-	tmp[0] = c;
-	tmp[1] = '\0';
-	return (ft_strjoin_free(res, tmp));
+	if (!lx->quoted)
+	{
+		tok = tokenize(ctx, *res, true);
+		if (is_whitespace((*res)[ft_strlen(*res) - 1]))
+			lx->merge = false;
+	}
+	else
+		return (simple_tok(lx, res, 0));
+	free(*res);
+	if (tok)
+		return (tok);
+	return (NULL);
 }
 
-static char	*handle_input_err(char *res)
+t_token	*handle_quote_var(t_ctx *ctx, t_lexing *lx, char **res)
 {
-	if (res[0] == '\0')
+	char	quote;
+
+	quote = lx->str[lx->i];
+	while (lx->str[lx->i + 1] && lx->str[lx->i + 1] != quote)
 	{
-		free(res);
+		lx->i++;
+		*res = append_char(*res, lx->str[lx->i]);
+	}
+	if (!lx->str[lx->i + 1] && lx->str[lx->i] != quote)
+	{
+		lx->i++;
+		parsing_err(ctx, "newline", 2);
+		ctx->err_in_tokens = true;
+		free(*res);
 		return (NULL);
 	}
-	return (res);
+	lx->i += 2;
+	return (simple_tok(lx, res, 0));
 }
 
-char	*expand_args(t_ctx *ctx, char *str)
+t_token	*expand_args(t_ctx *ctx, t_lexing *lx, char *s)
 {
-	char	*s;
 	char	*res;
 
-	if (!str)
+	if (!s || !*s)
 		return (NULL);
-	s = str;
 	res = ft_strdup("");
 	if (!res)
 		return (NULL);
 	while (*s)
 	{
-		if (*s == '$' && (s[1] == '?' || ft_isalnum(s[1]) || s[1] == '_'))
+		if (*s == '\\')
 		{
-			res = handle_env_var(ctx, &s, res);
-			if (!res)
-				return (NULL);
-			continue ;
+			s++;
+			res = append_char(res, *s++);
 		}
-		res = append_char(res, *s++);
-		if (!res)
-			return (NULL);
+		else if (*s == '$' && (s[1] == '?' || ft_isalnum(s[1]) || s[1] == '_'))
+			return (handle_var(ctx, lx, &s, &res));
+		else if (*s == '$' && (lx->str[lx->i] == '"' || lx->str[lx->i] == '\''))
+			return (handle_quote_var(ctx, lx, &res));
+		else
+			res = append_char(res, *s++);
 	}
-	return (handle_input_err(res));
+	return (simple_tok(lx, &res, ft_strlen(s)));
 }
