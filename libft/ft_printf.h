@@ -18,10 +18,10 @@
 
 int		parse_args(char *s, va_list *args, ssize_t *total_len);
 int		mandatory_parser(char c, va_list *args, ssize_t *total_len, int err);
-int		ft_printf(const char *format, ...)
-		__attribute__ ((format (printf, 1, 2)));
-int		ft_dprintf(int fd, const char *format, ...)
-		__attribute__ ((format (printf, 2, 3)));
+int		ft_printf(const char *format, ...);
+//		__attribute__ ((format (printf, 1, 2)));
+int		ft_dprintf(int fd, const char *format, ...);
+//		__attribute__ ((format (printf, 2, 3)));
 
 char	check_conv(char c);
 void	format_update(char **s, ssize_t	*i, ssize_t *len, va_list *args);

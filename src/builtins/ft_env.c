@@ -6,12 +6,27 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 18:38:30 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/12 10:58:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "minishell.h"
+
+int	update_env(t_env *env, char *key, char *value)
+{
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+		{
+			free(env->value);
+			env->value = value;
+			return (0);
+		}
+		env = env->next;
+	}
+	return (1);
+}
 
 int	ft_env(t_env *env, int argc, char **args)
 {

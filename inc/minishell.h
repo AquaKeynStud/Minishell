@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 22:54:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:41:03 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <unistd.h>
 
 /* -- Structures -- */
+typedef struct s_ast	t_ast;
+typedef struct s_token	t_token;
+
 typedef struct s_fd
 {
 	int			fd;
@@ -27,11 +30,15 @@ typedef struct s_fd
 
 typedef struct s_ctx
 {
-	t_env	*env;		// pointeur vers ton tableau d’env
+	t_env	*env;
 	t_fd	*fds;
+	t_ast	*ast;
 	int		status;
+	char	*input;
+	t_token	*tokens;
 	int		stdin_fd;
 	int		stdout_fd;
+	bool	err_in_tokens;
 	bool	has_found_err;
 }			t_ctx;
 

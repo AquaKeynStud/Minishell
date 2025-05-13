@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 19:38:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:45:59 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,14 @@
 static void	init_context(t_ctx *ctx, char **envp)
 {
 	ctx->fds = NULL;
+	ctx->ast = NULL;
 	ctx->status = 0;
 	ctx->env = init_env(envp);
+	ctx->tokens = NULL;
+	ctx->has_found_err = false;
+	ctx->err_in_tokens = false;
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
-	ctx->has_found_err = false;
 	return ;
 }
 
@@ -37,15 +40,21 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_ast	*ast;
 	t_token	*tokens;
 
-	tokens = tokenize(ctx, cmd);
+	tokens = tokenize(ctx, cmd, false);
 	ast = parse_input(ctx, tokens);
 	if (!get_redir(ctx, ast))
 		return ;
+	if (!has_bonus_err(ctx, tokens))
+		return ;
+	ctx->ast = ast;
+	ctx->tokens = tokens;
+	ctx->input = cmd;
 	execute_ast(ctx, ast);
 	free_tokens(&tokens);
 	free_ast(ast);
 	ast = NULL;
 	ctx->has_found_err = false;
+	ctx->err_in_tokens = false;
 }
 
 static void	get_input_loop(t_ctx *ctx)
@@ -54,7 +63,10 @@ static void	get_input_loop(t_ctx *ctx)
 
 	while (1)
 	{
+		// if (isatty(STDIN_FILENO))
 		input = readline("minishell => ");
+		// else
+		// 	input = readline(NULL);
 		if (!input)
 			break ;
 		if (*input)
@@ -62,6 +74,7 @@ static void	get_input_loop(t_ctx *ctx)
 		ft_trim(&input, " \t");
 		command_handler(ctx, input);
 		free(input);
+		input = NULL;
 	}
 	rl_clear_history();
 }

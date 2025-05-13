@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 18:48:49 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:24:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdbool.h>
 
 /* -- Structures -- */
+typedef struct s_ctx	t_ctx;
+
 typedef struct s_env
 {
 	char			*key;			// ex: "PATH"
@@ -28,12 +30,13 @@ typedef struct s_env
 
 /* -- Functions -- */
 int		ft_echo(char **args);
+int		double_dot(char **args);
 int		ft_pwd(char **args, void *env);
 int		ft_cd(char **args, t_env *env);
-int		ft_exit(int argc, char **args);
 int		ft_unset(char **args, t_env *env);
 int		ft_export(char **args, t_env **env);
 int		ft_env(t_env *env, int argc, char **args);
+void	ft_exit(t_ctx *ctx, int argc, char **args);
 
 void	free_env(t_env **env);
 t_env	*init_env(char **envp);
@@ -43,10 +46,11 @@ int		is_valid_key(char *key);
 t_env	*copy_env_list(t_env *env);
 void	print_sorted_env(t_env *env);
 char	*get_working_dir(char *cmd_request);
+char	*ft_strjoin_free(char *s1, char *s2);
 char	*get_from_env(t_env *env, const char *key);
 void	append_env_node(t_env **env, t_env *new_node);
+int		update_env(t_env *env, char *key, char *value);
 t_env	*create_env_node(const char *key, const char *value);
-
-char	*ft_strjoin_free(char *s1, char *s2);
+void	add_or_update_env(t_env **env, char *key, char *value);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:28:20 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/20 19:59:41 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:25:14 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 /* -- Structures -- */
 typedef struct s_fd
 {
-    int fd;
-    struct s_fd *next;
+	int			fd;
+	struct s_fd	*next;
 }			t_fd;
 
 /* -- Functions -- */

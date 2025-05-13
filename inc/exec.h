@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 00:24:06 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/11 20:48:36 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		execute_ast(t_ctx *ctx, t_ast *node);
 int		exec_command(t_ctx *ctx, t_ast *node);
 
 int		is_builtin(char *cmd);
-int		exec_builtin(char **args, t_env *env);
+int		exec_builtin(t_ctx *ctx, char **args, t_env *env);
 
 int		get_redir(t_ctx *ctx, t_ast *ast);
 int		pid_verification(t_ctx *ctx, t_ast *node);

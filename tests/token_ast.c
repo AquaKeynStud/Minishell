@@ -5,7 +5,43 @@
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
+#include "minishell.h"
 
+// char *trimmed(char *res)
+// {
+// 	int		i;
+// 	char	*tmp;
+// 	char	*result;
+// 	char	**splited;
+
+// 	i = 0;
+// 	if (!res || !*res)
+// 		return (res);
+// 	splited = ft_split(res, ' ');
+// 	if (!splited)
+// 		return (res);
+// 	result = ft_strdup("");
+// 	if (!result)
+// 		return (res);
+// 	if (*res == ' ')
+// 		result = append_char(result, ' ');
+// 	while (splited[i])
+// 	{
+// 		tmp = ft_strjoin(result, splited[i]);
+// 		if (splited[i + 1])
+// 			tmp = append_char(tmp, ' ');
+// 		free(result);
+// 		result = tmp;
+// 		i++;
+// 	}
+// 	if (res[ft_strlen(res) - 1] == ' ')
+// 		result = append_char(result, ' ');
+// 	free(res);
+// 	double_free((void **)splited, 0);
+// 	return (result);
+// }
+
+// Affiche la liste de tokens avec leur type
 // Affiche la liste de tokens avec leur type
 void print_token_list(t_token *head)
 {
@@ -61,7 +97,17 @@ void print_ast_tree(t_ast *root)
     }
 }
 
-void run_tests(const char *label, const char **tests, int num_tests)
+static void	init_context(t_ctx *ctx, char **envp)
+{
+	ctx->fds = NULL;
+	ctx->status = 0;
+	ctx->env = init_env(envp);
+	ctx->stdin_fd = dup(STDIN_FILENO);
+	ctx->stdout_fd = dup(STDOUT_FILENO);
+	return ;
+}
+
+void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 {
 	for (int i = 0; i < num_tests; i++)
 	{
@@ -71,13 +117,13 @@ void run_tests(const char *label, const char **tests, int num_tests)
 
 		// Tokenisation
 		printf("Tokenisation :\n");
-		t_token *tokens = tokenize(tests[i]);
+		t_token *tokens = tokenize(ctx, tests[i], false);
 		print_token_list(tokens);
 
 		// Parsing en AST et affichage
 		printf("_________________________________________________________|\n");
 		printf("AST :\n");
-		t_ast *ast = parse_input(tokens);
+		t_ast *ast = parse_input(ctx, tokens);
 		if (ast)
 			print_ast_tree(ast);
 		else
@@ -89,9 +135,11 @@ void run_tests(const char *label, const char **tests, int num_tests)
 
 // ────────────────────────────────────────────────────────────────────────────────
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
-	const char *simple_tests[] = {
+	t_ctx ctx;
+	init_context(&ctx, envp);
+	char *simple_tests[] = {
 		"ls -l",
 		"echo hello world",
 		"grep main *.c",
@@ -109,7 +157,7 @@ int main(int argc, char **argv)
 		"ps aux | grep ssh | awk '{print $2}' | xargs -I {} ls -lh /proc/{}/fd | grep sock | sort | uniq | head -n 5 | sed '1d' | wc -l"
 	};
 
-	const char *pipe_redirect_tests[] = {
+	char *pipe_redirect_tests[] = {
 		"cat < input.txt | grep 'error'",
 		"grep keyword < input.txt | sort > sorted.txt",
 		"ls -l | tee files.txt > log.txt",
@@ -122,18 +170,57 @@ int main(int argc, char **argv)
 		"grep TODO < notes.txt | wc -l > count.txt"
 	};
 
-	const char *my_tests[] = {
-		"cat Makefile > test.txt", // Test1
-		"<< eof", // Test 2
-		"Makefile < cat | echo > test.txt", // Test 3
-		"< infile cmd", // Test 4
-		"< in1 < in2 grep foo", // Test 5 
-		"echo bar > out.txt", // Test 6
-		"<< eof cat", // Test 7
-		"<< eof < in1 > out1 grep foo", // Test 8
-		"< input.txt > output.txt cat file1 file2", // Test 9
-		"<< eof < in1 < in2 > out1 > out2 cat foo", // Test 10
-		"cat | << eof < in1 | < in2 > out1 | grep foo", // Test 11
+	char *my_tests[] = {
+		// "echo $?HELLO",
+		// "echo $USERHELLO",
+		// "echo $USERldkfheilsjf-\"sd\"",
+		// "echo $USERdcdfjd^dsf",
+		// "echo '> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<'",
+		// "echo \"'$USER'\"",
+		// "echo '\"$USER\"'",
+		// "echo -n sodjhqsd",
+		// "echo $? | echo $? | echo $?",
+		// "echo $?|echo $?|echo $?",
+		// "echo $? | echo $? |||echo $?",
+		// "echo $? | echo $? | |echo $?",
+		// "<echo<",
+		// ">echo>",
+		// ">>echo>>",
+		// "<<echo<<",
+		// "echo >> |",
+		// ">>>>>>>>",
+		// "echo \"\" test",
+		// "echo eifjs\"\"$A.",
+		// "cat Makefile > test.txt", // Test1
+		// "<< eof", // Test 2
+		// "Makefile < cat | echo > test.txt", // Test 3
+		// "< infile cmd", // Test 4
+		// "< in1 < in2 grep foo", // Test 5 
+		// "echo bar > out.txt", // Test 6
+		// "<< eof cat", // Test 7
+		// "<< eof < in1 > out1 grep foo", // Test 8
+		// "< input.txt > output.txt cat file1 file2", // Test 9
+		// "<< eof < in1 < in2 > out1 > out2 cat foo", // Test 10
+		// "cat | << eof < in1 | < in2 > out1 | grep foo", // Test 11
+		// "cat minishell.h | grep \");\"$",
+		// "env | sort | grep -v SHLVL | grep -v ^_",
+		// "grep hi \"<infile\" <         ./test_files/infile",
+		// "echo hi < ./test_files/infile bye bye",
+		// "echo <\"./test_files/infile\" \"bonjour       42\"",
+		// "cat <\"1\"\"2\"\"3\"\"4\"\"5\"",
+		// "cat < \"Hello\"\"$USER\"\"Wolrd !\"",
+		// "cat < \"Hello\"'$USER'\"Wolrd !\"",
+		// "cat <\"./test_files/infile_big\" | echo hi",
+		// ">>>",
+		// "echo hi |  \"|\"",
+		// "echo ceci'$USER'estuntest",
+		// "echo ceci\"$USER\"estuntest",
+		// "echo '$PWD'",
+		// "echo \"$PWD\"",
+		// "echo ceci\"$USER\"est un test",
+		// "echo <\"./test_files/infile_big\" | echo <\"./test_files/infile\"",
+		// "echo hi | echo >>./outfiles/outfile01 bye",
+		"/bin/echo test1		test2",
 		"cat << eof > outfile.txt",
 		// // Cas avec erreurs syntaxiques qu'il faudra détecter :
 		// "cat | | grep foo",       // erreur de syntaxe : double pipe
@@ -143,8 +230,14 @@ int main(int argc, char **argv)
 		// "cat > fichier >",        // erreur de syntaxe : redirection sans fichier
 		// "cat || grep",            // erreur de syntaxe (pour toi pour l'instant, car tu ne fais pas ||)
 		// "cat ||| grep",           // erreur de syntaxe (triple pipe invalide)
+		// "echo \"exit_code ->$? user ->$USER home -> $HOME\"",
+		// "echo exit_code->$?user->$USERhome->$HOME",
+		// "echo <\"./test_files/infile\" \"bonjour       42\"",
+		// "'''''''''''''''' echo ok",
+		"ifconfig | grep nothing",
+		"ifconfig | grep \":\"",
 	};
-	
+
 	if (argc < 2)
 	{
 		fprintf(stderr, "Usage: %s [1 | 2]\n", argv[0]);
@@ -152,11 +245,11 @@ int main(int argc, char **argv)
 	}
 
 	if (strcmp(argv[1], "1") == 0)
-		run_tests("SIMPLE", simple_tests, sizeof(simple_tests) / sizeof(simple_tests[0]));
+		run_tests("SIMPLE", simple_tests, sizeof(simple_tests) / sizeof(simple_tests[0]), &ctx);
 	else if (strcmp(argv[1], "2") == 0)
-		run_tests("PIPE+REDIRECT", pipe_redirect_tests, sizeof(pipe_redirect_tests) / sizeof(pipe_redirect_tests[0]));
+		run_tests("PIPE+REDIRECT", pipe_redirect_tests, sizeof(pipe_redirect_tests) / sizeof(pipe_redirect_tests[0]), &ctx);
 	else if (strcmp(argv[1], "3") == 0)
-		run_tests("my tests", my_tests, sizeof(my_tests) / sizeof(my_tests[0]));
+		run_tests("my tests", my_tests, sizeof(my_tests) / sizeof(my_tests[0]), &ctx);
 	else
 		fprintf(stderr, "Argument invalide. Utilise : 1, 2 ou 3\n");
 

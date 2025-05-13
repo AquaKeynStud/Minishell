@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 00:36:19 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 14:45:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 		sig_set(SIG_DFL);
 		execve(path, args, envp);
 		free_cmd(path, args, envp, execve_err(ctx, args));
-		exit(ctx->status);
+		exit (ctx->status);
 	}
 	waitpid(pid, &ctx->status, 0);
 	sig_init();
@@ -107,8 +107,10 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 		ctx->status = exec_redir(ctx, node);
 	else if (node->type == AST_COMMAND && node->value)
 	{
-		if (is_builtin(node->value))
-			ctx->status = exec_builtin(ast_to_argv(node), ctx->env);
+		if (!ft_strcmp(node->value, "!"))
+			ctx->status = 1;
+		else if (is_builtin(node->value))
+			ctx->status = exec_builtin(ctx, ast_to_argv(node), ctx->env);
 		else
 			ctx->status = exec_command(ctx, node);
 	}

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/02 19:29:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/06 15:20:44 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-static void	add_or_update_env(t_env **env, char *key, char *value)
+void	add_or_update_env(t_env **env, char *key, char *value)
 {
 	char	*existing;
 	t_env	*new_node;

@@ -6,13 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/30 13:39:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:31:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "exec.h"
 #include "libft.h"
+#include <sys/stat.h>
 #include "minishell.h"
 
 char	*get_from_env(t_env *env, const char *key)
@@ -88,6 +89,21 @@ void	free_env(t_env **env)
 	}
 	*env = NULL;
 }
+
+// static void	add_env(t_env *env)
+// {
+// 	struct stat	st;
+
+// 	if (!fstat(0, &st))
+// 	{
+// 		uid_t uid = st.st_uid;
+// 		char *uid_str = ft_itoa(uid);
+// 		add_or_update_env(&env, "UID", uid_str);
+// 		free(uid_str);
+// 	}
+// }
+
+// add_env(env_list);
 
 t_env	*init_env(char **envp)
 {
