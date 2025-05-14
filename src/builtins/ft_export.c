@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/07 11:38:50 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:41:39 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	ft_export(char **args, t_env **env)
 	if (arg_count == 1)
 	{
 		print_sorted_env(*env);
+		free(args);
 		return (0);
 	}
 	i = 1;
