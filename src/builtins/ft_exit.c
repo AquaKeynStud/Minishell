@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 19:36:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 11:20:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static int	str_is_numeric(char *arg)
 	int	i;
 
 	i = 0;
+	if (!arg || !arg[0])
+		return (2);
 	if (arg[i] == '-' || arg[i] == '+')
 		i++;
 	while (arg[i])

@@ -6,13 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/13 18:26:51 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:42:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*check_env(t_env *env, char *req)
+char	*check_env(t_env *env, char *req)
 {
 	char	*path;
 
@@ -32,9 +32,7 @@ static char	*ensure_target_dir(char *args, t_env *env)
 	if (args[1] && ((*args == '~' && args[1]) || !ft_strcmp(args, "-")))
 	{
 		if (*args == '~' && args[1] == '/')
-		{
-			path = join_with_delim(check_env(env, "HOME"), args + 2, "/");
-		}
+			path = ft_strjoin(check_env(env, "HOME"), args + 1);
 		else if (!ft_strcmp(args, "-"))
 		{
 			path = check_env(env, "OLDPWD");

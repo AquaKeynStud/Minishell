@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:56:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 18:36:59 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 16:43:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,11 @@ int	execve_err(t_ctx *ctx, char **value)
 		saved_errno = ENOENT;
 	if (*value && !ft_strcmp(*value, "."))
 	{
-		ft_dprintf(2, "minishell: .: filename argument required\n");
+		ft_dprintf(2, "minishell: ");
+		ft_dprintf(2, ".: filename argument required\n");
 		return (exit_with_code(ctx, 2));
 	}
-	if (saved_errno == ENOENT)
+	if (saved_errno == ENOENT || (*value && !ft_strcmp(*value, "..")))
 		enoent_err(ctx, *value);
 	else if (saved_errno == EACCES)
 		eacces_err(ctx, *value);
