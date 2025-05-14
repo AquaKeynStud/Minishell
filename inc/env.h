@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/14 12:40:22 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 21:50:42 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_ctx	t_ctx;
 typedef struct s_env
 {
 	char			*key;			// ex: "PATH"
-	char			*value;		// ex: "/usr/bin:/bin"
+	char			*value;			// ex: "/usr/bin:/bin"
 	struct s_env	*next;
 }				t_env;
 

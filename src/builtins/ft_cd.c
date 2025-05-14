@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/14 15:42:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 22:55:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,15 @@ static char	*ensure_target_dir(char *args, t_env *env)
 {
 	char	*path;
 
-	if (args[1] && ((*args == '~' && args[1]) || !ft_strcmp(args, "-")))
-	{
-		if (*args == '~' && args[1] == '/')
-			path = ft_strjoin(check_env(env, "HOME"), args + 1);
-		else if (!ft_strcmp(args, "-"))
-		{
-			path = check_env(env, "OLDPWD");
-			ft_printf("%s\n", path);
-		}
-		else
-			path = args;
-		return (path);
-	}
-	else if (args && (*args != '~' || args[1]) && ft_strcmp(args, "--"))
-		path = args;
-	else
+	if (!args || (args && !ft_strcmp(args, "--")))
 		path = check_env(env, "HOME");
+	else if (!ft_strcmp(args, "-"))
+	{
+		path = check_env(env, "OLDPWD");
+		ft_printf("%s\n", path);
+	}
+	else
+		path = args;	
 	return (path);
 }
 
@@ -71,8 +63,6 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 	{
 		ft_dprintf(2, "minishell: cd: ");
 		perror(path);
-		if (path[0] == '~' && path[1] == '/')
-			free(path);
 		return (EXIT_FAILURE);
 	}
 	newpwd = get_working_dir("chdir");
@@ -87,8 +77,6 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 		update_env(env, "OLDPWD", oldpwd);
 	if (newpwd)
 		update_env(env, "PWD", newpwd);
-	if (path[0] == '~' && path[1] == '/')
-		free(path);
 	return (EXIT_SUCCESS);
 }
 

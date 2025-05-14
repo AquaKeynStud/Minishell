@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/07 11:38:50 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/14 22:53:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,31 @@
 #include "libft.h"
 #include "minishell.h"
 
-static void	add_or_update_env(t_env **env, char *key, char *value)
+static void add_or_update_env(t_env **env, const char *key, const char *value)
 {
-	char	*existing;
-	t_env	*new_node;
+    t_env *node = *env;
 
-	existing = get_from_env(*env, key);
-	if (existing)
-	{
-		free(existing);
-		if (value)
-			existing = ft_strdup(value);
-		else
-			existing = NULL;
-	}
-	else
-	{
-		new_node = create_env_node(key, value);
-		if (!new_node)
-			return ;
-		append_env_node(env, new_node);
-	}
+    // Parcours pour trouver le nœud existant
+    while (node)
+    {
+        if (ft_strcmp(node->key, key) == 0)
+        {
+            // On a trouvé : on remplace node->value
+            free(node->value);
+            if (value)
+                node->value = ft_strdup(value);
+            else
+                node->value = NULL;
+            return;
+        }
+        node = node->next;
+    }
+
+    // Si pas trouvé, on crée un nouveau nœud et on l'ajoute
+    t_env *new_node = create_env_node(key, value);
+    if (!new_node)
+        return;
+    append_env_node(env, new_node);
 }
 
 static int	parse_env_assignment(char *arg, char **key, char **value)
@@ -92,6 +96,7 @@ int	ft_export(char **args, t_env **env)
 	if (arg_count == 1)
 	{
 		print_sorted_env(*env);
+		free(args);
 		return (0);
 	}
 	i = 1;
