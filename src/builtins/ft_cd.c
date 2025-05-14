@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/14 10:10:06 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:48:29 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static char	*ensure_target_dir(char *args, t_env *env)
 {
 	char	*path;
 
-	if (args != NULL && args[1] && ((*args == '~' && args[1]) || !ft_strcmp(args, "-")))
+	if (args != NULL && args[1] && ((*args == '~' && args[1])
+			|| !ft_strcmp(args, "-")))
 	{
 		if (*args == '~' && args[1] == '/')
 		{
