@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/14 22:53:00 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 01:49:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,53 @@
 #include "libft.h"
 #include "minishell.h"
 
-static void add_or_update_env(t_env **env, const char *key, const char *value)
+static void	add_or_update_env(t_env **env, const char *key, const char *value)
 {
-    t_env *node = *env;
+	t_env	*node;
+	t_env	*new_node;
 
-    // Parcours pour trouver le nœud existant
-    while (node)
-    {
-        if (ft_strcmp(node->key, key) == 0)
-        {
-            // On a trouvé : on remplace node->value
-            free(node->value);
-            if (value)
-                node->value = ft_strdup(value);
-            else
-                node->value = NULL;
-            return;
-        }
-        node = node->next;
-    }
-
-    // Si pas trouvé, on crée un nouveau nœud et on l'ajoute
-    t_env *new_node = create_env_node(key, value);
-    if (!new_node)
-        return;
-    append_env_node(env, new_node);
+	node = *env;
+	while (node)
+	{
+		if (!ft_strcmp(node->key, key))
+		{
+			free(node->value);
+			if (value)
+				node->value = ft_strdup(value);
+			else
+				node->value = NULL;
+			return ;
+		}
+		node = node->next;
+	}
+	new_node = create_env_node(key, value);
+	if (!new_node)
+		return ;
+	append_env_node(env, new_node);
 }
 
-static int	parse_env_assignment(char *arg, char **key, char **value)
+static int	parse_env_assignment(t_env **env, char *arg, char **key, char **value)
 {
-	char	*equal_pos;
+	char	*pos;
+	int		equal;
 
-	equal_pos = ft_strchr(arg, '=');
-	if (!equal_pos)
+	pos = ft_strchr(arg, '=');
+	equal = pos - arg;
+	if (!pos)
 	{
 		*key = ft_strdup(arg);
 		*value = NULL;
 	}
+	else if (equal >= 2 && arg[equal - 1] == '+'
+		&& (ft_isalnum(arg[equal - 2]) || arg[equal - 2] == '_'))
+	{
+		*key = ft_substr(arg, 0, pos - arg - 1);
+		*value = ft_strjoin(get_from_env(*env, *key), pos + 1);
+	}
 	else
 	{
-		*key = ft_substr(arg, 0, equal_pos - arg);
-		*value = ft_strdup(equal_pos + 1);
+		*key = ft_substr(arg, 0, pos - arg);
+		*value = ft_strdup(pos + 1);
 	}
 	if (!(*key))
 		return (0);
@@ -70,7 +76,7 @@ int	process_env_arg(char *arg, t_env **env)
 	key = NULL;
 	value = NULL;
 	exit_code = 0;
-	if (!parse_env_assignment(arg, &key, &value))
+	if (!parse_env_assignment(env, arg, &key, &value))
 		return (1);
 	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')
