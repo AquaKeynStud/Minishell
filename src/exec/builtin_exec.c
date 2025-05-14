@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 20:16:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 12:49:57 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 	if (!ft_strcmp(args[0], "env"))
 		return (ft_env(env, count_args(args), args));
 	if (!ft_strcmp(args[0], "exit"))
-		return (ft_exit(count_args(args), args));
+		return (ft_exit(ctx, count_args(args), args));
 	if (!ft_strcmp(args[0], ":"))
 		return (double_dot(args));
 	return (-1);

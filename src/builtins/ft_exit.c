@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 19:36:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 12:49:02 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	check_exit_args(int argc, char **args)
 	return (0);
 }
 
-void	handle_exit(int argc, char **args)
+void	handle_exit(t_ctx *ctx, int argc, char **args)
 {
 	long long	arg;
 	int			error;
@@ -60,15 +60,17 @@ void	handle_exit(int argc, char **args)
 		{
 			ft_dprintf(2, "minishell: exit: ");
 			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
-			exit(error);
+			ctx->status = error;
+			secure_exit(ctx);
 		}
-		exit(arg);
+		ctx->status = arg % 256;
+		secure_exit(ctx);
 	}
 	free(args);
-	exit(0);
+	secure_exit(ctx);
 }
 
-int	ft_exit(int argc, char **args)
+int	ft_exit(t_ctx *ctx, int argc, char **args)
 {
 	int	error;
 
@@ -79,6 +81,6 @@ int	ft_exit(int argc, char **args)
 			exit(2);
 		return (1);
 	}
-	handle_exit(argc, args);
+	handle_exit(ctx, argc, args);
 	return (0);
 }

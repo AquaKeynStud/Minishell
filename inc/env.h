@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 19:19:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 12:50:30 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		ft_cd(char **args, t_env *env);
 int		ft_unset(char **args, t_env *env);
 int		ft_export(char **args, t_env **env);
 int		ft_env(t_env *env, int argc, char **args);
-int		ft_exit(int argc, char **args);
+int		ft_exit(t_ctx *ctx, int argc, char **args);
 
 void	free_env(t_env **env);
 t_env	*init_env(char **envp);
