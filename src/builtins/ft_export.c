@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 11:32:29 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:35:05 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,31 @@
 #include "libft.h"
 #include "minishell.h"
 
+static t_env	*find_env_node(t_env *env, const char *key)
+{
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+			return env;
+		env = env->next;
+	}
+	return NULL;
+}
+
 static void	add_or_update_env(t_env **env, char *key, char *value)
 {
-	char	*existing;
+	t_env	*existing;
 	t_env	*new_node;
 
-	existing = get_from_env(*env, key);
+	existing = find_env_node(*env, key);
 	if (existing)
 	{
 		if (value)
-			existing = ft_strdup(value);
-		else
-			existing = NULL;
+		{
+			if (existing->value)
+				free(existing->value);
+			existing->value = ft_strdup(value);
+		}
 	}
 	else
 	{
@@ -34,7 +47,6 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 			return ;
 		append_env_node(env, new_node);
 	}
-	free(existing);
 }
 
 static int	parse_env_assignment(char *arg, char **key, char **value)
