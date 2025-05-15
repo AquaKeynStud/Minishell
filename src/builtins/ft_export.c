@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/14 18:41:39 by student          ###   ########.fr       */
+/*   Updated: 2025/05/15 11:32:29 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 	existing = get_from_env(*env, key);
 	if (existing)
 	{
-		free(existing);
 		if (value)
 			existing = ft_strdup(value);
 		else
@@ -35,6 +34,7 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 			return ;
 		append_env_node(env, new_node);
 	}
+	free(existing);
 }
 
 static int	parse_env_assignment(char *arg, char **key, char **value)
