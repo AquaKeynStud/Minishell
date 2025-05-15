@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 18:44:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:55:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 void	secure_exit(t_ctx *ctx)
 {
+	free(ctx->uid);
 	free_env(&ctx->env);
 	// if (ctx->ast)
 	// 	free_ast(ctx->ast);

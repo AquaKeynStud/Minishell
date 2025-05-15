@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/14 15:39:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:05:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ static char	*handle_env_var(t_ctx *ctx, t_lexing *lx, char **str, char *res)
 			s++;
 	}
 	key = ft_strndup(*str + 1, s - (*str + 1));
-	val = ft_strdup(get_from_env(ctx->env, key));
+	if (!ft_strcmp(key, "UID"))
+		val = ft_strdup(ctx->uid);
+	else
+		val = ft_strdup(get_from_env(ctx->env, key));
 	free(key);
 	lx->i -= ft_strlen(s);
 	if (lx->quoted)

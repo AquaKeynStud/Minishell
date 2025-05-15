@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 01:49:21 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 13:26:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-static void	add_or_update_env(t_env **env, const char *key, const char *value)
+void	add_or_update_env(t_env **env, const char *key, const char *value)
 {
 	t_env	*node;
 	t_env	*new_node;
@@ -81,7 +81,8 @@ int	process_env_arg(char *arg, t_env **env)
 	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')
 	{
-		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
+		ft_dprintf(2, "export: `");
+		ft_dprintf(2, "%s': not a valid identifier\n", arg);
 		exit_code = 1;
 	}
 	else if (exit_code == 0)

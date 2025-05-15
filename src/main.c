@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/14 16:43:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:51:23 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,27 @@
 #include "lexing.h"
 #include <stdlib.h>
 #include "parsing.h"
+#include <sys/stat.h>
 #include "minishell.h"
 #include "sigaction.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 
-static void	init_context(t_ctx *ctx, char **envp)
+static void	init_context(t_ctx *ctx, char **argv, char **envp)
 {
+	struct stat	st;
+
 	ctx->fds = NULL;
 	ctx->ast = NULL;
 	ctx->status = 0;
-	ctx->env = init_env(envp);
+	ctx->env = init_env(argv, envp);
 	ctx->tokens = NULL;
 	ctx->has_found_err = false;
 	ctx->err_in_tokens = false;
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
+	if (!stat("/proc/self", &st))
+		ctx->uid = ft_itoa(st.st_uid);
 	return ;
 }
 
@@ -81,8 +86,7 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	(void)argv;
-	init_context(&ctx, envp);
+	init_context(&ctx, argv, envp);
 	sig_init();
 	get_input_loop(&ctx);
 	secure_exit(&ctx);
