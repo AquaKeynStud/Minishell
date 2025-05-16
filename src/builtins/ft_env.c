@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/12 10:58:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 18:25:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	ft_env(t_env *env, int argc, char **args)
 				ft_printf("env: '%s': no argument allowed\n", args[i]);
 			i++;
 		}
+		free(args);
 		return (1);
 	}
 	while (env)

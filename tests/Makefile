@@ -45,14 +45,14 @@ LST_TOK		=	add_token.c			\
 				utils_token.c		\
 				tokenisation.c
 
-LST_PAR		=	parser.c			\
-				ast_builders.c		\
-				ast_semantics.c
+LST_PAR		=	redir.c				\
+				parser.c			\
+				ast_builders.c
 
 LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
-				cmd_utils.c		\
+				cmd_utils.c			\
 				builtin_exec.c		\
 				exec_behaviors.c
 
@@ -63,11 +63,12 @@ LST_BLT		=	ft_cd.c				\
 				ft_echo.c			\
 				ft_unset.c			\
 				ft_export.c			\
-				utils_builtins.c	\
+				double_dot.c		\
 				ft_export_print.c	\
 				ft_export_utils.c
 
-LST_UTL		=	printers.c			\
+LST_UTL		=	joins.c				\
+				printers.c			\
 				secure_exit.c		\
 				secure_alloc.c		\
 				fd_collector.c

@@ -63,11 +63,11 @@ void print_ast_tree(t_ast *root)
     }
 }
 
-static void	init_context(t_ctx *ctx, char **envp)
+static void	init_context(t_ctx *ctx, char **args, char **envp)
 {
 	ctx->fds = NULL;
 	ctx->status = 0;
-	ctx->env = init_env(envp);
+	ctx->env = init_env(args, envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
 	return ;
@@ -83,7 +83,7 @@ void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 
 		// Tokenisation
 		printf("Tokenisation :\n");
-		t_token *tokens = tokenize(ctx, tests[i]);
+		t_token *tokens = tokenize(ctx, tests[i], false);
 		print_token_list(tokens);
 
 		// Parsing en AST et affichage
@@ -104,7 +104,7 @@ void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 int main(int argc, char **argv, char **envp)
 {
 	t_ctx ctx;
-	init_context(&ctx, envp);
+	init_context(&ctx, argv, envp);
 	char *simple_tests[] = {
 		"ls -l",
 		"echo hello world",
@@ -164,8 +164,9 @@ int main(int argc, char **argv, char **envp)
 		// "echo '$PWD'",
 		// "echo \"$PWD\"",
 		// "echo ceci\"$USER\"est un test",
-		"echo <\"./test_files/infile_big\" | echo <\"./test_files/infile\"",
+		// "echo <\"./test_files/infile_big\" | echo <\"./test_files/infile\"",
 		"echo hi | echo >>./outfiles/outfile01 bye",
+		"ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3",
 	// 	"cat << eof > outfile.txt",
 	// 	// Cas avec erreurs syntaxiques qu'il faudra détecter :
 	// 	"cat | | grep foo",       // erreur de syntaxe : double pipe

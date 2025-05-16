@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 10:41:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 17:49:05 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,13 @@ int	ft_unset(char **args, t_env *env)
 	int		exit_code;
 
 	i = 1;
-	if (!args[1])
+	if (!args)
 		return (0);
+	else if (!args[1])
+	{
+		free(args);
+		return (0);
+	}
 	exit_code = is_option(args);
 	while (args[i])
 	{

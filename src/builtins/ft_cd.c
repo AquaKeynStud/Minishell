@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/14 22:55:19 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 17:17:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 	{
 		ft_dprintf(2, "minishell: cd: ");
 		perror(path);
+		free(oldpwd);
 		return (EXIT_FAILURE);
 	}
 	newpwd = get_working_dir("chdir");
@@ -92,6 +93,7 @@ int	ft_cd(char **args, t_env *env)
 		return (1);
 	}
 	path = ensure_target_dir(args[1], env);
+	free(args);
 	if (!path)
 		return (1);
 	if (path[0] == '-' && path[1])
@@ -102,6 +104,5 @@ int	ft_cd(char **args, t_env *env)
 	oldpwd = ft_strdup(get_from_env(env, "PWD"));
 	if (!oldpwd)
 		oldpwd = get_working_dir("cd");
-	free(args);
 	return (process_cd(path, oldpwd, env));
 }

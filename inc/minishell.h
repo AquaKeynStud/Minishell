@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 14:05:20 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/16 13:43:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,13 @@ typedef struct s_ctx
 # define TRUNC_FLAGS 577 // (O_CREAT | O_TRUNC | O_WRONLY)
 # define APPEND_FLAGS 1089 // (O_CREAT | O_APPEND | O_WRONLY)
 
+# ifndef COLOR
+#  define COLOR false
+# endif
+
 /* -- Functions -- */
 int		err(char *message);
+void	print_status(t_ctx *ctx);
 int		perr(const char *s, int return_value);
 int		err_value(char *message, char *value);
 

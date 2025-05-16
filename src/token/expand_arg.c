@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 14:05:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 17:40:14 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
 	if (!lx->quoted)
 	{
 		tok = tokenize(ctx, *res, true);
-		if (is_whitespace((*res)[ft_strlen(*res) - 1]))
+		if (**res && is_whitespace((*res)[ft_strlen(*res) - 1]))
 			lx->merge = false;
 	}
 	else
@@ -126,6 +126,7 @@ static t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res)
 	path = ft_strjoin(home, *s);
 	if (!path)
 		return (simple_tok(lx, &home, 0));
+	free(home);
 	return (simple_tok(lx, &path, 0));
 }
 

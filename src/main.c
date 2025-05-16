@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 14:51:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/16 13:51:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,26 @@ static void	init_context(t_ctx *ctx, char **argv, char **envp)
 	ctx->fds = NULL;
 	ctx->ast = NULL;
 	ctx->status = 0;
-	ctx->env = init_env(argv, envp);
+	ctx->input = NULL;
 	ctx->tokens = NULL;
 	ctx->has_found_err = false;
 	ctx->err_in_tokens = false;
+	ctx->env = init_env(argv, envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
 	if (!stat("/proc/self", &st))
 		ctx->uid = ft_itoa(st.st_uid);
+	return ;
+}
+
+static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
+{
+	free_tokens(tokens);
+	free_ast(*ast);
+	(*ctx)->ast = NULL;
+	(*ctx)->tokens = NULL;
+	(*ctx)->has_found_err = false;
+	(*ctx)->err_in_tokens = false;
 	return ;
 }
 
@@ -47,19 +59,12 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 
 	tokens = tokenize(ctx, cmd, false);
 	ast = parse_input(ctx, tokens);
-	if (!get_redir(ctx, ast))
-		return ;
-	if (!has_bonus_err(ctx, tokens))
-		return ;
+	if (!get_redir(ctx, ast) || !has_bonus_err(ctx, tokens))
+		return (destroy_command(&ctx, &tokens, &ast));
 	ctx->ast = ast;
 	ctx->tokens = tokens;
-	ctx->input = cmd;
 	execute_ast(ctx, ast);
-	free_tokens(&tokens);
-	free_ast(ast);
-	ast = NULL;
-	ctx->has_found_err = false;
-	ctx->err_in_tokens = false;
+	destroy_command(&ctx, &tokens, &ast);
 }
 
 static void	get_input_loop(t_ctx *ctx)
@@ -68,15 +73,22 @@ static void	get_input_loop(t_ctx *ctx)
 
 	while (1)
 	{
-		input = readline("minishell => ");
+		if (COLOR)
+		{
+			print_status(ctx);
+			input = readline(NULL);
+		}
+		else
+			input = readline("➜  minishell ✗ ");
 		if (!input)
 			break ;
 		if (*input)
 			add_history(input);
 		ft_trim(&input, " \t");
+		ctx->input = input;
 		command_handler(ctx, input);
 		free(input);
-		input = NULL;
+		ctx->input = NULL;
 	}
 	rl_clear_history();
 }
