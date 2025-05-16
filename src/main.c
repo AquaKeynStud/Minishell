@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 14:25:14 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:26:09 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,20 +79,35 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 static void	get_input_loop(t_ctx *ctx)
 {
 	char	*input;
-
-	while (1)
+	int		is_interactive;
+	
+	input = NULL;
+	is_interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
+	if (is_interactive)
 	{
-		input = readline("minishell => ");
-		if (!input)
-			break ;
-		if (*input)
-			add_history(input);
-		ft_trim(&input, " \t");
-		command_handler(ctx, input);
-		free(input);
-		input = NULL;
+		while (1)
+		{
+			input = readline("minishell => ");
+			if (!input)
+				break;
+			ft_trim(&input, " \t");
+			if (*input)
+				add_history(input);
+			command_handler(ctx, input);
+			free(input);
+		}
+		rl_clear_history();
 	}
-	rl_clear_history();
+	else
+	{
+		while ((input = get_next_line(STDIN_FILENO)))
+		{
+			ft_trim(&input, " \t\n");
+			if (*input)
+				command_handler(ctx, input);
+			free(input);
+		}
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
