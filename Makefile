@@ -114,7 +114,7 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-	$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@
+	$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
@@ -149,7 +149,7 @@ supp_file: | $(D_OBJ)
 	@echo "$(SUPP_FILE) successfully created !"
 
 valgrind: supp_file
-	@$(MAKE) debug
+	@$(MAKE)
 	@clear
 	valgrind							\
 		--leak-check=full					\
