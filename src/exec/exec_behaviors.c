@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 18:33:08 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:53:40 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-// dup2(ctx->stderr_fd, STDERR_FILENO);
 int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 {
 	int	pid;
