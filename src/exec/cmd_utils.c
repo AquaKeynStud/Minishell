@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 00:36:05 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/14 22:46:23 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,11 @@ char	*get_path(const char *cmd, t_env *env)
 	char	*full_cmd;
 
 	i = 0;
+	full_cmd = NULL;
 	if (!cmd)
 		return (NULL);
 	raw_path = get_from_env(env, "PATH");
-	if (ft_strchr(cmd, '/') || !raw_path)
+	if (!raw_path || !*raw_path || ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	paths = ft_split(raw_path, ':');
 	if (!paths)

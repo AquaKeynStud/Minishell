@@ -6,13 +6,37 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 19:37:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:19:27 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "env.h"
 #include "libft.h"
 #include <stdio.h>
 #include <unistd.h>
+#include "minishell.h"
+
+void	print_status(t_ctx *ctx)
+{
+	char	*cwd;
+
+	if (ctx->status == 0)
+		ft_printf("\033[1m\033[32m%s  ", "➜");
+	else
+		ft_printf("\033[1m\033[31m%s  ", "➜");
+	if (ctx && get_from_env(ctx->env, "USER"))
+		ft_printf("\033[35m[%s] ", get_from_env(ctx->env, "USER"));
+	if (ctx)
+	{
+		cwd = getcwd(NULL, 0);
+		if (cwd)
+		{
+			ft_printf("\033[36m%s ", cwd);
+			free(cwd);
+		}
+	}
+	ft_printf("\033[33m%s \033[0m\n", "✗");
+}
 
 int	err(char *message)
 {

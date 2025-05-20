@@ -90,22 +90,25 @@ void	free_env(t_env **env)
 	*env = NULL;
 }
 
-// static void	add_env(t_env *env)
-// {
-// 	struct stat	st;
+static void	add_env(t_env **env, char **args)
+{
+	char	*shlvl;
 
-// 	if (!fstat(0, &st))
-// 	{
-// 		uid_t uid = st.st_uid;
-// 		char *uid_str = ft_itoa(uid);
-// 		add_or_update_env(&env, "UID", uid_str);
-// 		free(uid_str);
-// 	}
-// }
+	if (!get_from_env(*env, "PWD"))
+		add_or_update_env(env, "PWD", get_working_dir("pwd"));
+	if (get_from_env(*env, "SHLVL"))
+	{
+		shlvl = ft_itoa(ft_atoi(get_from_env(*env, "SHLVL")) + 1);
+		add_or_update_env(env, "SHLVL", shlvl);
+		free(shlvl);
+	}
+	else
+		add_or_update_env(env, "SHLVL", "1");
+	if (!get_from_env(*env, "_") && args[0])
+		add_or_update_env(env, "_", args[0]);
+}
 
-// add_env(env_list);
-
-t_env	*init_env(char **envp)
+t_env	*init_env(char **args, char **envp)
 {
 	t_env	*env_list;
 	t_env	*node;
@@ -130,5 +133,6 @@ t_env	*init_env(char **envp)
 		env_list = node;
 		envp++;
 	}
+	add_env(&env_list, args);
 	return (env_list);
 }

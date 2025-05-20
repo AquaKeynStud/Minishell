@@ -92,19 +92,18 @@ INCS		:=	-I$(D_INC) -I$(D_LFT)
 
 SUPP_FILE	:=	readline.supp
 
+COLOR ?= false
+
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
-	@$(MAKE) clean
+	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
-	@clear
 
-debug:	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
-	@$(CC) $(CFLAGS) -g3 $(OBJ) $(LIBS) -o $(NAME)
-	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
+true:
+	@$(MAKE) COLOR=true all
 
 $(D_OBJ):
 	@mkdir -p $@
@@ -115,8 +114,7 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-# @echo "Compiling $< → $@"
-	@$(CC) $(CFLAGS) -g3 $(INCS) -c $< -o $@
+	$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
@@ -135,20 +133,12 @@ fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(MAKE) -s -C $(D_LFT) fclean
 	@$(RM) $(NAME)
-	@clear
 	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
-
-# documentation:
-# 	doxygen Doxyfile
-
-# html:
-# 	$(MAKE) documentation
-# 	xdg-open docs/html/index.html 
 
 norminette:
 	norminette $(D_SRC) $(D_INC)
@@ -159,7 +149,7 @@ supp_file: | $(D_OBJ)
 	@echo "$(SUPP_FILE) successfully created !"
 
 valgrind: supp_file
-	@$(MAKE) debug
+	@$(MAKE)
 	@clear
 	valgrind							\
 		--leak-check=full					\

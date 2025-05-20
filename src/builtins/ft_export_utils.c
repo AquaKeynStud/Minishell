@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/07 11:36:49 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/15 01:14:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ int	is_valid_key(char *key, char *arg)
 	int	i;
 
 	i = 0;
+	if (key[0] == '-' && key[1])
+	{
+		ft_dprintf(2, "minishell: export: ");
+		ft_dprintf(2, "%c%c: invalid option\n", key[0], key[1]);
+		return (2);
+	}
 	if (ft_isdigit(key[i]))
 	{
 		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);

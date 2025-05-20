@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 14:50:23 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:32:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@
 
 void	secure_exit(t_ctx *ctx)
 {
+	free(ctx->uid);
 	free_env(&ctx->env);
-	// if (ctx->ast)
-	// 	free_ast(ctx->ast);
-	// if (ctx->tokens)
-	// 	free_tokens(&ctx->tokens);
-	// free(ctx->input);
+	if (ctx->ast)
+		free_ast(ctx->ast);
+	if (ctx->tokens)
+		free_tokens(&ctx->tokens);
+	if (ctx->input)
+		free(ctx->input);
 	close_all_fds(&ctx->fds);
 	if (ctx->stdin_fd > 2)
 		close(ctx->stdin_fd);

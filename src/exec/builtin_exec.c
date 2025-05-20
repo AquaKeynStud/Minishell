@@ -40,7 +40,6 @@ int	is_builtin(char *cmd)
 
 int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 {
-	(void)ctx;
 	if (!args)
 	{
 		ft_dprintf(2, "minishell: builtin: Invalid arguments\n");

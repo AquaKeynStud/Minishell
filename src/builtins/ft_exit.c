@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/14 15:05:03 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:30:33 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,17 @@ static int	str_is_numeric(char *arg)
 	return (0);
 }
 
-static void	free_exit(t_ctx *ctx, char **args)
+static void	interractive_exit(void)
 {
-	free(args);
-	if (ctx->ast)
-		free_ast(ctx->ast);
-	if (ctx->tokens)
-		free_tokens(&ctx->tokens);
-	free(ctx->input);
+	if (isatty(STDIN_FILENO))
+		ft_dprintf(2, "exit\n");
 }
 
 static int	check_exit_args(int argc, char **args)
 {
 	if (argc > 2 && str_is_numeric(args[1]) == 0)
 	{
-		ft_dprintf(2, "exit\n");
+		interractive_exit();
 		ft_dprintf(2, "minishell: exit: too many arguments\n");
 		return (1);
 	}
@@ -54,7 +50,7 @@ static int	check_exit_args(int argc, char **args)
 	{
 		if (str_is_numeric(args[1]) == 2)
 		{
-			ft_dprintf(2, "exit\n");
+			interractive_exit();
 			ft_dprintf(2, "minishell: exit: ");
 			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
 			return (2);
@@ -72,20 +68,19 @@ void	handle_exit(t_ctx *ctx, int argc, char **args)
 		arg = ft_atoll(args[1], &ctx->status) % 256;
 		if (ctx->status == 2)
 		{
-			ft_dprintf(2, "exit\n");
+			interractive_exit();
 			ft_dprintf(2, "minishell: exit: ");
 			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
-			ctx->status = ctx->status;
-			free_exit(ctx, args);
+			free(args);
 			secure_exit(ctx);
 		}
 		ctx->status = arg % 256;
-		free_exit(ctx, args);
-		ft_dprintf(2, "exit\n");
+		free(args);
+		interractive_exit();
 		secure_exit(ctx);
 	}
-	free_exit(ctx, args);
-	ft_dprintf(2, "exit\n");
+	free(args);
+	interractive_exit();
 	secure_exit(ctx);
 }
 

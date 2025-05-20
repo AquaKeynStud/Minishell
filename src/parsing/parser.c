@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/13 18:37:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 18:16:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_ast	*overwrite_stub(t_token **curr, t_ast **cmd)
 		stub = *cmd;
 		while (stub->type == AST_REDIR)
 			stub = stub->childs[1];
+		if (stub->value)
+			free(stub->value);
 		stub->value = ft_strdup((*curr)->value);
 	}
 	stub = *cmd;
@@ -73,7 +75,7 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
 		{
 			if (!parse_redirs(ctx, &cmd, curr))
-				return (NULL);
+				return (free_ast(cmd));
 		}
 		else if ((*curr)->type == TOKEN_WORD)
 		{

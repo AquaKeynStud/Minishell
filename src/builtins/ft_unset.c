@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 19:02:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 17:49:05 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,13 @@
 #include "libft.h"
 #include "minishell.h"
 
-static int	is_option(char *command, char **args)
+static int	is_option(char **args)
 {
-	int		i;
-
-	i = 1;
-	while (args[i])
+	if (args[1][0] == '-' && args[1][1])
 	{
-		if (args[i][0] == '-')
-		{
-			ft_printf("%s: %s: no option allowed\n", command, args[i]);
-			return (2);
-		}
-		i++;
+		ft_dprintf(2, "minishell: unset: ");
+		ft_printf("%c%c: invalid option\n", args[1][0], args[1][1]);
+		return (2);
 	}
 	return (0);
 }
@@ -62,7 +56,14 @@ int	ft_unset(char **args, t_env *env)
 	int		exit_code;
 
 	i = 1;
-	exit_code = is_option("unset", args);
+	if (!args)
+		return (0);
+	else if (!args[1])
+	{
+		free(args);
+		return (0);
+	}
+	exit_code = is_option(args);
 	while (args[i])
 	{
 		remove_env_var(args[i], &env);

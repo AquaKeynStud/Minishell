@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/14 14:48:29 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:17:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*check_env(t_env *env, char *req)
+char	*check_env(t_env *env, char *req)
 {
 	char	*path;
 
@@ -28,27 +28,15 @@ static char	*check_env(t_env *env, char *req)
 static char	*ensure_target_dir(char *args, t_env *env)
 {
 	char	*path;
-
-	if (args != NULL && args[1] && ((*args == '~' && args[1])
-			|| !ft_strcmp(args, "-")))
-	{
-		if (*args == '~' && args[1] == '/')
-		{
-			path = join_with_delim(check_env(env, "HOME"), args + 2, "/");
-		}
-		else if (!ft_strcmp(args, "-"))
-		{
-			path = check_env(env, "OLDPWD");
-			ft_printf("%s\n", path);
-		}
-		else
-			path = args;
-		return (path);
-	}
-	else if (args && (*args != '~' || args[1]) && ft_strcmp(args, "--"))
-		path = args;
-	else
+	if (!args || (args && !ft_strcmp(args, "--")))
 		path = check_env(env, "HOME");
+	else if (!ft_strcmp(args, "-"))
+	{
+		path = check_env(env, "OLDPWD");
+		ft_printf("%s\n", path);
+	}
+	else
+		path = args;	
 	return (path);
 }
 
@@ -74,8 +62,7 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 	{
 		ft_dprintf(2, "minishell: cd: ");
 		perror(path);
-		if (path[0] == '~' && path[1] == '/')
-			free(path);
+		free(oldpwd);
 		return (EXIT_FAILURE);
 	}
 	newpwd = get_working_dir("chdir");
@@ -90,8 +77,6 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 		update_env(env, "OLDPWD", oldpwd);
 	if (newpwd)
 		update_env(env, "PWD", newpwd);
-	if (path[0] == '~' && path[1] == '/')
-		free(path);
 	return (EXIT_SUCCESS);
 }
 
@@ -107,6 +92,7 @@ int	ft_cd(char **args, t_env *env)
 		return (1);
 	}
 	path = ensure_target_dir(args[1], env);
+	free(args);
 	if (!path)
 		return (1);
 	if (path[0] == '-' && path[1])
@@ -117,6 +103,5 @@ int	ft_cd(char **args, t_env *env)
 	oldpwd = ft_strdup(get_from_env(env, "PWD"));
 	if (!oldpwd)
 		oldpwd = get_working_dir("cd");
-	free(args);
 	return (process_cd(path, oldpwd, env));
 }
