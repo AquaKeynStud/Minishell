@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   secure_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 15:32:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 13:45:52 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include <signal.h>
 #include "parsing.h"
 #include "minishell.h"
 
@@ -34,6 +35,17 @@ void	secure_exit(t_ctx *ctx)
 
 int	s_exec_exit(int status)
 {
+	int	sig;
+
+	if (WIFSIGNALED(status))
+	{
+		sig = WTERMSIG(status);
+		if (sig == SIGQUIT)
+			ft_dprintf(2, "Quit (core dumped)\n");
+		else if (sig == SIGINT)
+			ft_dprintf(2, "\n");
+		return (128 + sig);
+	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (1);
