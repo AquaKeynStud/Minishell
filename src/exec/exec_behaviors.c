@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 14:53:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 14:55:09 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 		close_fd(&ctx->fds, fds[0]);
 		close_fd(&ctx->fds, fds[1]);
 		ctx->status = execute_ast(ctx, node);
-		exit(ctx->status);
+		secure_exit(ctx);
 	}
 	else if (pid < 0)
 	{

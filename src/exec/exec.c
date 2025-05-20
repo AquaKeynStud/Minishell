@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 13:38:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 14:59:03 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
 	int	pid;
-	int	ret;
 
 	fd = pid_verification(ctx, node);
 	if (fd < 0)
@@ -62,8 +61,8 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 		else
 			dup2(fd, STDOUT_FILENO);
 		close(fd);
-		ret = execute_ast(ctx, node->childs[1]);
-		exit(ret);
+		ctx->status = execute_ast(ctx, node->childs[1]);
+		secure_exit(ctx);
 	}
 	close_fd(&ctx->fds, fd);
 	waitpid(pid, &ctx->status, 0);
@@ -90,7 +89,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 		sig_set(SIG_DFL);
 		execve(path, args, envp);
 		free_cmd(path, args, envp, execve_err(ctx, args));
-		exit (ctx->status);
+		secure_exit(ctx);
 	}
 	waitpid(pid, &ctx->status, 0);
 	sig_init();

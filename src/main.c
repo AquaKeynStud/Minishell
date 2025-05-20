@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 13:54:58 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:16:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ static void	get_input_loop(t_ctx *ctx)
 		free(input);
 		ctx->input = NULL;
 	}
+	rl_clear_history();
 }
 
 int	main(int argc, char **argv, char **envp)
