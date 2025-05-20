@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 12:17:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 13:54:58 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,11 @@ int	main(int argc, char **argv, char **envp)
 	init_context(&ctx, argv, envp);
 	ctx = *set_ctx(&ctx);
 	sig_init();
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	{
+		ft_dprintf(STDERR_FILENO, "Minishell interactive mode not allowed\n");
+		exit(EXIT_FAILURE);
+	}
 	get_input_loop(&ctx);
 	secure_exit(&ctx);
 	return (0);
