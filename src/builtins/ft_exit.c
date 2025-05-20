@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/19 13:30:33 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 09:20:29 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,12 @@ int	ft_exit(t_ctx *ctx, int argc, char **args)
 	{
 		if (ctx->status == 2)
 		{
-			free_exit(ctx, args);
+			free(args);
+			if (ctx->ast)
+				free_ast(ctx->ast);
+			if (ctx->tokens)
+				free_tokens(&ctx->tokens);
+			free(ctx->input);
 			secure_exit(ctx);
 		}
 		return (1);

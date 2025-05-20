@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 16:35:05 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/20 09:24:11 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_env	*find_env_node(t_env *env, const char *key)
 	return NULL;
 }
 
-static void	add_or_update_env(t_env **env, char *key, char *value)
+void	add_or_update_env(t_env **env, const char *key, const char *value)
 {
 	t_env	*existing;
 	t_env	*new_node;
@@ -35,8 +35,7 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 	{
 		if (value)
 		{
-			if (existing->value)
-				free(existing->value);
+			free(existing->value);
 			existing->value = ft_strdup(value);
 		}
 	}
@@ -44,14 +43,9 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 	{
 		new_node = create_env_node(key, value);
 		if (!new_node)
-			return ;
-		}
-		node = node->next;
+			return;
+		append_env_node(env, new_node);
 	}
-	new_node = create_env_node(key, value);
-	if (!new_node)
-		return ;
-	append_env_node(env, new_node);
 }
 
 static int	parse_env_assignment(t_env **env, char *arg, char **key, char **value)
