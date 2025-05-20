@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 15:16:08 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 15:19:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,20 +99,15 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	if (!isatty(STDOUT_FILENO) || !isatty(STDIN_FILENO))
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 	{
 		if (isatty(STDERR_FILENO))
-			ft_dprintf(2, "minishell: this feature is not supported\n");
+			ft_dprintf(2, "minishell: interactive mode not allowed\n");
 		exit(EXIT_FAILURE);
 	}
 	init_context(&ctx, argv, envp);
 	ctx = *set_ctx(&ctx);
 	sig_init();
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		ft_dprintf(STDERR_FILENO, "Minishell interactive mode not allowed\n");
-		exit(EXIT_FAILURE);
-	}
 	get_input_loop(&ctx);
 	secure_exit(&ctx);
 	return (0);
