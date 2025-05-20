@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/20 11:33:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:36:50 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static t_env	*find_env_node(t_env *env, const char *key)
 	while (env)
 	{
 		if (!ft_strcmp(env->key, key))
-			return env;
+			return (env);
 		env = env->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
 void	add_or_update_env(t_env **env, const char *key, const char *value)
@@ -43,7 +43,7 @@ void	add_or_update_env(t_env **env, const char *key, const char *value)
 	{
 		new_node = create_env_node(key, value);
 		if (!new_node)
-			return;
+			return ;
 		append_env_node(env, new_node);
 	}
 }

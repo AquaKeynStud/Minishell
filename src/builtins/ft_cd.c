@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/20 11:11:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:36:23 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*check_env(t_env *env, char *req)
 static char	*ensure_target_dir(char *args, t_env *env)
 {
 	char	*path;
+
 	if (!args || (args && !ft_strcmp(args, "--")))
 		path = check_env(env, "HOME");
 	else if (!ft_strcmp(args, "-"))

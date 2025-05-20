@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 11:33:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 12:16:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 static void	get_input_loop(t_ctx *ctx)
 {
 	char	*input;
-	
+
 	input = NULL;
 	while (1)
 	{
@@ -93,31 +93,19 @@ static void	get_input_loop(t_ctx *ctx)
 	}
 }
 
-/* int	main(int argc, char **argv, char **envp)
-{
-	t_ctx	ctx;
-
-	(void)argc;
-	init_context(&ctx, argv, envp);
-	ctx = *set_ctx(&ctx);
-	sig_init();
-	get_input_loop(&ctx);
-	secure_exit(&ctx);
-	return (0);
-} */
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_ctx	ctx;
 
 	(void)argc;
-
-	if (!isatty(STDOUT_FILENO) || !isatty(STDERR_FILENO))
+	if (!isatty(STDOUT_FILENO) || !isatty(STDIN_FILENO))
 	{
-		ft_dprintf(2, "minishell: output redirection or piping is not supported\n");
+		if (isatty(STDERR_FILENO))
+			ft_dprintf(2, "minishell: this feature is not supported\n");
 		exit(EXIT_FAILURE);
 	}
 	init_context(&ctx, argv, envp);
+	ctx = *set_ctx(&ctx);
 	sig_init();
 	get_input_loop(&ctx);
 	secure_exit(&ctx);
