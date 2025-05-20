@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 13:26:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/15 16:35:05 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,36 @@
 #include "libft.h"
 #include "minishell.h"
 
-void	add_or_update_env(t_env **env, const char *key, const char *value)
+static t_env	*find_env_node(t_env *env, const char *key)
 {
-	t_env	*node;
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+			return env;
+		env = env->next;
+	}
+	return NULL;
+}
+
+static void	add_or_update_env(t_env **env, char *key, char *value)
+{
+	t_env	*existing;
 	t_env	*new_node;
 
-	node = *env;
-	while (node)
+	existing = find_env_node(*env, key);
+	if (existing)
 	{
-		if (!ft_strcmp(node->key, key))
+		if (value)
 		{
-			free(node->value);
-			if (value)
-				node->value = ft_strdup(value);
-			else
-				node->value = NULL;
+			if (existing->value)
+				free(existing->value);
+			existing->value = ft_strdup(value);
+		}
+	}
+	else
+	{
+		new_node = create_env_node(key, value);
+		if (!new_node)
 			return ;
 		}
 		node = node->next;

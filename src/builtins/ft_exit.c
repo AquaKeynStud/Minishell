@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
 /*   Updated: 2025/05/19 13:30:33 by arocca           ###   ########.fr       */
@@ -91,10 +91,9 @@ int	ft_exit(t_ctx *ctx, int argc, char **args)
 	{
 		if (ctx->status == 2)
 		{
-			free(args);
+			free_exit(ctx, args);
 			secure_exit(ctx);
 		}
-		free(args);
 		return (1);
 	}
 	handle_exit(ctx, argc, args);

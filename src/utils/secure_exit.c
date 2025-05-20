@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   secure_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
 /*   Updated: 2025/05/15 15:32:39 by arocca           ###   ########.fr       */
@@ -25,8 +25,10 @@ void	secure_exit(t_ctx *ctx)
 	if (ctx->input)
 		free(ctx->input);
 	close_all_fds(&ctx->fds);
-	close(ctx->stdin_fd);
-	close(ctx->stdout_fd);
+	if (ctx->stdin_fd > 2)
+		close(ctx->stdin_fd);
+	if (ctx->stdout_fd > 2)
+		close(ctx->stdout_fd);
 	exit(ctx->status);
 }
 

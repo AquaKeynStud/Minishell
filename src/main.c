@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/16 13:51:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/16 13:26:09 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,26 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 static void	get_input_loop(t_ctx *ctx)
 {
 	char	*input;
-
-	while (1)
+	int		is_interactive;
+	
+	input = NULL;
+	is_interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
+	if (is_interactive)
+	{
+		while (1)
+		{
+			input = readline("minishell => ");
+			if (!input)
+				break;
+			ft_trim(&input, " \t");
+			if (*input)
+				add_history(input);
+			command_handler(ctx, input);
+			free(input);
+		}
+		rl_clear_history();
+	}
+	else
 	{
 		if (COLOR)
 		{
@@ -90,7 +108,6 @@ static void	get_input_loop(t_ctx *ctx)
 		free(input);
 		ctx->input = NULL;
 	}
-	rl_clear_history();
 }
 
 int	main(int argc, char **argv, char **envp)

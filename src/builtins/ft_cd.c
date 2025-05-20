@@ -28,7 +28,6 @@ char	*check_env(t_env *env, char *req)
 static char	*ensure_target_dir(char *args, t_env *env)
 {
 	char	*path;
-
 	if (!args || (args && !ft_strcmp(args, "--")))
 		path = check_env(env, "HOME");
 	else if (!ft_strcmp(args, "-"))
