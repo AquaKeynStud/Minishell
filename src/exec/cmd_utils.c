@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/14 22:46:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:14:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,17 @@
 #include "parsing.h"
 #include "minishell.h"
 #include "sigaction.h"
+
+char	*get_from_env(t_env *env, const char *key)
+{
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
+}
 
 static int	count_argv(t_ast *node)
 {

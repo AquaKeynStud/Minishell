@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 17:40:14 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:17:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*handle_env_var(t_ctx *ctx, t_lexing *lx, char **str, char *res)
 	return (ft_strjoin_free(res, val));
 }
 
-t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
+static t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
 {
 	t_token	*tok;
 
@@ -86,7 +86,7 @@ t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
 	return (NULL);
 }
 
-t_token	*handle_quote_var(t_ctx *ctx, t_lexing *lx, char **res)
+static t_token	*handle_quote_var(t_ctx *ctx, t_lexing *lx, char **res)
 {
 	char	quote;
 
@@ -106,28 +106,6 @@ t_token	*handle_quote_var(t_ctx *ctx, t_lexing *lx, char **res)
 	}
 	lx->i += 2;
 	return (simple_tok(lx, res, 0));
-}
-
-static t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res)
-{
-	char	*home;
-	char	*path;
-
-	*s += 1;
-	free(*res);
-	home = ft_strdup(check_env(ctx->env, "HOME"));
-	if (!home)
-	{
-		home = ft_strdup(*s);
-		if (!home)
-			return (NULL);
-		return (simple_tok(lx, &home, 0));
-	}
-	path = ft_strjoin(home, *s);
-	if (!path)
-		return (simple_tok(lx, &home, 0));
-	free(home);
-	return (simple_tok(lx, &path, 0));
 }
 
 t_token	*expand_args(t_ctx *ctx, t_lexing *lx, char *s)

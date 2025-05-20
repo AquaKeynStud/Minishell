@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 15:32:18 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/20 11:33:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,6 @@
 #include "libft.h"
 #include <sys/stat.h>
 #include "minishell.h"
-
-char	*get_from_env(t_env *env, const char *key)
-{
-	while (env)
-	{
-		if (!ft_strcmp(env->key, key))
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL);
-}
 
 static bool	fill_envp(char **envp, t_env *env)
 {

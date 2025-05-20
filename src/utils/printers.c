@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/19 13:19:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:08:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_status(t_ctx *ctx)
 {
 	char	*cwd;
 
-	if (ctx->status == 0)
+	if (ctx && ctx->status == 0)
 		ft_printf("\033[1m\033[32m%s  ", "➜");
 	else
 		ft_printf("\033[1m\033[31m%s  ", "➜");

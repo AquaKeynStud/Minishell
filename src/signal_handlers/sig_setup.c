@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/02 19:34:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 10:28:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	sig_set(void (*handler)(int))
 void	sig_init(void)
 {
 	set_sigaction(SIGQUIT, SIG_IGN, NULL);
-	set_sigaction(SIGINT, handle_sigint_sigquit, "1000000");
+	set_sigaction(SIGINT, handle_sigint, "1000000");
 }
 
 static bool	parse_flags(char *s)

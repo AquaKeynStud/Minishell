@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/16 13:43:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:26:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,20 +53,23 @@ typedef struct s_ctx
 
 /* -- Functions -- */
 int		err(char *message);
-void	print_status(t_ctx *ctx);
 int		perr(const char *s, int return_value);
 int		err_value(char *message, char *value);
+
+void	print_status(t_ctx *ctx);
 
 void	close_all_fds(t_fd **head);
 void	close_fd(t_fd **head, int fd);
 int		register_fd(t_fd **head, int fd);
 int		open_fd(t_fd **head, const char *filepath, int flags, mode_t perms);
 
+t_ctx	*set_ctx(t_ctx *ctx);
 void	*s_malloc(size_t size);
 void	*s_calloc(size_t nmemb, size_t size);
 void	double_free(void **ptr, size_t size_if_not_null_term);
 void	*s_realloc(void *ptr, size_t old_size, size_t new_size);
 
+char	*ft_strjoin_free(char *s1, char *s2);
 char	*join_with_delim(const char *s1, const char *s2, const char *delimiter);
 
 int		s_exec_exit(int status);

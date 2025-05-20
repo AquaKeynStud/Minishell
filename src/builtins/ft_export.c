@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/20 09:24:11 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/20 11:33:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	add_or_update_env(t_env **env, const char *key, const char *value)
 	}
 }
 
-static int	parse_env_assignment(t_env **env, char *arg, char **key, char **value)
+static int	parse_env_set(t_env **env, char *arg, char **key, char **value)
 {
 	char	*pos;
 	int		equal;
@@ -85,7 +85,7 @@ int	process_env_arg(char *arg, t_env **env)
 	key = NULL;
 	value = NULL;
 	exit_code = 0;
-	if (!parse_env_assignment(env, arg, &key, &value))
+	if (!parse_env_set(env, arg, &key, &value))
 		return (1);
 	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')

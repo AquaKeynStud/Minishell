@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 11:26:36 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/20 11:33:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static void	get_input_loop(t_ctx *ctx)
 			input = readline(NULL);
 		}
 		else
-			input = readline("➜  minishell ✗ ");
+			input = readline("minishell => ");
 		if (!input)
 			break ;
 		if (*input)
@@ -99,6 +99,7 @@ static void	get_input_loop(t_ctx *ctx)
 
 	(void)argc;
 	init_context(&ctx, argv, envp);
+	ctx = *set_ctx(&ctx);
 	sig_init();
 	get_input_loop(&ctx);
 	secure_exit(&ctx);

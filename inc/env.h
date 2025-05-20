@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/20 09:24:07 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/05/20 11:34:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ char	*check_env(t_env *env, char *req);
 int		is_valid_key(char *key, char *arg);
 t_env	*init_env(char **args, char **envp);
 char	*get_working_dir(char *cmd_request);
-char	*ft_strjoin_free(char *s1, char *s2);
 char	*get_from_env(t_env *env, const char *key);
 void	append_env_node(t_env **env, t_env *new_node);
 int		update_env(t_env *env, char *key, char *value);

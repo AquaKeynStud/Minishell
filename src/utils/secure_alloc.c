@@ -6,13 +6,24 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/10 12:32:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:11:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "lexing.h"
 #include "parsing.h"
+
+t_ctx	*set_ctx(t_ctx *ctx)
+{
+	static t_ctx	*context;
+
+	if (ctx)
+		context = ctx;
+	else if (!context)
+		return (NULL);
+	return (context);
+}
 
 void	*s_malloc(size_t size)
 {
