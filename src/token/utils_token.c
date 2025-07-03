@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/03 09:16:15 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 10:38:52 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_token	*get_last_token(t_token *tokens)
 
 bool	last_is_a(t_token *token, t_token_type type)
 {
+	if (!token || !type)
+		return (false);
 	return (get_last_token(token)->type == type);
 }
 
