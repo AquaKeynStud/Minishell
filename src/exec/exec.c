@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 14:59:03 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:32:41 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,31 @@
 #include <sys/wait.h>
 #include "minishell.h"
 #include "sigaction.h"
+
+static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
+{
+	int	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		sig_set(SIG_DFL);
+		if (is_l_side)
+			dup2(fds[1], STDOUT_FILENO);
+		else
+			dup2(fds[0], STDIN_FILENO);
+		close_fd(&ctx->fds, fds[0]);
+		close_fd(&ctx->fds, fds[1]);
+		ctx->status = execute_ast(ctx, node);
+		secure_exit(ctx);
+	}
+	else if (pid < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	return (pid);
+}
 
 int	exec_pipe(t_ctx *ctx, t_ast *node)
 {

@@ -6,7 +6,7 @@
 #    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/05/13 19:24:55 by arocca           ###   ########.fr        #
+#    Updated: 2025/07/03 12:28:35 by arocca           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRCS	=	ft_atoi.c ft_atoll.c ft_bzero.c ft_calloc.c ft_abs.c\
 			ft_split.c ft_strchr.c ft_strcmp.c ft_strndup.c ft_strdup.c ft_striteri.c \
 			ft_strjoin.c ft_strlcat.c ft_strlen.c ft_strmapi.c ft_strncmp.c ft_strnstr.c \
 			ft_strchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c \
-			ft_putnbr.c ft_putstr_fd.c ft_trim.c \
+			ft_putnbr.c ft_putstr_fd.c ft_trim.c in_str.c is_whitespace.c \
 			ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
 			ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
 			gnl/get_next_line.c gnl/get_next_line_utils.c \

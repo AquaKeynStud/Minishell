@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 09:07:06 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:26:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	s->quoted = true;
 	s->end_quote = s->i;
 	if (quote == '"' && len > 0)
-		expanded = expand_args(ctx, tokens, s, content);
+		expanded = expand_args(ctx, *tokens, s, content);
 	else
 		expanded = create_token(content, TOKEN_WORD);
 	free(content);
@@ -112,7 +112,7 @@ static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 		str = ft_strndup(&s->str[start], len);
 		if (!str)
 			return ;
-		expanded = expand_args(ctx, tokens, s, str);
+		expanded = expand_args(ctx, *tokens, s, str);
 		free(str);
 		s->merge = add_or_merge_word(tokens, s, expanded);
 	}

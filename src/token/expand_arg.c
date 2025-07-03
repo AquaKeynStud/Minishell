@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 09:16:02 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:17:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static t_token	*handle_quote_var(t_ctx *ctx, t_lexing *lx, char **res)
 	return (simple_tok(lx, res, 0));
 }
 
-t_token	*expand_args(t_ctx *ctx, t_token **tokens, t_lexing *lx, char *s)
+t_token	*expand_args(t_ctx *ctx, t_token *tok, t_lexing *lx, char *s)
 {
 	char	*res;
 
@@ -124,14 +124,14 @@ t_token	*expand_args(t_ctx *ctx, t_token **tokens, t_lexing *lx, char *s)
 			s++;
 			res = append_char(res, *s++);
 		}
-		else if (*s == '$' && !last_is_a(*tokens, TOKEN_HEREDOC) && (s[1] == '?' || ft_isalnum(s[1]) || s[1] == '_'))
+		else if (*s == '$' && !is_eof(tok) && in_str(s[1], "?_", true))
 			return (handle_var(ctx, lx, &s, &res));
-		else if (*s == '$' && !last_is_a(*tokens, TOKEN_HEREDOC) && (lx->str[lx->i] == '"' || lx->str[lx->i] == '\''))
+		else if (*s == '$' && !is_eof(tok) && in_str(lx->str[lx->i], "\"'", 0))
 			return (handle_quote_var(ctx, lx, &res));
-		else if (*s == '~' && !last_is_a(*tokens, TOKEN_HEREDOC) && !lx->quoted && !*res && (!s[1] || s[1] == '/'))
+		else if (*s == '~' && !is_eof(tok) && !lx->quoted
+			&& !*res && (!s[1] || s[1] == '/'))
 			return (expand_tilde(ctx, lx, &s, &res));
-		else
-			res = append_char(res, *s++);
+		res = append_char(res, *s++);
 	}
 	return (simple_tok(lx, &res, ft_strlen(s)));
 }

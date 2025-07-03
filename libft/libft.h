@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 08:43:53 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 19:05:59 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:28:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <limits.h>
 # include <stdint.h>
 # include <stdarg.h>
+# include <stdbool.h>
 # include "ft_printf.h"
 
 typedef struct s_list
@@ -43,6 +44,8 @@ void		*ft_memcpy(void *dest, const void *src, size_t n);
 void		*ft_memmove(void *dest, const void *src, size_t n);
 void		*ft_memset(void *s, int c, size_t n);
 void		*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+bool 		in_str(char c, char *str, bool verif_alnum);
+int			is_whitespace(char c);
 int			ft_atoi(const char *nptr);
 int			ft_isalnum(int c);
 int			ft_isalpha(int c);

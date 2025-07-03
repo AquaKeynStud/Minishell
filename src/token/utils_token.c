@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/03 10:38:52 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:31:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,14 @@ t_token	*get_last_token(t_token *tokens)
 	return (tokens);
 }
 
-bool	last_is_a(t_token *token, t_token_type type)
+bool	is_eof(t_token *token)
 {
-	if (!token || !type)
+	if (!token)
 		return (false);
-	return (get_last_token(token)->type == type);
+	return (get_last_token(token)->type == TOKEN_HEREDOC);
 }
 
 int	is_operator(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_whitespace(char c)
-{
-	return (c == ' ' || c == '\t');
 }

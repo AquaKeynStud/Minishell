@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 09:50:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 12:39:50 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,6 @@
 #include "sigaction.h"
 #include <readline/history.h>
 #include <readline/readline.h>
-
-int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		sig_set(SIG_DFL);
-		if (is_l_side)
-			dup2(fds[1], STDOUT_FILENO);
-		else
-			dup2(fds[0], STDIN_FILENO);
-		close_fd(&ctx->fds, fds[0]);
-		close_fd(&ctx->fds, fds[1]);
-		ctx->status = execute_ast(ctx, node);
-		secure_exit(ctx);
-	}
-	else if (pid < 0)
-	{
-		perror("fork");
-		return (-1);
-	}
-	return (pid);
-}
 
 int	pid_verification(t_ctx *ctx, t_ast *node)
 {
@@ -61,10 +36,27 @@ int	pid_verification(t_ctx *ctx, t_ast *node)
 	return (fd);
 }
 
-static pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *limiter)
+static void	exec_heredoc(char *prompt, const char *eof, int pipefd[2])
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline(prompt);
+		if (!line || !ft_strcmp(line, eof))
+		{
+			if (line)
+				free(line);
+			break ;
+		}
+		ft_dprintf(pipefd[1], "%s\n", line);
+		free(line);
+	}
+}
+
+pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *eof)
 {
 	pid_t	pid;
-	char	*line;
 
 	pid = fork();
 	if (pid < 0)
@@ -77,25 +69,14 @@ static pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *l
 	{
 		set_sigaction(SIGINT, handle_sigint_heredoc, "0000000");
 		close(pipefd[0]);
-		while (1)
-		{
-			line = readline(prompt);
-			if (!line || !ft_strcmp(line, limiter))
-			{
-				if (line)
-					free(line);
-				break ;
-			}
-			ft_dprintf(pipefd[1], "%s\n", line);
-			free(line);
-		}
+		exec_heredoc(prompt, eof, pipefd);
 		close(pipefd[1]);
 		secure_exit(ctx);
 	}
 	return (pid);
 }
 
-int	here_doc(t_ctx *ctx, const char *limiter)
+int	here_doc(t_ctx *ctx, const char *eof)
 {
 	pid_t	pid;
 	char	*prompt;
@@ -107,7 +88,7 @@ int	here_doc(t_ctx *ctx, const char *limiter)
 	prompt = NULL;
 	if (isatty(STDIN_FILENO))
 		prompt = "> ";
-	pid = fork_heredoc(ctx, pipefd, prompt, limiter);
+	pid = fork_heredoc(ctx, pipefd, prompt, eof);
 	close(pipefd[1]);
 	waitpid(pid, &ctx->status, 0);
 	sig_init();
