@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/03 10:20:20 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 10:54:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	ft_exit(t_ctx *ctx, int argc, char **args)
 			free(args);
 			secure_exit(ctx);
 		}
+		free(args);
 		return (1);
 	}
 	handle_exit(ctx, argc, args);
