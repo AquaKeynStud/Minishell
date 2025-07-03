@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/21 12:09:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 09:50:46 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *l
 	}
 	if (pid == 0)
 	{
+		set_sigaction(SIGINT, handle_sigint_heredoc, "0000000");
 		close(pipefd[0]);
 		while (1)
 		{
@@ -102,12 +103,14 @@ int	here_doc(t_ctx *ctx, const char *limiter)
 
 	if (pipe(pipefd) < 0)
 		return (-1);
+	sig_set(SIG_IGN);
 	prompt = NULL;
 	if (isatty(STDIN_FILENO))
 		prompt = "> ";
 	pid = fork_heredoc(ctx, pipefd, prompt, limiter);
 	close(pipefd[1]);
 	waitpid(pid, &ctx->status, 0);
+	sig_init();
 	if (WIFSIGNALED(ctx->status) && WTERMSIG(ctx->status) == SIGINT)
 	{
 		close(pipefd[0]);

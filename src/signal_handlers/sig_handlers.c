@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 17:16:49 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/21 11:35:49 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 10:03:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,11 @@ void	handle_sigint(int signal)
 	write(1, "\n", 1);
 	if (COLOR)
 		print_status(ctx);
+}
+
+void	handle_sigint_heredoc(int signal)
+{
+	(void)signal;
+	write(1, "\n", 1);
+	secure_exit(set_ctx(NULL));
 }
