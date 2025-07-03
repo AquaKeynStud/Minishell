@@ -6,13 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 14:55:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/21 12:09:40 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include <signal.h>
 #include "parsing.h"
+#include <sys/wait.h>
 #include "minishell.h"
 #include "sigaction.h"
 #include <readline/history.h>
@@ -60,9 +61,42 @@ int	pid_verification(t_ctx *ctx, t_ast *node)
 	return (fd);
 }
 
-static int	here_doc(const char *limiter)
+static pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *limiter)
 {
+	pid_t	pid;
 	char	*line;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		while (1)
+		{
+			line = readline(prompt);
+			if (!line || !ft_strcmp(line, limiter))
+			{
+				if (line)
+					free(line);
+				break ;
+			}
+			ft_dprintf(pipefd[1], "%s\n", line);
+			free(line);
+		}
+		close(pipefd[1]);
+		secure_exit(ctx);
+	}
+	return (pid);
+}
+
+int	here_doc(t_ctx *ctx, const char *limiter)
+{
+	pid_t	pid;
 	char	*prompt;
 	int		pipefd[2];
 
@@ -71,20 +105,17 @@ static int	here_doc(const char *limiter)
 	prompt = NULL;
 	if (isatty(STDIN_FILENO))
 		prompt = "> ";
-	while (1)
-	{
-		line = readline(prompt);
-		if (!line)
-			break ;
-		if (!ft_strcmp(line, limiter))
-		{
-			free(line);
-			break ;
-		}
-		ft_dprintf(pipefd[1], "%s\n", line);
-		free(line);
-	}
+	pid = fork_heredoc(ctx, pipefd, prompt, limiter);
 	close(pipefd[1]);
+	waitpid(pid, &ctx->status, 0);
+	if (WIFSIGNALED(ctx->status) && WTERMSIG(ctx->status) == SIGINT)
+	{
+		close(pipefd[0]);
+		ctx->status = 130;
+		return (-1);
+	}
+	else if (WIFEXITED(ctx->status))
+		ctx->status = WEXITSTATUS(ctx->status);
 	return (pipefd[0]);
 }
 
@@ -103,9 +134,9 @@ int	get_redir(t_ctx *ctx, t_ast *ast)
 	{
 		if (ft_strcmp(ast->value, "<<") == 0)
 		{
-			fd = here_doc(ast->childs[0]->value);
+			fd = here_doc(ctx, ast->childs[0]->value);
 			if (fd < 0)
-				return (perr("heredoc", 1), 0);
+				return (0);
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
@@ -113,11 +144,4 @@ int	get_redir(t_ctx *ctx, t_ast *ast)
 			return (0);
 	}
 	return (1);
-}
-
-int	exit_with_code(t_ctx *ctx, int code)
-{
-	if (code >= 0)
-		ctx->status = code;
-	return (ctx->status);
 }

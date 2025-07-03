@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/06 19:31:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/21 11:09:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int	get_redir(t_ctx *ctx, t_ast *ast)
 		if (ft_strcmp(ast->value, "<<") == 0)
 		{
 			fd = here_doc(ast->childs[0]->value);
+			printf("idfjsfisdf\n");
 			if (fd < 0)
 				return (perr("heredoc", 1), 0);
 			ast->fd = fd;

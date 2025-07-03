@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 13:38:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/21 10:51:29 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_ctx
 	int		stdout_fd;
 	bool	err_in_tokens;
 	bool	has_found_err;
+	bool	sigint_in_heredoc;
 }			t_ctx;
 
 /* -- Macros -- */

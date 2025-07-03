@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 15:19:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/21 12:10:01 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 
 	tokens = tokenize(ctx, cmd, false);
 	ast = parse_input(ctx, tokens);
+	sig_set(SIG_DFL);
 	if (!get_redir(ctx, ast) || !has_bonus_err(ctx, tokens))
 		return (destroy_command(&ctx, &tokens, &ast));
+	sig_init();
 	ctx->ast = ast;
 	ctx->tokens = tokens;
 	execute_ast(ctx, ast);

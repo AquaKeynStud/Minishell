@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:11:58 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 10:28:06 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/21 10:55:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ bool	set_sigaction(int signum, void (*handler)(int), char *flags);
 
 /* -- Handlers functions -- */
 void	handle_sigint(int signal);
+void	handle_sigint_heredoc(int signal);
 
 #endif

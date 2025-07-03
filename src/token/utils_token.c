@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:18:47 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/13 18:39:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 09:16:15 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ t_token	*get_last_token(t_token *tokens)
 	while (tokens->next)
 		tokens = tokens->next;
 	return (tokens);
+}
+
+bool	last_is_a(t_token *token, t_token_type type)
+{
+	return (get_last_token(token)->type == type);
 }
 
 int	is_operator(char c)

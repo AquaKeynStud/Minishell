@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 13:45:52 by arocca           ###   ########.fr       */
+/*   Updated: 2025/05/21 11:48:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,11 @@ int	s_exec_exit(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (1);
+}
+
+int	exit_with_code(t_ctx *ctx, int code)
+{
+	if (code >= 0)
+		ctx->status = code;
+	return (ctx->status);
 }

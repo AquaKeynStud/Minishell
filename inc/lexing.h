@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/20 11:25:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/03 09:15:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,9 @@ int		is_whitespace(char c);
 void	ajust_data(t_lexing *s);
 char	*append_char(char *res, char c);
 t_token	*get_last_token(t_token *tokens);
+bool	last_is_a(t_token *token, t_token_type type);
 void	init_s(t_lexing *s, char *input, bool is_var);
-t_token	*expand_args(t_ctx *ctx, t_lexing *lx, char *str);
 t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res);
+t_token	*expand_args(t_ctx *ctx, t_token **tokens, t_lexing *lx, char *s);
 
 #endif
