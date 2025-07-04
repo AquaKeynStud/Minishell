@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/04 12:34:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/04 14:48:26 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	here_doc(t_ctx *ctx, const char *eof)
 	return (pipefd[0]);
 }
 
-int	get_redir(t_ctx *ctx, t_ast *ast)
+int	get_redir(t_ctx *ctx, t_ast *ast, t_token *tokens)
 {
 	int	fd;
 
@@ -111,20 +111,22 @@ int	get_redir(t_ctx *ctx, t_ast *ast)
 		return (1);
 	if (ast->type == AST_PIPE)
 	{
-		if (!get_redir(ctx, ast->childs[0]) || !get_redir(ctx, ast->childs[1]))
+		if (!get_redir(ctx, ast->childs[0], tokens) || !get_redir(ctx, ast->childs[1], tokens))
 			return (0);
 	}
 	else if (ast->type == AST_REDIR)
 	{
 		if (!ft_strcmp(ast->value, "<<"))
 		{
+			ctx->ast = ast;
+			ctx->tokens = tokens;
 			fd = here_doc(ctx, ast->childs[0]->value);
 			if (fd < 0)
 				return (0);
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		if (!get_redir(ctx, ast->childs[1]))
+		if (!get_redir(ctx, ast->childs[1], tokens))
 			return (0);
 	}
 	return (1);

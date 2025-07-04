@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/04 12:38:21 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/04 14:45:27 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	tokens = tokenize(ctx, cmd, false);
 	ast = parse_input(ctx, tokens);
 	sig_set(SIG_DFL);
-	ctx->ast = ast;
-	ctx->tokens = tokens;
-	if (!get_redir(ctx, ast) || !has_bonus_err(ctx, tokens))
+	if (!get_redir(ctx, ast, tokens) || !has_bonus_err(ctx, tokens))
 		return (destroy_command(&ctx, &tokens, &ast));
 	sig_init();
+	ctx->ast = ast;
+	ctx->tokens = tokens;
 	execute_ast(ctx, ast);
 	destroy_command(&ctx, &tokens, &ast);
 }
@@ -103,12 +103,12 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		if (isatty(STDERR_FILENO))
-			ft_dprintf(2, "minishell: interactive mode not allowed\n");
-		exit(EXIT_FAILURE);
-	}
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	// {
+	// 	if (isatty(STDERR_FILENO))
+	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
+	// 	exit(EXIT_FAILURE);
+	// }
 	init_context(&ctx, argv, envp);
 	ctx = *set_ctx(&ctx);
 	sig_init();
