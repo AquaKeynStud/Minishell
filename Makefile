@@ -109,12 +109,12 @@ $(D_OBJ):
 	@mkdir -p $@
 
 $(D_DEP):
-	@mkdir -p $(D_DEP)
+	@mkdir -p $@
 
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-	$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@
+	$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
@@ -141,7 +141,7 @@ re:
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
 norminette:
-	norminette $(D_SRC) $(D_INC)
+	norminette $(D_SRC) $(D_LFT) $(D_INC)
 
 supp_file: | $(D_OBJ)
 	@echo "Generating $(SUPP_FILE)..."
