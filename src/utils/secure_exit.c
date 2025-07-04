@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 15:44:05 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/04 08:22:29 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ int	s_exec_exit(int status)
 	if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		// if (sig == SIGQUIT)
-		// 	ft_dprintf(2, "Quit (core dumped)\n");
 		if (sig == SIGINT)
 			ft_dprintf(2, "\n");
 		return (128 + sig);

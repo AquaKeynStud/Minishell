@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 15:43:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/04 08:23:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 	(*ctx)->tokens = NULL;
 	(*ctx)->has_found_err = false;
 	(*ctx)->err_in_tokens = false;
+	if ((*ctx)->status != 0 && ((*ctx)->status - 128) == SIGQUIT)
+		ft_dprintf(2, "Quit (core dumped)\n");
 	return ;
 }
 
