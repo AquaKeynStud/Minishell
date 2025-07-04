@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 12:39:50 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/04 12:34:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	get_redir(t_ctx *ctx, t_ast *ast)
 	}
 	else if (ast->type == AST_REDIR)
 	{
-		if (ft_strcmp(ast->value, "<<") == 0)
+		if (!ft_strcmp(ast->value, "<<"))
 		{
 			fd = here_doc(ctx, ast->childs[0]->value);
 			if (fd < 0)
