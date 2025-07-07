@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/04/29 23:01:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/06 16:18:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,30 @@ int	register_fd(t_fd **head, int fd)
 	new->next = *head;
 	*head = new;
 	return (0);
+}
+
+void	close_unregistered_fds(t_ctx *ctx)
+{
+	int		fd;
+	t_fd	*current;
+	bool	registered;
+
+	fd = 3;
+	while (fd < 1024)
+	{
+		current = ctx->fds;
+		registered = false;
+		while (current)
+		{
+			if (current->fd == fd)
+				registered = true;
+			current = current->next;
+		}
+		if (!registered)
+			close(fd);
+		fd++;
+	}
+	return ;
 }
 
 void	close_fd(t_fd **head, int fd)

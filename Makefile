@@ -1,5 +1,7 @@
 .PHONY : all clean fclean re libft norminette valgrind supp_file
 
+.DELETE_ON_ERROR:
+
 NAME = minishell
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ BASICS VARIABLES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
@@ -90,6 +92,8 @@ LIBS		:=	-L$(D_LFT) -lft -lreadline -lncurses
 
 INCS		:=	-I$(D_INC) -I$(D_LFT)
 
+LIBFT		:=	$(D_LFT)libft.a
+
 SUPP_FILE	:=	readline.supp
 
 COLOR ?= false
@@ -98,7 +102,8 @@ COLOR ?= false
 
 all:	$(NAME)
 
-$(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
+$(NAME): $(LIBFT) $(OBJ) | $(D_OBJ) $(D_DEP) Makefile
+#	$(info ⏱️  Rebuild check: $?)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
@@ -114,12 +119,11 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-	$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@
-	@mv $(@:.o=.d) $(D_DEP)
+	$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
 
 -include $(DEPS)
 
-libft:	$(D_LFT)
+$(LIBFT):
 	$(MAKE) -C $(D_LFT)
 
 clean:
@@ -127,7 +131,7 @@ ifeq ($(SHOW_MSG_CLEAN), true)
 	@echo "\e[0;36mAll $(NAME) objects have been removed 🧹\e[0m"
 endif
 	@$(MAKE) -s -C $(D_LFT) clean
-	@$(RM) $(D_OBJ) $(D_DEP) $(D_DOC)
+	@$(RM) $(D_OBJ) $(D_DEP)
 
 fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
@@ -156,5 +160,17 @@ valgrind: supp_file
 		--show-leak-kinds=all				\
 		--track-origins=yes 				\
 		--track-fds=yes						\
+		--suppressions=$(D_OBJ)$(SUPP_FILE)	\
+		./$(NAME)
+
+childs: supp_file
+	@$(MAKE)
+	@clear
+	valgrind							\
+		--leak-check=full					\
+		--show-leak-kinds=all				\
+		--track-origins=yes 				\
+		--track-fds=yes						\
+		--trace-children=yes				\
 		--suppressions=$(D_OBJ)$(SUPP_FILE)	\
 		./$(NAME)

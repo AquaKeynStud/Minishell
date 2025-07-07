@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 15:43:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/06 16:20:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	if (pid == 0)
 	{
 		sig_set(SIG_DFL);
+		close_unregistered_fds(ctx);
 		execve(path, args, envp);
 		free_cmd(path, args, envp, execve_err(ctx, args));
 		secure_exit(ctx);

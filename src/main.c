@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/04 14:45:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/07 09:27:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 {
 	free_tokens(tokens);
 	free_ast(*ast);
+	close_unregistered_fds(*ctx);
 	(*ctx)->ast = NULL;
 	(*ctx)->tokens = NULL;
 	(*ctx)->has_found_err = false;
@@ -103,14 +104,14 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	// {
-	// 	if (isatty(STDERR_FILENO))
-	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
-	// 	exit(EXIT_FAILURE);
-	// }
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	{
+		if (isatty(STDERR_FILENO))
+			ft_dprintf(2, "minishell: interactive mode not allowed\n");
+		exit(EXIT_FAILURE);
+	}
 	init_context(&ctx, argv, envp);
-	ctx = *set_ctx(&ctx);
+	set_status(&ctx, 0);
 	sig_init();
 	get_input_loop(&ctx);
 	secure_exit(&ctx);

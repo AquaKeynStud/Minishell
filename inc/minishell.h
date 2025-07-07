@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 15:43:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/07 08:51:22 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,11 @@ void	print_status(t_ctx *ctx);
 void	close_all_fds(t_fd **head);
 void	close_fd(t_fd **head, int fd);
 int		register_fd(t_fd **head, int fd);
+void	close_unregistered_fds(t_ctx *ctx);
 int		open_fd(t_fd **head, const char *filepath, int flags, mode_t perms);
 
-t_ctx	*set_ctx(t_ctx *ctx);
 void	*s_malloc(size_t size);
+int		set_status(t_ctx *ctx, int value);
 void	*s_calloc(size_t nmemb, size_t size);
 void	double_free(void **ptr, size_t size_if_not_null_term);
 void	*s_realloc(void *ptr, size_t old_size, size_t new_size);

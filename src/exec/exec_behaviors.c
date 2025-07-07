@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/04 14:48:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/07 09:02:59 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *eof)
 		set_sigaction(SIGINT, handle_sigint_heredoc, "0000000");
 		close(pipefd[0]);
 		exec_heredoc(prompt, eof, pipefd);
-		close(pipefd[1]);
+		close_unregistered_fds(ctx);
 		secure_exit(ctx);
 	}
 	return (pid);
@@ -103,31 +103,30 @@ int	here_doc(t_ctx *ctx, const char *eof)
 	return (pipefd[0]);
 }
 
-int	get_redir(t_ctx *ctx, t_ast *ast, t_token *tokens)
+int	get_redir(t_ctx *ctx, t_ast *ast, t_token *tok)
 {
 	int	fd;
 
 	if (!ast)
 		return (1);
 	if (ast->type == AST_PIPE)
-	{
-		if (!get_redir(ctx, ast->childs[0], tokens) || !get_redir(ctx, ast->childs[1], tokens))
-			return (0);
-	}
+		return (get_redir(ctx, ast->childs[0], tok)
+			&& get_redir(ctx, ast->childs[1], tok));
 	else if (ast->type == AST_REDIR)
 	{
 		if (!ft_strcmp(ast->value, "<<"))
 		{
 			ctx->ast = ast;
-			ctx->tokens = tokens;
+			ctx->tokens = tok;
 			fd = here_doc(ctx, ast->childs[0]->value);
 			if (fd < 0)
 				return (0);
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		if (!get_redir(ctx, ast->childs[1], tokens))
+		if (!get_redir(ctx, ast->childs[1], tok))
 			return (0);
 	}
+	close_unregistered_fds(ctx);
 	return (1);
 }

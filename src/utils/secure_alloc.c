@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 11:11:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/07 09:19:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 #include "lexing.h"
 #include "parsing.h"
 
-t_ctx	*set_ctx(t_ctx *ctx)
+int	set_status(t_ctx *ctx, int value)
 {
-	static t_ctx	*context;
+	static int	*status = NULL;
 
 	if (ctx)
-		context = ctx;
-	else if (!context)
-		return (NULL);
-	return (context);
+		status = &ctx->status;
+	else
+		*status = value;
+	return (value);
 }
 
 void	*s_malloc(size_t size)

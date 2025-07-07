@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 12:17:38 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/07 09:07:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,7 @@ t_token	*expand_args(t_ctx *ctx, t_token *tok, t_lexing *lx, char *s)
 		return (NULL);
 	while (*s)
 	{
-		if (*s == '\\')
-		{
-			s++;
-			res = append_char(res, *s++);
-		}
-		else if (*s == '$' && !is_eof(tok) && in_str(s[1], "?_", true))
+		if (*s == '$' && !is_eof(tok) && in_str(s[1], "?_", true))
 			return (handle_var(ctx, lx, &s, &res));
 		else if (*s == '$' && !is_eof(tok) && in_str(lx->str[lx->i], "\"'", 0))
 			return (handle_quote_var(ctx, lx, &res));
