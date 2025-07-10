@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 10:15:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 18:51:22 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	print_status(t_ctx *ctx)
 		if (cwd)
 		{
 			ft_printf("\033[36m%s ", cwd);
-			free(cwd);
+			s_free(ctx, cwd);
 		}
 	}
 	ft_printf("\033[33m%s \033[0m\n", "✗");

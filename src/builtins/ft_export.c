@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/20 11:36:50 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:29:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_env	*find_env_node(t_env *env, const char *key)
 	return (NULL);
 }
 
-void	add_or_update_env(t_env **env, const char *key, const char *value)
+void	add_or_update_env(t_ctx *ctx, t_env **env, char *key, char *value)
 {
 	t_env	*existing;
 	t_env	*new_node;
@@ -35,48 +35,47 @@ void	add_or_update_env(t_env **env, const char *key, const char *value)
 	{
 		if (value)
 		{
-			free(existing->value);
-			existing->value = ft_strdup(value);
+			s_free(ctx, existing->value);
+			existing->value = s_save(ctx, ft_strdup(value));
 		}
 	}
 	else
 	{
-		new_node = create_env_node(key, value);
+		new_node = create_env_node(ctx, key, value);
 		if (!new_node)
 			return ;
 		append_env_node(env, new_node);
 	}
 }
 
-static int	parse_env_set(t_env **env, char *arg, char **key, char **value)
+static int	parse_env_set(t_ctx *ctx, t_env **env, char *arg, char **key, char **value)
 {
 	char	*pos;
-	int		equal;
+	int		sep;
 
 	pos = ft_strchr(arg, '=');
-	equal = pos - arg;
+	sep = pos - arg;
 	if (!pos)
 	{
-		*key = ft_strdup(arg);
+		*key = s_save(ctx, ft_strdup(arg));
 		*value = NULL;
 	}
-	else if (equal >= 2 && arg[equal - 1] == '+'
-		&& (ft_isalnum(arg[equal - 2]) || arg[equal - 2] == '_'))
+	else if (sep >= 2 && arg[sep - 1] == '+' && in_str(arg[sep - 2], "_", 1))
 	{
 		*key = ft_substr(arg, 0, pos - arg - 1);
-		*value = ft_strjoin(get_from_env(*env, *key), pos + 1);
+		*value = s_save(ctx, ft_strjoin(get_from_env(*env, *key), pos + 1));
 	}
 	else
 	{
 		*key = ft_substr(arg, 0, pos - arg);
-		*value = ft_strdup(pos + 1);
+		*value = s_save(ctx, ft_strdup(pos + 1));
 	}
 	if (!(*key))
 		return (0);
 	return (1);
 }
 
-int	process_env_arg(char *arg, t_env **env)
+int	process_env_arg(t_ctx *ctx, char *arg, t_env **env)
 {
 	char	*key;
 	char	*value;
@@ -85,7 +84,7 @@ int	process_env_arg(char *arg, t_env **env)
 	key = NULL;
 	value = NULL;
 	exit_code = 0;
-	if (!parse_env_set(env, arg, &key, &value))
+	if (!parse_env_set(ctx, env, arg, &key, &value))
 		return (1);
 	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')
@@ -95,13 +94,13 @@ int	process_env_arg(char *arg, t_env **env)
 		exit_code = 1;
 	}
 	else if (exit_code == 0)
-		add_or_update_env(env, key, value);
-	free(key);
-	free(value);
+		add_or_update_env(ctx, env, key, value);
+	s_free(ctx, key);
+	s_free(ctx, value);
 	return (exit_code);
 }
 
-int	ft_export(char **args, t_env **env)
+int	ft_export(t_ctx *ctx, char **args, t_env **env)
 {
 	int	arg_count;
 	int	i;
@@ -111,16 +110,16 @@ int	ft_export(char **args, t_env **env)
 	arg_count = count_args(args);
 	if (arg_count == 1)
 	{
-		print_sorted_env(*env);
-		free(args);
+		print_sorted_env(ctx, *env);
+		s_free(ctx, args);
 		return (0);
 	}
 	i = 1;
 	while (i < arg_count)
 	{
-		exit_code = process_env_arg(args[i], env);
+		exit_code = process_env_arg(ctx, args[i], env);
 		i++;
 	}
-	free(args);
+	s_free(ctx, args);
 	return (exit_code);
 }

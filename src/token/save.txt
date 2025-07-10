@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_arg.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    save.txt                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/05/01 12:27:23 by arocca            #+#    #+#              #
+#    Updated: 2025/07/10 22:50:10 by arocca           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
 #include <stdlib.h>
 #include <string.h>
@@ -24,10 +24,10 @@ static char	*expand_status(t_ctx *ctx, t_lexing *lx, char **str, char **res)
 	char	*val;
 
 	s = *str + 2;
-	val = s_save(ctx, ft_itoa(ctx->status));
+	val = ft_itoa(ctx->status);
 	lx->i -= (ft_strlen(s) + (lx->quoted));
 	*str = s;
-	return (s_save(ctx, ft_strjoin_free(ctx, *res, val)));
+	return (s_register(ctx, ft_strjoin_free(ctx, *res, val)));
 }
 
 static char	*handle_env_var(t_ctx *ctx, t_lexing *lx, char **str, char *res)
@@ -46,17 +46,17 @@ static char	*handle_env_var(t_ctx *ctx, t_lexing *lx, char **str, char *res)
 		while (ft_isalnum(*s) || *s == '_')
 			s++;
 	}
-	key = s_save(ctx, ft_strndup(*str + 1, s - (*str + 1)));
+	key = s_register(ctx, ft_strndup(*str + 1, s - (*str + 1)));
 	if (!ft_strcmp(key, "UID"))
-		val = s_save(ctx, ft_strdup(ctx->uid));
+		val = s_register(ctx, ft_strdup(ctx->uid));
 	else
-		val = s_save(ctx, ft_strdup(get_from_env(ctx->env, key)));
+		val = s_register(ctx, ft_strdup(get_from_env(ctx->env, key)));
 	s_free(ctx, key);
 	lx->i -= ft_strlen(s);
 	if (lx->quoted)
 		lx->i--;
 	*str = s;
-	return (s_save(ctx, ft_strjoin_free(ctx, res, val)));
+	return (s_register(ctx, ft_strjoin_free(ctx, res, val)));
 }
 
 static t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
@@ -114,7 +114,7 @@ t_token	*expand_args(t_ctx *ctx, t_token *tok, t_lexing *lx, char *s)
 
 	if (!s || !*s)
 		return (NULL);
-	res = s_save(ctx, ft_strdup(""));
+	res = s_register(ctx, ft_strdup(""));
 	if (!res)
 		return (NULL);
 	while (*s)

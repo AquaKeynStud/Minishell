@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/07 09:27:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:38:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,21 @@ static void	init_context(t_ctx *ctx, char **argv, char **envp)
 	ctx->status = 0;
 	ctx->input = NULL;
 	ctx->tokens = NULL;
+	ctx->allocs = NULL;
 	ctx->has_found_err = false;
 	ctx->err_in_tokens = false;
-	ctx->env = init_env(argv, envp);
+	ctx->env = init_env(ctx, argv, envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
 	if (!stat("/proc/self", &st))
-		ctx->uid = ft_itoa(st.st_uid);
+		ctx->uid = s_save(ctx, ft_itoa(st.st_uid));
 	return ;
 }
 
 static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 {
-	free_tokens(tokens);
-	free_ast(*ast);
+	free_tokens(*ctx, tokens);
+	free_ast(*ctx, *ast);
 	close_unregistered_fds(*ctx);
 	(*ctx)->ast = NULL;
 	(*ctx)->tokens = NULL;
@@ -91,9 +92,10 @@ static void	get_input_loop(t_ctx *ctx)
 		if (*input)
 			add_history(input);
 		ft_trim(&input, " \t");
+		s_save(ctx, input);
 		ctx->input = input;
 		command_handler(ctx, input);
-		free(input);
+		s_free(ctx, input);
 		ctx->input = NULL;
 	}
 	rl_clear_history();

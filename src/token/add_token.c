@@ -6,13 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:17:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/12 11:47:00 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:15:58 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexing.h"
 
-void	free_tokens(t_token **list)
+void	free_tokens(t_ctx *ctx, t_token **list)
 {
 	t_token	*current;
 	t_token	*next;
@@ -21,14 +21,14 @@ void	free_tokens(t_token **list)
 	while (current)
 	{
 		next = current->next;
-		free(current->value);
-		free(current);
+		s_free(ctx, current->value);
+		s_free(ctx, current);
 		current = next;
 	}
 	*list = NULL;
 }
 
-bool	add_or_merge_word(t_token **tokens, t_lexing *lx, t_token *content)
+bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content)
 {
 	t_token	*last;
 	char	*merged;
@@ -37,35 +37,35 @@ bool	add_or_merge_word(t_token **tokens, t_lexing *lx, t_token *content)
 		return (lx->merge);
 	if (!lx->merge)
 	{
-		add_token(tokens, content);
+		add_token(tok, content);
 		if (content->next)
 			return (lx->merge);
 		return (true);
 	}
-	last = get_last_token(*tokens);
+	last = get_last_token(*tok);
 	if (last && last->type == TOKEN_WORD)
 	{
-		merged = ft_strjoin_free(last->value, content->value);
+		merged = s_save(ctx, ft_strjoin_free(ctx, last->value, content->value));
 		if (merged)
 			last->value = merged;
 		last->next = content->next;
-		free(content);
+		s_free(ctx, content);
 		return (true);
 	}
 	return (lx->merge);
 }
 
-t_token	*create_token(const char *value, t_token_type type)
+t_token	*create_token(t_ctx *ctx, const char *value, t_token_type type)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = s_malloc(ctx, sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->value = ft_strdup(value);
+	token->value = s_save(ctx, ft_strdup(value));
 	if (!token->value)
 	{
-		free(token);
+		s_free(ctx, token);
 		return (NULL);
 	}
 	token->type = type;
@@ -92,14 +92,14 @@ void	add_token(t_token **head, t_token *new)
 	new->prev = tmp;
 }
 
-t_token	*simple_tok(t_lexing *lx, char **res, int len)
+t_token	*simple_tok(t_ctx *ctx, t_lexing *lx, char **res, int len)
 {
 	t_token	*tok;
 
-	tok = create_token(*res, TOKEN_WORD);
+	tok = create_token(ctx, *res, TOKEN_WORD);
 	if (len)
 		lx->i -= len;
-	free(*res);
+	s_free(ctx, *res);
 	if (tok)
 		return (tok);
 	return (NULL);

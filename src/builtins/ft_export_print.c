@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 11:44:49 by abouclie          #+#    #+#             */
-/*   Updated: 2025/04/29 23:50:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 18:57:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ static void	sort(t_env **env)
 	}
 }
 
-void	print_sorted_env(t_env *env)
+void	print_sorted_env(t_ctx *ctx, t_env *env)
 {
 	t_env	*copy;
 	t_env	*tmp;
 
-	copy = copy_env_list(env);
+	copy = copy_env_list(ctx, env);
 	sort(&copy);
 	tmp = copy;
 	while (tmp)
@@ -65,5 +65,5 @@ void	print_sorted_env(t_env *env)
 			ft_printf("export %s\n", tmp->key);
 		tmp = tmp->next;
 	}
-	free_env(&copy);
+	free_env(ctx, &copy);
 }

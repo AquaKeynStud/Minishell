@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:39 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 17:49:05 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 19:15:02 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	is_option(char **args)
 	return (0);
 }
 
-static void	remove_env_var(char *key, t_env **env)
+static void	remove_env_var(t_ctx *ctx, char *key, t_env **env)
 {
 	t_env	*tmp;
 	t_env	*prev;
@@ -40,9 +40,9 @@ static void	remove_env_var(char *key, t_env **env)
 				prev->next = tmp->next;
 			else
 				*env = tmp->next;
-			free(tmp->key);
-			free(tmp->value);
-			free(tmp);
+			s_free(ctx, tmp->key);
+			s_free(ctx, tmp->value);
+			s_free(ctx, tmp);
 			return ;
 		}
 		prev = tmp;
@@ -50,7 +50,7 @@ static void	remove_env_var(char *key, t_env **env)
 	}
 }
 
-int	ft_unset(char **args, t_env *env)
+int	ft_unset(t_ctx *ctx, char **args, t_env *env)
 {
 	int		i;
 	int		exit_code;
@@ -60,15 +60,15 @@ int	ft_unset(char **args, t_env *env)
 		return (0);
 	else if (!args[1])
 	{
-		free(args);
+		s_free(ctx, args);
 		return (0);
 	}
 	exit_code = is_option(args);
 	while (args[i])
 	{
-		remove_env_var(args[i], &env);
+		remove_env_var(ctx, args[i], &env);
 		i++;
 	}
-	free(args);
+	s_free(ctx, args);
 	return (exit_code);
 }

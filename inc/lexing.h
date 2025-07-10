@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/03 12:09:06 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:16:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,17 @@ typedef struct s_token
 t_token	*tokenize(t_ctx *ctx, char *input, bool is_var);
 
 /* Add token */
-void	free_tokens(t_token **list);
+void	free_tokens(t_ctx *ctx, t_token **list);
 void	add_token(t_token **head, t_token *new);
-t_token	*simple_tok(t_lexing *lx, char **res, int len);
-t_token	*create_token(const char *value, t_token_type type);
-bool	add_or_merge_word(t_token **tokens, t_lexing *lx, t_token *content);
+t_token	*simple_tok(t_ctx *ctx, t_lexing *lx, char **res, int len);
+t_token	*create_token(t_ctx *ctx, const char *value, t_token_type type);
+bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
 
 /* Utils */
 int		is_operator(char c);
 int		is_whitespace(char c);
 void	ajust_data(t_lexing *s);
-char	*append_char(char *res, char c);
+char	*append_char(t_ctx *ctx, char *res, char c);
 t_token	*get_last_token(t_token *tokens);
 bool	is_eof(t_token *token);
 void	init_s(t_lexing *s, char *input, bool is_var);

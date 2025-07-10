@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 17:17:44 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 19:13:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ bool	has_nl(char **args, int *i)
 	return (newline);
 }
 
-int	ft_echo(char **args)
+int	ft_echo(t_ctx *ctx, char **args)
 {
 	int		i;
 	bool	newline;
@@ -69,7 +69,7 @@ int	ft_echo(char **args)
 	if (!args[1])
 	{
 		ft_printf("\n");
-		free(args);
+		s_free(ctx, args);
 		return (EXIT_SUCCESS);
 	}
 	while (args[i])
@@ -81,6 +81,6 @@ int	ft_echo(char **args)
 	}
 	if (newline)
 		ft_printf("\n");
-	free(args);
+	s_free(ctx, args);
 	return (EXIT_SUCCESS);
 }

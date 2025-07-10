@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/14 12:49:57 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/07/10 19:15:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,20 @@ int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 		return (1);
 	}
 	if (!ft_strcmp(args[0], "cd"))
-		return (ft_cd(args, env));
+		return (ft_cd(ctx, args, env));
 	if (!ft_strcmp(args[0], "echo"))
-		return (ft_echo(args));
+		return (ft_echo(ctx, args));
 	if (!ft_strcmp(args[0], "pwd"))
-		return (ft_pwd(args, env));
+		return (ft_pwd(ctx, args, env));
 	if (!ft_strcmp(args[0], "export"))
-		return (ft_export(args, &env));
+		return (ft_export(ctx, args, &env));
 	if (!ft_strcmp(args[0], "unset"))
-		return (ft_unset(args, env));
+		return (ft_unset(ctx, args, env));
 	if (!ft_strcmp(args[0], "env"))
-		return (ft_env(env, count_args(args), args));
+		return (ft_env(ctx, env, count_args(args), args));
 	if (!ft_strcmp(args[0], "exit"))
 		return (ft_exit(ctx, count_args(args), args));
 	if (!ft_strcmp(args[0], ":"))
-		return (double_dot(args));
+		return (double_dot(ctx, args));
 	return (-1);
 }

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/03 10:54:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 18:51:22 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,15 @@ void	handle_exit(t_ctx *ctx, int argc, char **args)
 			interractive_exit();
 			ft_dprintf(2, "minishell: exit: ");
 			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
-			free(args);
+			s_free(ctx, args);
 			secure_exit(ctx);
 		}
 		ctx->status = arg % 256;
-		free(args);
+		s_free(ctx, args);
 		interractive_exit();
 		secure_exit(ctx);
 	}
-	free(args);
+	s_free(ctx, args);
 	interractive_exit();
 	secure_exit(ctx);
 }
@@ -91,10 +91,10 @@ int	ft_exit(t_ctx *ctx, int argc, char **args)
 	{
 		if (ctx->status == 2)
 		{
-			free(args);
+			s_free(ctx, args);
 			secure_exit(ctx);
 		}
-		free(args);
+		s_free(ctx, args);
 		return (1);
 	}
 	handle_exit(ctx, argc, args);

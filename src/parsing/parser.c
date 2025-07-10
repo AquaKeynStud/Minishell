@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/15 18:16:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 #include "parsing.h"
 #include "minishell.h"
 
-t_ast	*overwrite_stub(t_token **curr, t_ast **cmd)
+t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 {
 	t_ast	*stub;
 
 	if (!*cmd)
-		*cmd = new_ast(AST_COMMAND, (*curr)->value);
+		*cmd = new_ast(ctx, AST_COMMAND, (*curr)->value);
 	else
 	{
 		stub = *cmd;
 		while (stub->type == AST_REDIR)
 			stub = stub->childs[1];
 		if (stub->value)
-			free(stub->value);
-		stub->value = ft_strdup((*curr)->value);
+			s_free(ctx, stub->value);
+		stub->value = s_save(ctx, ft_strdup((*curr)->value));
 	}
 	stub = *cmd;
 	while (stub->type == AST_REDIR)
@@ -75,15 +75,15 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
 		{
 			if (!parse_redirs(ctx, &cmd, curr))
-				return (free_ast(cmd));
+				return (free_ast(ctx, cmd));
 		}
 		else if ((*curr)->type == TOKEN_WORD)
 		{
 			if (!cmd || !stub)
-				stub = overwrite_stub(curr, &cmd);
+				stub = overwrite_stub(ctx, curr, &cmd);
 			else
 			{
-				ast_add_child(stub, new_ast(AST_COMMAND, (*curr)->value));
+				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, (*curr)->value));
 				*curr = (*curr)->next;
 			}
 		}
@@ -104,17 +104,17 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 	if (!left)
 		return (NULL);
 	if (!left->value)
-		return (free_ast(left));
+		return (free_ast(ctx, left));
 	while (*curr && (*curr)->type == TOKEN_PIPE)
 	{
 		tmp = *curr;
 		*curr = (*curr)->next;
 		right = parse_command(ctx, curr, NULL);
 		if (!right || !right->value)
-			return (double_free_ast(right, left));
-		pipe_node = new_ast(AST_PIPE, tmp->value);
-		ast_add_child(pipe_node, left);
-		ast_add_child(pipe_node, right);
+			return (double_free_ast(ctx, right, left));
+		pipe_node = new_ast(ctx, AST_PIPE, tmp->value);
+		ast_add(ctx, pipe_node, left);
+		ast_add(ctx, pipe_node, right);
 		left = pipe_node;
 	}
 	return (left);

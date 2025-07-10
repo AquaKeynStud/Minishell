@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/07 09:19:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:12:01 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,52 +25,60 @@ int	set_status(t_ctx *ctx, int value)
 	return (value);
 }
 
-void	*s_malloc(size_t size)
+void	*s_malloc(t_ctx *ctx, size_t size)
 {
-	void	*alloc;
+	t_allocs	*new;
+	void		*alloc;
 
 	if (!size)
-		exit(1);
+		return (NULL);
 	alloc = malloc(size);
 	if (!alloc)
 	{
 		perror("malloc");
-		exit(1);
+		secure_exit(ctx);
 	}
-	return (alloc);
-}
-
-void	*s_calloc(size_t nmemb, size_t size)
-{
-	void	*alloc;
-
-	if (!nmemb || !size || nmemb > SIZE_MAX / size)
-		return (NULL);
-	alloc = ft_calloc(nmemb, size);
-	if (!alloc)
+	new = malloc(sizeof(t_allocs));
+	if (!new)
 	{
-		perror("ft_calloc");
-		exit(1);
+		perror("garbage collector");
+		s_free(ctx, alloc);
+		secure_exit(ctx);
 	}
+	new->alloc = alloc;
+	new->next = ctx->allocs;
+	ctx->allocs = new;
 	return (alloc);
 }
 
-void	*s_realloc(void *ptr, size_t old_size, size_t new_size)
+void	*s_realloc(t_ctx *ctx, void *ptr, size_t old_size, size_t new_size)
 {
-	void	*alloc;
+	t_allocs	*new;
+	void		*alloc;
 
 	if (!new_size)
 		return (NULL);
+	s_delete(ctx, ptr);
 	alloc = ft_realloc(ptr, old_size, new_size);
 	if (!alloc)
 	{
 		perror("ft_realloc");
-		exit(1);
+		secure_exit(ctx);
 	}
+	new = malloc(sizeof(t_allocs));
+	if (!new)
+	{
+		perror("garbage collector");
+		s_free(ctx, alloc);
+		secure_exit(ctx);
+	}
+	new->alloc = alloc;
+	new->next = ctx->allocs;
+	ctx->allocs = new;
 	return (alloc);
 }
 
-void	double_free(void **ptr, size_t size_if_not_null_term)
+void	double_free(t_ctx *ctx, void **ptr, size_t size_if_not_null_term)
 {
 	size_t	i;
 
@@ -80,12 +88,12 @@ void	double_free(void **ptr, size_t size_if_not_null_term)
 	if (!size_if_not_null_term)
 	{
 		while (ptr[i])
-			free(ptr[i++]);
+			s_free(ctx, ptr[i++]);
 	}
 	else
 	{
 		while (i < size_if_not_null_term)
-			free(ptr[i++]);
+			s_free(ctx, ptr[i++]);
 	}
-	free(ptr);
+	s_free(ctx, ptr);
 }

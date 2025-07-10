@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/05/20 11:36:23 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*get_working_dir(char *cmd_request)
 	return (cwd);
 }
 
-static int	process_cd(char *path, char *oldpwd, t_env *env)
+static int	process_cd(t_ctx *ctx, char *path, char *oldpwd, t_env *env)
 {
 	char	*newpwd;
 
@@ -63,25 +63,25 @@ static int	process_cd(char *path, char *oldpwd, t_env *env)
 	{
 		ft_dprintf(2, "minishell: cd: ");
 		perror(path);
-		free(oldpwd);
+		s_free(ctx, oldpwd);
 		return (EXIT_FAILURE);
 	}
 	newpwd = get_working_dir("chdir");
 	if (!newpwd)
 	{
 		if (path[0] == '/')
-			newpwd = ft_strdup(path);
+			newpwd = s_save(ctx, ft_strdup(path));
 		else
-			newpwd = join_with_delim((char *)oldpwd, (char *)path, "/");
+			newpwd = join_with_delim(ctx, (char *)oldpwd, (char *)path, "/");
 	}
 	if (oldpwd)
-		update_env(env, "OLDPWD", oldpwd);
+		update_env(ctx, env, "OLDPWD", oldpwd);
 	if (newpwd)
-		update_env(env, "PWD", newpwd);
+		update_env(ctx, env, "PWD", newpwd);
 	return (EXIT_SUCCESS);
 }
 
-int	ft_cd(char **args, t_env *env)
+int	ft_cd(t_ctx *ctx, char **args, t_env *env)
 {
 	char	*path;
 	char	*oldpwd;	
@@ -89,11 +89,11 @@ int	ft_cd(char **args, t_env *env)
 	if (count_args(args) > 2 && ft_strcmp(args[1], "--"))
 	{
 		ft_dprintf(2, "cd: too many arguments\n");
-		free(args);
+		s_free(ctx, args);
 		return (1);
 	}
 	path = ensure_target_dir(args[1], env);
-	free(args);
+	s_free(ctx, args);
 	if (!path)
 		return (1);
 	if (path[0] == '-' && path[1])
@@ -101,8 +101,8 @@ int	ft_cd(char **args, t_env *env)
 		ft_dprintf(2, "cd: %c%c: invalid option\n", path[0], path[1]);
 		return (1);
 	}
-	oldpwd = ft_strdup(get_from_env(env, "PWD"));
+	oldpwd = s_save(ctx, ft_strdup(get_from_env(env, "PWD")));
 	if (!oldpwd)
 		oldpwd = get_working_dir("cd");
-	return (process_cd(path, oldpwd, env));
+	return (process_cd(ctx, path, oldpwd, env));
 }

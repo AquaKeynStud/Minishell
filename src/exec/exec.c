@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/06 16:20:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:36:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,11 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 	char	**envp;
 	char	**args;
 
-	envp = env_to_envp(ctx->env);
-	args = ast_to_argv(node);
-	path = get_path(node->value, ctx->env);
+	envp = env_to_envp(ctx, ctx->env);
+	args = ast_to_argv(ctx, node);
+	path = get_path(ctx, node->value, ctx->env);
 	if (!path || !args || !envp)
-		return (free_cmd(path, args, envp, execve_err(ctx, args)));
+		return (execve_err(ctx, args));
 	sig_set(SIG_IGN);
 	pid = fork();
 	if (pid == 0)
@@ -114,12 +114,12 @@ int	exec_command(t_ctx *ctx, t_ast *node)
 		sig_set(SIG_DFL);
 		close_unregistered_fds(ctx);
 		execve(path, args, envp);
-		free_cmd(path, args, envp, execve_err(ctx, args));
+		execve_err(ctx, args);
 		secure_exit(ctx);
 	}
 	waitpid(pid, &ctx->status, 0);
 	sig_init();
-	return (free_cmd(path, args, envp, s_exec_exit(ctx->status)));
+	return (s_exec_exit(ctx->status));
 }
 
 int	execute_ast(t_ctx *ctx, t_ast *node)
@@ -135,7 +135,7 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 		if (!ft_strcmp(node->value, "!"))
 			ctx->status = 1;
 		else if (is_builtin(node->value))
-			ctx->status = exec_builtin(ctx, ast_to_argv(node), ctx->env);
+			ctx->status = exec_builtin(ctx, ast_to_argv(ctx, node), ctx->env);
 		else
 			ctx->status = exec_command(ctx, node);
 	}

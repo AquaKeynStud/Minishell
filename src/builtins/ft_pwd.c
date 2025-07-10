@@ -6,14 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:24:54 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 10:39:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 19:13:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
 #include <limits.h>
+#include "minishell.h"
 
-static void	pwd_args(char **args, int	*situation)
+static void	pwd_args(t_ctx *ctx, char **args, int	*situation)
 {
 	if (args[1] && *args[1] == '-' && (args[1][1] != 'L' && args[1][1] != 'P'))
 	{
@@ -25,7 +25,7 @@ static void	pwd_args(char **args, int	*situation)
 		(*situation) = 1;
 	else
 		(*situation) = 0;
-	free(args);
+	s_free(ctx, args);
 	return ;
 }
 
@@ -43,7 +43,7 @@ static int	logical_pwd(t_env *env)
 	return (EXIT_FAILURE);
 }
 
-static int	physical_pwd(void)
+static int	physical_pwd(t_ctx *ctx)
 {
 	char	*cwd;
 
@@ -51,19 +51,19 @@ static int	physical_pwd(void)
 	if (!cwd)
 		return (EXIT_FAILURE);
 	ft_printf("%s\n", cwd);
-	free(cwd);
+	s_free(ctx, cwd);
 	return (EXIT_SUCCESS);
 }
 
-int	ft_pwd(char **args, void *env)
+int	ft_pwd(t_ctx *ctx, char **args, void *env)
 {
 	int	situation;
 
-	pwd_args(args, &situation);
+	pwd_args(ctx, args, &situation);
 	if (situation < 0)
 		return (EXIT_FAILURE);
 	else if (situation > 0)
 		return (logical_pwd(env));
 	else
-		return (physical_pwd());
+		return (physical_pwd(ctx));
 }

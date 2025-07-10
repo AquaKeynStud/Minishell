@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 20:02:24 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/11 11:17:05 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ static int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
 	return (2);
 }
 
-void	cat_empty_heredoc(t_ast **cmd, t_token *tmp)
+void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 {
 	t_ast	*stub;
 
 	if (!*cmd)
 	{
 		if (tmp->type == TOKEN_HEREDOC)
-			*cmd = new_ast(AST_COMMAND, "cat");
+			*cmd = new_ast(ctx, AST_COMMAND, "cat");
 		else
-			*cmd = new_ast(AST_COMMAND, NULL);
+			*cmd = new_ast(ctx, AST_COMMAND, NULL);
 		return ;
 	}
 	if (tmp->type == TOKEN_HEREDOC)
@@ -62,11 +62,11 @@ void	cat_empty_heredoc(t_ast **cmd, t_token *tmp)
 		while (stub->type == AST_REDIR)
 			stub = stub->childs[1];
 		if (!stub->value)
-			stub->value = ft_strdup("cat");
+			stub->value = s_save(ctx, ft_strdup("cat"));
 	}
 }
 
-void	redir_priority(t_ast **cmd, t_ast *redir)
+void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
 {
 	t_ast	*leaf;
 	t_ast	*parent;
@@ -82,12 +82,12 @@ void	redir_priority(t_ast **cmd, t_ast *redir)
 		}
 		if (!leaf)
 			return ;
-		ast_add_child(redir, leaf);
+		ast_add(ctx, redir, leaf);
 		parent->childs[1] = redir;
 	}
 	else
 	{
-		ast_add_child(redir, *cmd);
+		ast_add(ctx, redir, *cmd);
 		*cmd = redir;
 	}
 }
@@ -106,11 +106,11 @@ int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 	err = err_redir(ctx, tmp, curr);
 	if (err != 2)
 		return (err);
-	cat_empty_heredoc(cmd, tmp);
-	redir = new_ast(AST_REDIR, tmp->value);
-	file_node = new_ast(AST_COMMAND, (*curr)->value);
-	ast_add_child(redir, file_node);
-	redir_priority(cmd, redir);
+	cat_empty_heredoc(ctx, cmd, tmp);
+	redir = new_ast(ctx, AST_REDIR, tmp->value);
+	file_node = new_ast(ctx, AST_COMMAND, (*curr)->value);
+	ast_add(ctx, redir, file_node);
+	redir_priority(ctx, cmd, redir);
 	*curr = (*curr)->next;
 	return (1);
 }

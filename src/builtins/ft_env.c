@@ -6,20 +6,20 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
-/*   Updated: 2025/05/15 18:25:11 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/10 19:11:04 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "minishell.h"
 
-int	update_env(t_env *env, char *key, char *value)
+int	update_env(t_ctx *ctx, t_env *env, char *key, char *value)
 {
 	while (env)
 	{
 		if (!ft_strcmp(env->key, key))
 		{
-			free(env->value);
+			s_free(ctx, env->value);
 			env->value = value;
 			return (0);
 		}
@@ -28,7 +28,7 @@ int	update_env(t_env *env, char *key, char *value)
 	return (1);
 }
 
-int	ft_env(t_env *env, int argc, char **args)
+int	ft_env(t_ctx *ctx, t_env *env, int argc, char **args)
 {
 	int		i;
 
@@ -43,7 +43,7 @@ int	ft_env(t_env *env, int argc, char **args)
 				ft_printf("env: '%s': no argument allowed\n", args[i]);
 			i++;
 		}
-		free(args);
+		s_free(ctx, args);
 		return (1);
 	}
 	while (env)
@@ -52,6 +52,6 @@ int	ft_env(t_env *env, int argc, char **args)
 			ft_printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	free(args);
+	s_free(ctx, args);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/03 12:26:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 00:15:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,26 @@
 #include "lexing.h"
 #include <stdbool.h>
 
-static void	handle_pipe(t_lexing *s, t_token **tokens)
+static void	handle_pipe(t_ctx *ctx, t_lexing *s, t_token **tokens)
 {
 	int		i;
 	char	*pipe;
 
 	i = 0;
-	pipe = ft_strdup("");
+	pipe = s_save(ctx, ft_strdup(""));
 	while (s->str[s->i] == '|')
 	{
 		i++;
 		(s->i)++;
 	}
 	while (i--)
-		pipe = append_char(pipe, '|');
-	add_token(tokens, create_token(pipe, TOKEN_PIPE));
-	free(pipe);
+		pipe = append_char(ctx, pipe, '|');
+	add_token(tokens, create_token(ctx, pipe, TOKEN_PIPE));
+	s_free(ctx, pipe);
 	s->merge = false;
 }
 
-static void	handle_redir(t_lexing *s, t_token **tokens)
+static void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens)
 {
 	char	op;
 	int		len;
@@ -44,20 +44,20 @@ static void	handle_redir(t_lexing *s, t_token **tokens)
 	op = s->str[s->i];
 	if (s->str[s->i + 1] == op)
 		len = 2;
-	str = ft_strndup(&s->str[s->i], len);
+	str = s_save(ctx, ft_strndup(&s->str[s->i], len));
 	if (!str)
 		return ;
 	if (op == '>' && len == 2)
-		token = create_token(str, TOKEN_REDIR_APPEND);
+		token = create_token(ctx, str, TOKEN_REDIR_APPEND);
 	else if (op == '<' && len == 2)
-		token = create_token(str, TOKEN_HEREDOC);
+		token = create_token(ctx, str, TOKEN_HEREDOC);
 	else if (op == '>')
-		token = create_token(str, TOKEN_REDIR_OUT);
+		token = create_token(ctx, str, TOKEN_REDIR_OUT);
 	else
-		token = create_token(str, TOKEN_REDIR_IN);
+		token = create_token(ctx, str, TOKEN_REDIR_IN);
 	if (token)
 		add_token(tokens, token);
-	free(str);
+	s_free(ctx, str);
 	s->i += len;
 	s->merge = false;
 }
@@ -77,7 +77,7 @@ static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	if (s->str[s->i] != quote)
 		return ;
 	len = s->i - start;
-	content = ft_strndup(&s->str[start], len);
+	content = s_save(ctx, ft_strndup(&s->str[start], len));
 	(s->i)++;
 	if (!content || len < 0)
 		return ;
@@ -86,9 +86,9 @@ static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	if (quote == '"' && len > 0)
 		expanded = expand_args(ctx, *tokens, s, content);
 	else
-		expanded = create_token(content, TOKEN_WORD);
-	free(content);
-	s->merge = add_or_merge_word(tokens, s, expanded);
+		expanded = create_token(ctx, content, TOKEN_WORD);
+	s_free(ctx, content);
+	s->merge = add_or_merge(ctx, tokens, s, expanded);
 }
 
 static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
@@ -109,12 +109,12 @@ static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	len = s->i - start;
 	if (len > 0)
 	{
-		str = ft_strndup(&s->str[start], len);
+		str = s_save(ctx, ft_strndup(&s->str[start], len));
 		if (!str)
 			return ;
 		expanded = expand_args(ctx, *tokens, s, str);
-		free(str);
-		s->merge = add_or_merge_word(tokens, s, expanded);
+		s_free(ctx, str);
+		s->merge = add_or_merge(ctx, tokens, s, expanded);
 	}
 }
 
@@ -133,9 +133,9 @@ t_token	*tokenize(t_ctx *ctx, char *input, bool is_var)
 		else if (input[s.i] == '"' || input[s.i] == '\'')
 			handle_quotes(ctx, &s, &tokens, input[s.i]);
 		else if (!is_var && input[s.i] == '|')
-			handle_pipe(&s, &tokens);
+			handle_pipe(ctx, &s, &tokens);
 		else if (!is_var && (input[s.i] == '>' || input[s.i] == '<'))
-			handle_redir(&s, &tokens);
+			handle_redir(ctx, &s, &tokens);
 		else
 			handle_word(ctx, &s, &tokens);
 	}

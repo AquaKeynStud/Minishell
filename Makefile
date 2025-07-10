@@ -73,7 +73,8 @@ LST_UTL		=	joins.c				\
 				printers.c			\
 				secure_exit.c		\
 				secure_alloc.c		\
-				fd_collector.c
+				fd_collector.c		\
+				allocs_collector.c
 
 LST_INC		=	lexing.h			\
 				parsing.h			\
@@ -119,7 +120,7 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-	$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
+	$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
 
 -include $(DEPS)
 
