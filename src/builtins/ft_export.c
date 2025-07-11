@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/11 00:29:16 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 09:41:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,15 @@ void	add_or_update_env(t_ctx *ctx, t_env **env, char *key, char *value)
 	}
 }
 
-static int	parse_env_set(t_ctx *ctx, t_env **env, char *arg, char **key, char **value)
+static int	parse_env_set(t_ctx *ctx, char *arg, char **key, char **value)
 {
 	char	*pos;
 	int		sep;
+	t_env	**env;
 
 	pos = ft_strchr(arg, '=');
 	sep = pos - arg;
+	env = &ctx->env;
 	if (!pos)
 	{
 		*key = s_save(ctx, ft_strdup(arg));
@@ -84,7 +86,7 @@ int	process_env_arg(t_ctx *ctx, char *arg, t_env **env)
 	key = NULL;
 	value = NULL;
 	exit_code = 0;
-	if (!parse_env_set(ctx, env, arg, &key, &value))
+	if (!parse_env_set(ctx, arg, &key, &value))
 		return (1);
 	exit_code = is_valid_key(key, arg);
 	if (!key || key[0] == '\0')
