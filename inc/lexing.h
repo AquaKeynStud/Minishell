@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/11 14:19:44 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 21:35:35 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,16 @@
 
 typedef enum e_token_type
 {
+	TOKEN_OR,			// Bonus part
+	TOKEN_AND,			// Bonus part
+	TOKEN_LPAR,			// Bonus part
+	TOKEN_RPAR,			// Bonus part
 	TOKEN_WORD,
 	TOKEN_PIPE,
+	TOKEN_HEREDOC,
 	TOKEN_REDIR_IN,
 	TOKEN_REDIR_OUT,
-	TOKEN_REDIR_APPEND,
-	TOKEN_HEREDOC
+	TOKEN_REDIR_APPEND
 }	t_token_type;
 
 typedef struct s_lexing
@@ -65,5 +69,8 @@ void	init_s(t_lexing *s, char *input, bool is_var);
 t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res);
 t_token	*expand_args(t_ctx *ctx, t_token *tokens, t_lexing *lx, char *s);
 bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
+
+/* -- Bonus - Functions -- */
+void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens);
 
 #endif

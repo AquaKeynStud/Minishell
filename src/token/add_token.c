@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:17:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/11 00:15:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 21:01:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ t_token	*create_token(t_ctx *ctx, const char *value, t_token_type type)
 	t_token	*token;
 
 	token = s_malloc(ctx, sizeof(t_token));
-	if (!token)
-		return (NULL);
 	token->value = s_save(ctx, ft_strdup(value));
 	if (!token->value)
 	{

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:15:35 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 21:55:06 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,30 @@
 #include "lexing.h"
 #include <stdbool.h>
 
-static void	handle_pipe(t_ctx *ctx, t_lexing *s, t_token **tokens)
+static void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op)
 {
 	int		i;
-	char	*pipe;
+	char	*value;
 
 	i = 0;
-	pipe = s_save(ctx, ft_strdup(""));
-	while (s->str[s->i] == '|')
+	value = s_save(ctx, ft_strdup(""));
+	while (s->str[s->i] == op)
 	{
 		i++;
 		(s->i)++;
 	}
 	while (i--)
-		pipe = append_char(ctx, pipe, '|');
-	add_token(tokens, create_token(ctx, pipe, TOKEN_PIPE));
-	s_free(ctx, pipe);
+		value = append_char(ctx, value, op);
+	if (op == '|')
+	{
+		if (ft_strlen(value) > 1)
+			add_token(tokens, create_token(ctx, value, TOKEN_OR));
+		else
+			add_token(tokens, create_token(ctx, value, TOKEN_PIPE));
+	}
+	else
+		add_token(tokens, create_token(ctx, value, TOKEN_AND));
+	s_free(ctx, value);
 	s->merge = false;
 }
 
@@ -100,7 +108,8 @@ static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 
 	start = s->i;
 	while (s->str[s->i] && !is_whitespace(s->str[s->i])
-		&& (s->is_var || !is_operator(s->str[s->i])))
+		&& (s->is_var || !is_operator(s->str[s->i]))
+		&& s->str[s->i] != '(' && s->str[s->i] != ')')
 	{
 		if (s->str[s->i] == '"' || s->str[s->i] == '\'')
 			break ;
@@ -132,10 +141,12 @@ t_token	*tokenize(t_ctx *ctx, char *input, bool is_var)
 			handle_quotes(ctx, &s, &tokens, '"');
 		else if (input[s.i] == '"' || input[s.i] == '\'')
 			handle_quotes(ctx, &s, &tokens, input[s.i]);
-		else if (!is_var && input[s.i] == '|')
-			handle_pipe(ctx, &s, &tokens);
+		else if (!is_var && (input[s.i] == '|' || input[s.i] == '&'))
+			handle_bonus(ctx, &s, &tokens, input[s.i]);
 		else if (!is_var && (input[s.i] == '>' || input[s.i] == '<'))
 			handle_redir(ctx, &s, &tokens);
+		else if (!is_var && (input[s.i] == '(' || input[s.i] == ')'))
+			handle_parenthesis(ctx, &s, &tokens);
 		else
 			handle_word(ctx, &s, &tokens);
 	}
