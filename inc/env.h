@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:13:44 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/11 00:06:41 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:53:01 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,8 @@ int		ft_exit(t_ctx *ctx, int argc, char **args);
 
 void	free_env(t_ctx *ctx, t_env **env);
 int		count_args(char **args);
-t_env	*copy_env_list(t_ctx *ctx, t_env *env);
 void	print_sorted_env(t_ctx *ctx, t_env *env);
 char	*check_env(t_env *env, char *req);
-int		is_valid_key(char *key, char *arg);
 char	*get_working_dir(char *cmd_request);
 char	*get_from_env(t_env *env, const char *key);
 void	append_env_node(t_env **env, t_env *new_node);

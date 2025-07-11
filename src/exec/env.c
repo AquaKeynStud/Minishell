@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 13:00:17 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,24 @@ static bool	fill_envp(t_ctx *ctx, char **envp, t_env *env)
 	}
 	envp[i] = NULL;
 	return (true);
+}
+
+static void	add_env(t_ctx *ctx, t_env **env, char **args)
+{
+	char	*shlvl;
+
+	if (!get_from_env(*env, "PWD"))
+		add_or_update_env(ctx, env, "PWD", get_working_dir("pwd"));
+	if (get_from_env(*env, "SHLVL"))
+	{
+		shlvl = s_save(ctx, ft_itoa(ft_atoi(get_from_env(*env, "SHLVL")) + 1));
+		add_or_update_env(ctx, env, "SHLVL", shlvl);
+		s_free(ctx, shlvl);
+	}
+	else
+		add_or_update_env(ctx, env, "SHLVL", "1");
+	if (!get_from_env(*env, "_") && args[0])
+		add_or_update_env(ctx, env, "_", args[0]);
 }
 
 char	**env_to_envp(t_ctx *ctx, t_env *env)
@@ -76,24 +94,6 @@ void	free_env(t_ctx *ctx, t_env **env)
 		current = next;
 	}
 	*env = NULL;
-}
-
-static void	add_env(t_ctx *ctx, t_env **env, char **args)
-{
-	char	*shlvl;
-
-	if (!get_from_env(*env, "PWD"))
-		add_or_update_env(ctx, env, "PWD", get_working_dir("pwd"));
-	if (get_from_env(*env, "SHLVL"))
-	{
-		shlvl = s_save(ctx, ft_itoa(ft_atoi(get_from_env(*env, "SHLVL")) + 1));
-		add_or_update_env(ctx, env, "SHLVL", shlvl);
-		s_free(ctx, shlvl);
-	}
-	else
-		add_or_update_env(ctx, env, "SHLVL", "1");
-	if (!get_from_env(*env, "_") && args[0])
-		add_or_update_env(ctx, env, "_", args[0]);
 }
 
 t_env	*init_env(t_ctx *ctx, char **args, char **envp)

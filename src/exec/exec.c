@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:36:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 13:02:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 	return (pid);
 }
 
-int	exec_pipe(t_ctx *ctx, t_ast *node)
+static int	exec_pipe(t_ctx *ctx, t_ast *node)
 {
 	int	ret;
 	int	fds[2];
@@ -67,7 +67,7 @@ int	exec_pipe(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(ctx->status));
 }
 
-int	exec_redir(t_ctx *ctx, t_ast *node)
+static int	exec_redir(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
 	int	pid;
@@ -95,7 +95,7 @@ int	exec_redir(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(ctx->status));
 }
 
-int	exec_command(t_ctx *ctx, t_ast *node)
+static int	exec_command(t_ctx *ctx, t_ast *node)
 {
 	int		pid;
 	char	*path;

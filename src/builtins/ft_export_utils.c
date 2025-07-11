@@ -6,64 +6,44 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 08:47:13 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:54:53 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	env_size(t_env *env)
+static t_env	*find_env_node(t_env *env, const char *key)
 {
-	int	size;
-
-	size = 0;
 	while (env)
 	{
-		size++;
+		if (!ft_strcmp(env->key, key))
+			return (env);
 		env = env->next;
 	}
-	return (size);
+	return (NULL);
 }
 
-t_env	*copy_env_list(t_ctx *ctx, t_env *env)
+void	add_or_update_env(t_ctx *ctx, t_env **env, char *key, char *value)
 {
-	t_env	*copy;
+	t_env	*existing;
+	t_env	*new_node;
 
-	copy = NULL;
-	while (env)
+	existing = find_env_node(*env, key);
+	if (existing)
 	{
-		append_env_node(&copy, create_env_node(ctx, env->key, env->value));
-		env = env->next;
-	}
-	return (copy);
-}
-
-int	is_valid_key(char *key, char *arg)
-{
-	int	i;
-
-	i = 0;
-	if (key[0] == '-' && key[1])
-	{
-		ft_dprintf(2, "minishell: export: ");
-		ft_dprintf(2, "%c%c: invalid option\n", key[0], key[1]);
-		return (2);
-	}
-	if (ft_isdigit(key[i]))
-	{
-		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
-		return (1);
-	}
-	while (key[i])
-	{
-		if (!ft_isalnum(key[i]) && key[i] != '_')
+		if (value)
 		{
-			ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
-			return (1);
+			s_free(ctx, existing->value);
+			existing->value = s_save(ctx, ft_strdup(value));
 		}
-		i++;
 	}
-	return (0);
+	else
+	{
+		new_node = create_env_node(ctx, key, value);
+		if (!new_node)
+			return ;
+		append_env_node(env, new_node);
+	}
 }
 
 t_env	*create_env_node(t_ctx *ctx, const char *key, const char *value)

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 13:03:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parsing.h"
 #include "minishell.h"
 
-t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
+static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 {
 	t_ast	*stub;
 

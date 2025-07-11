@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:12:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static char	*handle_env_var(t_ctx *ctx, t_lexing *lx, char **str, char *res)
 		s++;
 	else
 	{
-		while (ft_isalnum(*s) || *s == '_')
+		while (in_str(*s, "_", true))
 			s++;
 	}
 	key = s_save(ctx, ft_strndup(*str + 1, s - (*str + 1)));

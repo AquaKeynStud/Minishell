@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 11:44:49 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/10 18:57:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:57:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	swap_env_value(t_env *a, t_env *b)
 	b->value = tmp_value;
 }
 
-static void	sort(t_env **env)
+static void	sort_env(t_env **env)
 {
 	t_env	*current;
 	int		sorted;
@@ -49,13 +49,26 @@ static void	sort(t_env **env)
 	}
 }
 
+static t_env	*copy_env_list(t_ctx *ctx, t_env *env)
+{
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		append_env_node(&copy, create_env_node(ctx, env->key, env->value));
+		env = env->next;
+	}
+	return (copy);
+}
+
 void	print_sorted_env(t_ctx *ctx, t_env *env)
 {
 	t_env	*copy;
 	t_env	*tmp;
 
 	copy = copy_env_list(ctx, env);
-	sort(&copy);
+	sort_env(&copy);
 	tmp = copy;
 	while (tmp)
 	{

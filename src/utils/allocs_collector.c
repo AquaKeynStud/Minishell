@@ -6,13 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:24:21 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:15:01 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 19:47:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_saveed(t_allocs *head, void *ptr)
+static bool	is_saved(t_allocs *head, void *ptr)
 {
 	while (head)
 	{
@@ -29,7 +29,7 @@ void	*s_save(t_ctx *ctx, void *ptr)
 
 	if (!ptr)
 		return (NULL);
-	else if (is_saveed(ctx->allocs, ptr))
+	else if (is_saved(ctx->allocs, ptr))
 		return (ptr);
 	new = malloc(sizeof(t_allocs));
 	if (!new)
@@ -94,7 +94,7 @@ void	s_free(t_ctx *ctx, void *ptr)
 	free(ptr);
 }
 
-void	free_all(t_allocs **head)
+void	free_garbage(t_allocs **head)
 {
 	t_allocs	*tmp;
 

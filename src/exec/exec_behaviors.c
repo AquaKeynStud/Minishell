@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/10 19:00:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 13:01:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	exec_heredoc(char *prompt, const char *eof, int pipefd[2])
 	}
 }
 
-pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *eof)
+static pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, char *eof)
 {
 	pid_t	pid;
 
@@ -76,7 +76,7 @@ pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, const char *eof)
 	return (pid);
 }
 
-int	here_doc(t_ctx *ctx, const char *eof)
+static int	here_doc(t_ctx *ctx, char *eof)
 {
 	pid_t	pid;
 	char	*prompt;

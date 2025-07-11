@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:07:55 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/10 19:13:35 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:55:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "minishell.h"
 #include "sigaction.h"
 
-bool	is_dash_n_flag(char *arg)
+static bool	is_dash_n_flag(char *arg)
 {
 	if (!arg || !*arg || *arg != '-')
 		return (false);
@@ -46,7 +46,7 @@ static void	print_echo(char	*arg)
 	}
 }
 
-bool	has_nl(char **args, int *i)
+static bool	has_nl(char **args, int *i)
 {
 	bool	newline;
 

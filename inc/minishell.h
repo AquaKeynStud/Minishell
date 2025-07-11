@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:12:01 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 19:56:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,33 +59,28 @@ typedef struct s_ctx
 #  define COLOR false
 # endif
 
-/* -- Functions -- */
-int		err(char *message);
-int		perr(const char *s, int return_value);
-int		err_value(char *message, char *value);
-
-void	print_status(t_ctx *ctx);
-
+/* -- File descriptor - Garbage collector -- */
 void	close_all_fds(t_fd **head);
 void	close_fd(t_fd **head, int fd);
 int		register_fd(t_fd **head, int fd);
 void	close_unregistered_fds(t_ctx *ctx);
 int		open_fd(t_fd **head, const char *filepath, int flags, mode_t perms);
 
-void	free_all(t_allocs **head);
+/* -- Allocations - Garbage collector -- */
+void	free_garbage(t_allocs **head);
 void	s_free(t_ctx *ctx, void *ptr);
 void	*s_save(t_ctx *ctx, void *ptr);
 void	s_delete(t_ctx *ctx, void *ptr);
-
-int		set_status(t_ctx *ctx, int value);
 void	*s_malloc(t_ctx *ctx, size_t size);
-void	double_free(t_ctx *ctx, void **ptr, size_t size_if_not_null_term);
 void	*s_realloc(t_ctx *ctx, void *ptr, size_t old_size, size_t new_size);
 
-char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2);
-char	*join_with_delim(t_ctx *ctx, char *s1, char *s2, char *delimiter);
-
+/* -- Other - Functions -- */
 int		s_exec_exit(int status);
 void	secure_exit(t_ctx *ctx);
+void	print_status(t_ctx *ctx);
+int		set_status(t_ctx *ctx, int value);
+char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2);
+char	*join_with_delim(t_ctx *ctx, char *s1, char *s2, char *delimiter);
+void	double_free(t_ctx *ctx, void **ptr, size_t size_if_not_null_term);
 
 #endif

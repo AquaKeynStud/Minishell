@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:13:26 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/10 18:51:22 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:56:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	check_exit_args(int argc, char **args)
 	return (0);
 }
 
-void	handle_exit(t_ctx *ctx, int argc, char **args)
+static void	handle_exit(t_ctx *ctx, int argc, char **args)
 {
 	long long	arg;
 

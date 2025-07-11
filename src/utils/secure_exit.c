@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/10 23:21:07 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 19:47:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	secure_exit(t_ctx *ctx)
 		free_tokens(ctx, &ctx->tokens);
 	if (ctx->input)
 		s_free(ctx, ctx->input);
-	free_all(&ctx->allocs);
+	free_garbage(&ctx->allocs);
 	close_all_fds(&ctx->fds);
 	close_unregistered_fds(ctx);
 	if (ctx->stdin_fd > 2)

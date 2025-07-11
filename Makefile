@@ -69,8 +69,7 @@ LST_BLT		=	ft_cd.c				\
 				ft_export_print.c	\
 				ft_export_utils.c
 
-LST_UTL		=	joins.c				\
-				printers.c			\
+LST_UTL		=	str_handle.c		\
 				secure_exit.c		\
 				secure_alloc.c		\
 				fd_collector.c		\

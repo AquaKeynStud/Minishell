@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 20:02:24 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:11:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 13:05:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
 	return (2);
 }
 
-void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
+static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 {
 	t_ast	*stub;
 
@@ -66,7 +66,7 @@ void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 	}
 }
 
-void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
+static void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
 {
 	t_ast	*leaf;
 	t_ast	*parent;

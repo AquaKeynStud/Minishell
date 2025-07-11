@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:32:23 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/11 09:41:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:58:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,32 @@
 #include "libft.h"
 #include "minishell.h"
 
-static t_env	*find_env_node(t_env *env, const char *key)
+static int	is_valid_key(char *key, char *arg)
 {
-	while (env)
+	int	i;
+
+	i = 0;
+	if (key[0] == '-' && key[1])
 	{
-		if (!ft_strcmp(env->key, key))
-			return (env);
-		env = env->next;
+		ft_dprintf(2, "minishell: export: ");
+		ft_dprintf(2, "%c%c: invalid option\n", key[0], key[1]);
+		return (2);
 	}
-	return (NULL);
-}
-
-void	add_or_update_env(t_ctx *ctx, t_env **env, char *key, char *value)
-{
-	t_env	*existing;
-	t_env	*new_node;
-
-	existing = find_env_node(*env, key);
-	if (existing)
+	if (ft_isdigit(key[i]))
 	{
-		if (value)
+		ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
+		return (1);
+	}
+	while (key[i])
+	{
+		if (!in_str(key[i], "_", true))
 		{
-			s_free(ctx, existing->value);
-			existing->value = s_save(ctx, ft_strdup(value));
+			ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
+			return (1);
 		}
+		i++;
 	}
-	else
-	{
-		new_node = create_env_node(ctx, key, value);
-		if (!new_node)
-			return ;
-		append_env_node(env, new_node);
-	}
+	return (0);
 }
 
 static int	parse_env_set(t_ctx *ctx, char *arg, char **key, char **value)
@@ -77,7 +71,7 @@ static int	parse_env_set(t_ctx *ctx, char *arg, char **key, char **value)
 	return (1);
 }
 
-int	process_env_arg(t_ctx *ctx, char *arg, t_env **env)
+static int	process_env_arg(t_ctx *ctx, char *arg, t_env **env)
 {
 	char	*key;
 	char	*value;
