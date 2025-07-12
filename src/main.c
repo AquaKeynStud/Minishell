@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/12 10:51:15 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/12 21:05:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,45 +56,22 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 	return ;
 }
 
-static bool	check_parenthesis(t_token *tokens)
-{
-	t_token	*curr;
-	int		counter;
-
-	counter = 0;
-	curr = tokens;
-	while (curr)
-	{
-		if (curr->type == TOKEN_LPAR)
-			counter++;
-		else if (curr->type == TOKEN_RPAR)
-		{
-			counter--;
-			if (counter < 0)
-				return (true);
-		}
-		curr = curr->next;
-	}
-	if (counter != 0)
-		return (true);
-	return (false);
-}
-
 static void	command_handler(t_ctx *ctx, char *cmd)
 {
 	t_ast	*ast;
 	t_token	*tokens;
 
 	tokens = tokenize(ctx, cmd, false);
-	if (check_parenthesis(tokens))
+	if (!check_parenthesis(ctx, tokens))
 	{
 		close_unregistered_fds(ctx);
 		return (free_tokens(ctx, &tokens));
 	}
 	ast = parse_input(ctx, tokens);
 	sig_set(SIG_DFL);
-	if (!get_redir(ctx, ast, tokens) || !has_bonus_err(ctx, tokens))
+	if (!get_redir(ctx, ast, tokens) || !syntax_error(ctx, tokens))
 		return (destroy_command(&ctx, &tokens, &ast));
+	close_unregistered_fds(ctx);
 	sig_init();
 	ctx->ast = ast;
 	ctx->tokens = tokens;
@@ -135,12 +112,12 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		if (isatty(STDERR_FILENO))
-			ft_dprintf(2, "minishell: interactive mode not allowed\n");
-		exit(EXIT_FAILURE);
-	}
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	// {
+	// 	if (isatty(STDERR_FILENO))
+	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
+	// 	exit(EXIT_FAILURE);
+	// }
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();

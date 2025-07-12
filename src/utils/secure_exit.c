@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:15:31 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 19:47:08 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/12 20:19:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,28 @@ int	exit_with_code(t_ctx *ctx, int code)
 	if (code >= 0)
 		ctx->status = code;
 	return (ctx->status);
+}
+
+bool	check_parenthesis(t_ctx *ctx, t_token *tokens)
+{
+	t_token	*curr;
+	int		counter;
+
+	counter = 0;
+	curr = tokens;
+	while (curr)
+	{
+		if (curr->type == TOKEN_LPAR)
+			counter++;
+		else if (curr->type == TOKEN_RPAR)
+		{
+			counter--;
+			if (counter < 0)
+				return (parsing_err(ctx, ")", 2));
+		}
+		curr = curr->next;
+	}
+	if (counter != 0)
+		return (parsing_err(ctx, "(", 2));
+	return (true);
 }

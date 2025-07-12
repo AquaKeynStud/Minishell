@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:03:44 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 13:01:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/12 21:04:14 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ int	get_redir(t_ctx *ctx, t_ast *ast, t_token *tok)
 
 	if (!ast)
 		return (1);
-	if (ast->type == AST_PIPE)
+	if (ast->type == AST_SUB)
+		return (get_redir(ctx, ast->childs[0], tok));
+	if (ast->type == AST_PIPE || ast->type == AST_AND || ast->type == AST_OR)
 		return (get_redir(ctx, ast->childs[0], tok)
 			&& get_redir(ctx, ast->childs[1], tok));
 	else if (ast->type == AST_REDIR)
@@ -127,6 +129,5 @@ int	get_redir(t_ctx *ctx, t_ast *ast, t_token *tok)
 		if (!get_redir(ctx, ast->childs[1], tok))
 			return (0);
 	}
-	close_unregistered_fds(ctx);
 	return (1);
 }

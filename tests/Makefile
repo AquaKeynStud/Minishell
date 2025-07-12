@@ -48,6 +48,7 @@ LST_TOK		=	add_token.c			\
 
 LST_PAR		=	redir.c				\
 				parser.c			\
+				parsing_bonus.c		\
 				ast_builders.c
 
 LST_EXE		=	env.c				\

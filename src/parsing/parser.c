@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/12 10:58:20 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/12 21:02:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,65 +36,13 @@ static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 	return (stub);
 }
 
-int	has_bonus_err(t_ctx *ctx, t_token *tokens)
-{
-	t_token	*curr;
-
-	curr = tokens;
-	while (curr)
-	{
-		if (curr->type == TOKEN_PIPE)
-		{
-			if (!curr->next || (curr->next && curr->next->type == TOKEN_PIPE))
-				return (parsing_err(ctx, "|", 2));
-			else if (ft_strcmp(curr->value, "|"))
-				return (parsing_err(ctx, "||", 2));
-		}
-		else if (curr->type != TOKEN_WORD)
-		{
-			if (!curr->next)
-				return (parsing_err(ctx, "newline", 2));
-			else if (curr->next && curr->next->type != TOKEN_WORD)
-				return (parsing_err(ctx, curr->next->value, 2));
-		}
-		curr = curr->next;
-	}
-	curr = get_last_token(tokens);
-	if (curr && curr->type != TOKEN_PIPE && curr->type != TOKEN_WORD)
-		return (parsing_err(ctx, "newline", 2));
-	return (1);
-}
-
-static bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd)
-{
-	t_ast	*subcommand;
-
-	*cmd = NULL;
-	subcommand = NULL;
-	if (!*curr || (*curr)->type != TOKEN_LPAR)
-		return (false);
-	*curr = (*curr)->next;
-	subcommand = parse_logical(ctx, curr);
-	if (!subcommand || !*curr || (*curr)->type != TOKEN_RPAR)
-	{
-		parsing_err(ctx, ")", 1);
-		if (subcommand)
-			free_ast(ctx, subcommand);
-		return (false);
-	}
-	*curr = (*curr)->next;
-	*cmd = new_ast(ctx, AST_SUB, "()");
-	ast_add(ctx, *cmd, subcommand);
-	return (true);
-}
-
 static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 {
 	t_ast	*cmd;
 
 	if (parse_parenthesis(ctx, curr, &cmd))
 		return (cmd);
-	while (*curr && (*curr)->type != TOKEN_PIPE)
+	while (*curr && !is_binary_op((*curr)->type) && (*curr)->type != TOKEN_RPAR)
 	{
 		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
 		{
@@ -177,7 +125,6 @@ t_ast	*parse_input(t_ctx *ctx, t_token *tokens)
 	t_ast	*ast;
 	t_token	*curr;
 
-	printf("on est à : %i\n", ctx->err_in_tokens);
 	curr = tokens;
 	ctx->has_found_err = false;
 	if (ctx->err_in_tokens)

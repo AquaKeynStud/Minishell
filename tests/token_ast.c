@@ -68,8 +68,34 @@ void print_ast_tree(t_ast *root)
     }
 }
 
+static bool	check_parenthesis(t_ctx *ctx, t_token *tokens)
+{
+	t_token	*curr;
+	int		counter;
+
+	counter = 0;
+	curr = tokens;
+	while (curr)
+	{
+		if (curr->type == TOKEN_LPAR)
+			counter++;
+		else if (curr->type == TOKEN_RPAR)
+		{
+			counter--;
+			if (counter < 0)
+				return (parsing_err(ctx, ")", 2));
+		}
+		curr = curr->next;
+	}
+	if (counter != 0)
+		return (parsing_err(ctx, "(", 2));
+	return (true);
+}
+
 void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 {
+	t_ast *ast;
+
 	for (int i = 0; i < num_tests; i++)
 	{
 		printf("_________________________________________________________|\n");
@@ -84,7 +110,8 @@ void run_tests(const char *label, char **tests, int num_tests, t_ctx *ctx)
 		// Parsing en AST et affichage
 		printf("_________________________________________________________|\n");
 		printf("AST :\n");
-		t_ast *ast = parse_input(ctx, tokens);
+		if (check_parenthesis(ctx, tokens))
+			ast = parse_input(ctx, tokens);
 		if (ast)
 			print_ast_tree(ast);
 		else
@@ -193,11 +220,12 @@ int main(int argc, char **argv, char **envp)
 	};
 
 	char *bonus[] = {
+		// "( echo foo && ls | grep bar ) || cat > out.txt",
 		// "true && echo success",
 		// "false || echo fallback",
 		// "true && false || echo fallback",
 		// "(echo first && echo second) || echo failed",
-		"((echo nested1 && echo nested2) && echo outer) || echo error",
+		// "((echo nested1 && echo nested2) && echo outer) || echo error",
 		// "mkdir test && cd test && touch file.txt",
 		// "(ls -l && echo done) || (echo fail && exit 1)",
 		// "(false && echo never) || (true && echo always)",
@@ -208,7 +236,7 @@ int main(int argc, char **argv, char **envp)
 		// "cat input.txt | grep 'error' && echo found > log.txt",
 		// "echo hello && cat << EOF | grep l\nhello\nworld\nEOF",
 		// "cat << HERE | grep foo && echo matched\nfoo\nbar\nbaz\nHERE",
-		"(cat file.txt | sort) && echo sorted > sorted.txt",
+		// "(cat file.txt | sort) && echo sorted > sorted.txt",
 		// "ls -l | tee out.txt && echo done > done.txt",
 
 		// // Cas invalides à détecter par le parser
@@ -227,14 +255,25 @@ int main(int argc, char **argv, char **envp)
 		// "(ls -l | grep txt) &&",
 		// "(ls -l | grep txt &&",
 		// "(ls -l | grep txt ||",
-		"echo ok && (|| echo fail)",
+		// "echo ok && (|| echo fail)",
 
 		// // Cas plus complexes
 		// "(true && (false || (echo maybe && echo still)))",
 		// "(echo one && (echo two || echo three)) && echo four",
-		"(cat << END | grep 'bar' && echo ok\nfoo\nbar\nbaz\nEND)",
-		"(cut -d ':' -f1 /etc/passwd | sort) && (echo done || echo fail)",
-		"(grep TODO notes.txt || grep FIXME notes.txt) && echo checked",
+		// "(cat << END | grep 'bar' && echo ok\nfoo\nbar\nbaz\nEND)",
+		// "(cut -d ':' -f1 /etc/passwd | sort) && (echo done || echo fail)",
+		// "(grep TODO notes.txt || grep FIXME notes.txt) && echo checked",
+
+		"(cat file.txt | grep hello) && echo found || echo not found",
+		"(echo start && (echo mid || echo alt)) && echo end",
+		"((ls -l | grep \".c\") && echo \"C file\") || echo \"No match\"",
+		"echo A > a.txt && echo B >> a.txt || cat a.txt",
+		"(((echo 1 && echo 2) || echo 3) && echo 4)",
+		"|| echo fail",
+		"echo start && || echo fail",
+		"echo test >",
+		"echo ok && (echo fine",
+		"echo hello (|| echo world)",
 	};
 	
 	if (argc < 2)
