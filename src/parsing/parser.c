@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 10:49:18 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 13:03:49 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/12 10:58:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,35 @@ int	has_bonus_err(t_ctx *ctx, t_token *tokens)
 	return (1);
 }
 
+static bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd)
+{
+	t_ast	*subcommand;
+
+	*cmd = NULL;
+	subcommand = NULL;
+	if (!*curr || (*curr)->type != TOKEN_LPAR)
+		return (false);
+	*curr = (*curr)->next;
+	subcommand = parse_logical(ctx, curr);
+	if (!subcommand || !*curr || (*curr)->type != TOKEN_RPAR)
+	{
+		parsing_err(ctx, ")", 1);
+		if (subcommand)
+			free_ast(ctx, subcommand);
+		return (false);
+	}
+	*curr = (*curr)->next;
+	*cmd = new_ast(ctx, AST_SUB, "()");
+	ast_add(ctx, *cmd, subcommand);
+	return (true);
+}
+
 static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 {
 	t_ast	*cmd;
 
-	cmd = NULL;
+	if (parse_parenthesis(ctx, curr, &cmd))
+		return (cmd);
 	while (*curr && (*curr)->type != TOKEN_PIPE)
 	{
 		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
@@ -120,11 +144,40 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 	return (left);
 }
 
+t_ast	*parse_logical(t_ctx *ctx, t_token **curr)
+{
+	t_token	*tmp;
+	t_ast	*left;
+	t_ast	*right;
+	t_ast	*logical_node;
+
+	left = parse_pipeline(ctx, curr);
+	if (!left)
+		return (NULL);
+	while (*curr && ((*curr)->type == TOKEN_AND || (*curr)->type == TOKEN_OR))
+	{
+		tmp = *curr;
+		*curr = (*curr)->next;
+		right = parse_pipeline(ctx, curr);
+		if (!right)
+			return (double_free_ast(ctx, right, left));
+		if (tmp->type == TOKEN_OR)
+			logical_node = new_ast(ctx, AST_OR, tmp->value);
+		else
+			logical_node = new_ast(ctx, AST_AND, tmp->value);
+		ast_add(ctx, logical_node, left);
+		ast_add(ctx, logical_node, right);
+		left = logical_node;
+	}
+	return (left);
+}
+
 t_ast	*parse_input(t_ctx *ctx, t_token *tokens)
 {
 	t_ast	*ast;
 	t_token	*curr;
 
+	printf("on est à : %i\n", ctx->err_in_tokens);
 	curr = tokens;
 	ctx->has_found_err = false;
 	if (ctx->err_in_tokens)
@@ -132,10 +185,10 @@ t_ast	*parse_input(t_ctx *ctx, t_token *tokens)
 		ctx->err_in_tokens = false;
 		return (NULL);
 	}
-	ast = parse_pipeline(ctx, &curr);
+	ast = parse_logical(ctx, &curr);
 	if (curr != NULL)
 	{
-		parsing_err(ctx, "|", 2);
+		parsing_err(ctx, curr->value, 2);
 		return (NULL);
 	}
 	return (ast);

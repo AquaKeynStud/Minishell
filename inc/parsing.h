@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 10:04:09 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 19:44:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/12 10:52:50 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@
 /* -- Structures -- */
 typedef enum e_ast_type
 {
-	AST_COMMAND,
+	AST_OR,			// Bonus part
+	AST_AND,		// Bonus part
+	AST_SUB,		// Bonus part
+	AST_PIPE,
 	AST_REDIR,
-	AST_PIPE
+	AST_COMMAND,
 }			t_ast_type;
 
 typedef struct s_ast
@@ -48,5 +51,7 @@ void	*free_ast(t_ctx *ctx, t_ast *node);
 void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child);
 void	*double_free_ast(t_ctx *ctx, t_ast *left, t_ast *right);
 t_ast	*new_ast(t_ctx *ctx, t_ast_type type, const char *value);
+
+t_ast	*parse_logical(t_ctx *ctx, t_token **curr);
 
 #endif

@@ -193,22 +193,22 @@ int main(int argc, char **argv, char **envp)
 	};
 
 	char *bonus[] = {
-		"true && echo success",
-		"false || echo fallback",
-		"true && false || echo fallback",
-		"(echo first && echo second) || echo failed",
+		// "true && echo success",
+		// "false || echo fallback",
+		// "true && false || echo fallback",
+		// "(echo first && echo second) || echo failed",
 		"((echo nested1 && echo nested2) && echo outer) || echo error",
-		"mkdir test && cd test && touch file.txt",
-		"(ls -l && echo done) || (echo fail && exit 1)",
-		"(false && echo never) || (true && echo always)",
-		"(echo start && (echo middle && echo end))",
-		"(true || false) && (false || true)",
+		// "mkdir test && cd test && touch file.txt",
+		// "(ls -l && echo done) || (echo fail && exit 1)",
+		// "(false && echo never) || (true && echo always)",
+		// "(echo start && (echo middle && echo end))",
+		// "(true || false) && (false || true)",
 
 		// // Cas avec redirections et pipes combinés
 		// "cat input.txt | grep 'error' && echo found > log.txt",
 		// "echo hello && cat << EOF | grep l\nhello\nworld\nEOF",
 		// "cat << HERE | grep foo && echo matched\nfoo\nbar\nbaz\nHERE",
-		// "(cat file.txt | sort) && echo sorted > sorted.txt",
+		"(cat file.txt | sort) && echo sorted > sorted.txt",
 		// "ls -l | tee out.txt && echo done > done.txt",
 
 		// // Cas invalides à détecter par le parser
@@ -227,14 +227,14 @@ int main(int argc, char **argv, char **envp)
 		// "(ls -l | grep txt) &&",
 		// "(ls -l | grep txt &&",
 		// "(ls -l | grep txt ||",
-		// "echo ok && (|| echo fail)",
+		"echo ok && (|| echo fail)",
 
 		// // Cas plus complexes
 		// "(true && (false || (echo maybe && echo still)))",
 		// "(echo one && (echo two || echo three)) && echo four",
-		// "(cat << END | grep 'bar' && echo ok\nfoo\nbar\nbaz\nEND)",
-		// "(cut -d ':' -f1 /etc/passwd | sort) && (echo done || echo fail)",
-		// "(grep TODO notes.txt || grep FIXME notes.txt) && echo checked",
+		"(cat << END | grep 'bar' && echo ok\nfoo\nbar\nbaz\nEND)",
+		"(cut -d ':' -f1 /etc/passwd | sort) && (echo done || echo fail)",
+		"(grep TODO notes.txt || grep FIXME notes.txt) && echo checked",
 	};
 	
 	if (argc < 2)
