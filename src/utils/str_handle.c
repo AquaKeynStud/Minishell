@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 12:31:20 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/13 10:03:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 10:30:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,4 @@ void	print_status(t_ctx *ctx)
 		}
 	}
 	ft_printf("\033[33m%s \033[0m\n", "✗");
-}
-
-int	perror_code(const char *error, int exit_code)
-{
-	perror(error);
-	return (exit_code);
 }

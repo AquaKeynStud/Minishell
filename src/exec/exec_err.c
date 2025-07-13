@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:56:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/14 16:43:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 10:33:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,6 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include "minishell.h"
-
-static int	is_dir(const char *path)
-{
-	struct stat	sb;
-
-	return (!stat(path, &sb) && S_ISDIR(sb.st_mode));
-}
 
 static void	enoent_err(t_ctx *ctx, const char *value)
 {
@@ -42,8 +35,10 @@ static void	enoent_err(t_ctx *ctx, const char *value)
 
 static void	eacces_err(t_ctx *ctx, const char *value)
 {
+	struct stat	sb;
+
 	ctx->status = 126;
-	if (value && is_dir(value))
+	if (value && (!stat(value, &sb) && S_ISDIR(sb.st_mode)))
 	{
 		ft_dprintf(2, "minishell: ");
 		ft_dprintf(2, "%s: Is a directory\n", value);
@@ -93,4 +88,10 @@ int	redir_err(t_ctx *ctx, t_ast *ast, int exit_code)
 	if (exit_code < 0)
 		return (exit_code);
 	return (1);
+}
+
+int	perror_code(const char *error, int exit_code)
+{
+	perror(error);
+	return (exit_code);
 }
