@@ -6,11 +6,11 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:06:29 by arocca            #+#    #+#             */
-/*   Updated: 2025/05/20 10:28:00 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 10:05:41 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h> // Pour perror
+#include <stdio.h>
 #include <stddef.h>
 #include "sigaction.h"
 

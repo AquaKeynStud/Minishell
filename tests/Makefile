@@ -1,5 +1,7 @@
 .PHONY : all clean fclean re libft norminette valgrind supp_file
 
+.DELETE_ON_ERROR:
+
 NAME = tester
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ BASICS VARIABLES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
@@ -55,6 +57,7 @@ LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
 				cmd_utils.c			\
+				exec_bonus.c		\
 				builtin_exec.c		\
 				exec_behaviors.c
 
@@ -100,6 +103,7 @@ all:	$(NAME)
 
 $(NAME):	libft $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	@$(MAKE) clean
 	@clear
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 21:55:06 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 08:43:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	start = s->i;
 	while (s->str[s->i] && !is_whitespace(s->str[s->i])
 		&& (s->is_var || !is_operator(s->str[s->i]))
-		&& s->str[s->i] != '(' && s->str[s->i] != ')')
+		&& (s->is_var || (s->str[s->i] != '(' && s->str[s->i] != ')')))
 	{
 		if (s->str[s->i] == '"' || s->str[s->i] == '\'')
 			break ;

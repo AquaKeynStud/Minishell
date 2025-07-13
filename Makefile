@@ -57,6 +57,7 @@ LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
 				cmd_utils.c			\
+				exec_bonus.c		\
 				builtin_exec.c		\
 				exec_behaviors.c
 

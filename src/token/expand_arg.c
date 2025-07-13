@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 12:12:18 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 08:43:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static t_token	*handle_var(t_ctx *ctx, t_lexing *lx, char **s, char **res)
 	if (*res && **res)
 	{
 		if (lx->quoted)
-			lx->i--;
+		lx->i--;
 		return (simple_tok(ctx, lx, res, ft_strlen(*s)));
 	}
 	*res = handle_env_var(ctx, lx, s, *res);

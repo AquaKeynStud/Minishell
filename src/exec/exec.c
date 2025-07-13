@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 13:02:49 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 10:11:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,7 @@ static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 		secure_exit(ctx);
 	}
 	else if (pid < 0)
-	{
-		perror("fork");
-		return (-1);
-	}
+		perror_code("pipe fork", -1);
 	return (pid);
 }
 
@@ -109,6 +106,8 @@ static int	exec_command(t_ctx *ctx, t_ast *node)
 		return (execve_err(ctx, args));
 	sig_set(SIG_IGN);
 	pid = fork();
+	if (pid < 0)
+		return (perror_code("command fork", 1));
 	if (pid == 0)
 	{
 		sig_set(SIG_DFL);
@@ -130,6 +129,10 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 		ctx->status = exec_pipe(ctx, node);
 	else if (node->type == AST_REDIR)
 		ctx->status = exec_redir(ctx, node);
+	else if (node->type == AST_AND || node->type == AST_OR)
+		ctx->status = exec_operators(ctx, node);
+	else if (node->type == AST_SUB)
+		ctx->status = exec_subshell(ctx, node->childs[0]);
 	else if (node->type == AST_COMMAND && node->value)
 	{
 		if (!ft_strcmp(node->value, "!"))

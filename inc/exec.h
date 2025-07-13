@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/12 20:22:05 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 10:09:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,9 @@ int		is_builtin(char *cmd);
 int		exec_builtin(t_ctx *ctx, char **args, t_env *env);
 
 int		execute_ast(t_ctx *ctx, t_ast *node);
+
+/* -- Bonus - Functions -- */
+int		exec_operators(t_ctx *ctx, t_ast *ast);
+int		exec_subshell(t_ctx *ctx, t_ast *subtree);
 
 #endif
