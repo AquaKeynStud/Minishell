@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 19:56:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 15:29:37 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int		s_exec_exit(int status);
 void	secure_exit(t_ctx *ctx);
 void	print_status(t_ctx *ctx);
 int		set_status(t_ctx *ctx, int value);
+int		perror_code(const char *error, int exit_code);
 char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2);
 char	*join_with_delim(t_ctx *ctx, char *s1, char *s2, char *delimiter);
 void	double_free(t_ctx *ctx, void **ptr, size_t size_if_not_null_term);

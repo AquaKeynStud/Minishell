@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 11:23:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 13:02:49 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 15:32:59 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,7 @@ static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 		secure_exit(ctx);
 	}
 	else if (pid < 0)
-	{
-		perror("fork");
-		return (-1);
-	}
+		return (perror_code("fork", -1));
 	return (pid);
 }
 
@@ -109,6 +106,8 @@ static int	exec_command(t_ctx *ctx, t_ast *node)
 		return (execve_err(ctx, args));
 	sig_set(SIG_IGN);
 	pid = fork();
+	if (pid < 0)
+		return (perror_code("fork", 2));
 	if (pid == 0)
 	{
 		sig_set(SIG_DFL);
