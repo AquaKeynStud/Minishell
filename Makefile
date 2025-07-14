@@ -46,6 +46,8 @@ LST_TOK		=	add_token.c			\
 				expand_arg.c		\
 				utils_token.c		\
 				parenthesis.c		\
+				expand_wildcards.c	\
+				wildcards_utils.c	\
 				tokenisation.c
 
 LST_PAR		=	redir.c				\

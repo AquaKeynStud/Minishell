@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_arg.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:27:23 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/13 10:30:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/14 11:59:43 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ t_token	*expand_args(t_ctx *ctx, t_token *tok, t_lexing *lx, char *s)
 	res = s_save(ctx, ft_strdup(""));
 	if (!res)
 		return (NULL);
+	if (ft_strchr(s, '*') && !lx->quoted)
+		return (expand_wildcard(ctx, s));
 	while (*s)
 	{
 		if (*s == '$' && !is_eof(tok) && in_str(s[1], "?_", true))
