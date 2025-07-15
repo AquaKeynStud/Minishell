@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_files_wildcards.c                              :+:      :+:    :+:   */
+/*   wildcards_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 10:46:36 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/14 12:15:09 by abouclie          ###   ########.fr       */
+/*   Updated: 2025/07/15 09:26:17 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 #include "lexing.h"
 #include <sys/wait.h>
 
-static char	**get_files_from_pipe(int fd)
+static char	**get_files_from_pipe(t_ctx *ctx, int fd)
 {
-	char	**res;
-	char	*line;
 	int		i;
+	char	*line;
+	char	**res;
 
-	res = malloc(sizeof(char *) * 1024);
+	res = s_malloc(ctx, sizeof(char *) * 1024);
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -49,13 +49,13 @@ static void	init_get_files(char ***res, char **argv, char **envp)
 	envp[0] = NULL;
 }
 
-char	**get_files()
+char	**get_files(t_ctx *ctx)
 {
-	int		pipefd[2];
 	pid_t	pid;
+	char	**res;
 	char	*argv[3];
 	char	*envp[1];
-	char	**res;
+	int		pipefd[2];
 
 	init_get_files(&res, argv, envp);
 	if (pipe(pipefd) == -1)
@@ -69,11 +69,11 @@ char	**get_files()
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 		execve(argv[0], argv, envp);
-		exit(1);
+		secure_exit(ctx);
 	}
 	close(pipefd[1]);
-	res = get_files_from_pipe(pipefd[0]);
-	close(pipefd[0]);
+	res = get_files_from_pipe(ctx, pipefd[0]);
+	close_unregistered_fds(ctx);
 	wait(NULL);
 	return (res);
 }

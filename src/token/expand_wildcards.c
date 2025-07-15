@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcards.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 10:46:36 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/14 12:05:47 by abouclie          ###   ########.fr       */
+/*   Updated: 2025/07/15 09:26:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,16 @@ static int	is_valid_match(const char *pattern, const char *filename)
 
 t_token	*expand_wildcard(t_ctx *ctx, const char *pattern)
 {
-	char		**files;
 	int			i;
-	t_token		*tokens;
 	t_token		*tmp;
+	t_token		*tokens;
+	char		**files;
 
+	i = 0;
 	tokens = NULL;
-	files = get_files();
+	files = get_files(ctx);
 	if (!files)
 		return (create_token(ctx, pattern, TOKEN_WORD));
-	i = 0;
 	while (files[i])
 	{
 		if (is_valid_match(pattern, files[i]))

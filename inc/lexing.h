@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/14 12:16:27 by student          ###   ########.fr       */
+/*   Updated: 2025/07/15 09:25:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ char	*append_char(t_ctx *ctx, char *res, char c);
 void	init_s(t_lexing *s, char *input, bool is_var);
 t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res);
 t_token	*expand_args(t_ctx *ctx, t_token *tokens, t_lexing *lx, char *s);
-t_token	*expand_wildcard(t_ctx *ctx, const char *pattern);
-char	**get_files();
 bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
 
 /* -- Bonus - Functions -- */
+char	**get_files(t_ctx *ctx);
+t_token	*expand_wildcard(t_ctx *ctx, const char *pattern);
 void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens);
 
 #endif
