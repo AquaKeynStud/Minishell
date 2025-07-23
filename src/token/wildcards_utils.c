@@ -3,77 +3,175 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/13 10:46:36 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/15 09:26:17 by arocca           ###   ########.fr       */
+/*   Created: 2025/07/19 02:24:51 by abouclie          #+#    #+#             */
+/*   Updated: 2025/07/23 03:04:35 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "lexing.h"
-#include <sys/wait.h>
 
-static char	**get_files_from_pipe(t_ctx *ctx, int fd)
+size_t	ft_strncpy(char *dst, const char *src, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (src[i] && i < n)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	while (i < n)
+		dst[i++] = 0;
+	return (i);
+}
+
+int	wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i)
+{
+	int	next_wc_i;
+
+	if (!*pat && !*str)
+		return (1);
+	if (*pat == '*')
+	{
+		if (ctx->is_quoted[wc_i])
+		{
+			if (*str != '*')
+				return (0);
+			return (wildcards_match(ctx, pat + 1, str + 1, wc_i + 1));
+		}
+		next_wc_i = wc_i;
+		while (*(pat + 1) == '*')
+		{
+			pat++;
+			next_wc_i++;
+		}
+		if (!*(pat + 1))
+			return (1);
+		while (*str)
+		{
+			if (wildcards_match(ctx, pat + 1, str, next_wc_i + 1))
+				return (1);
+			str++;
+		}
+		return (0);
+	}
+	if (*pat == *str)
+		return (wildcards_match(ctx, pat + 1, str + 1, wc_i));
+	return (0);
+}
+
+
+
+int	contains_wildcard(const char *s)
+{
+	while (s && *s)
+	{
+		if (*s == '*')
+			return (1);
+		s++;
+	}
+	return (0);
+}
+
+
+char	*ft_strcpy(char *dst, const char *src)
+{
+	size_t	i;
+
+	i = 0;
+	while (src[i])
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
+}
+
+char	*ft_strcat(char *dest, const char *src)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (dest[i])
+		i++;
+	while (src[j])
+	{
+		dest[i + j] = src[j];
+		j++;
+	}
+	dest[i + j] = '\0';
+	return (dest);
+}
+
+void expand_last_token_if_needed(t_ctx *ctx, t_token **tokens)
+{
+	t_token	*last;
+	t_token	*expanded;
+
+	if (!ctx->has_wildcard || !tokens || !*tokens)
+		return;
+	t_token **cur = tokens;
+	while ((*cur)->next)
+		cur = &(*cur)->next;
+	last = *cur;
+	expanded = expand_wildcards(ctx, last->value);
+	if (!expanded)
+	{
+		// Soit garder le token original, soit le supprimer
+		return;
+	}
+	free_token(ctx, last);
+	*cur = expanded;
+	ctx->has_wildcard = false;
+}
+
+void	free_token(t_ctx *ctx, t_token *tok)
+{
+	if (!tok)
+		return;
+	if (tok->value)
+		s_free(ctx, tok->value);
+	tok->next = NULL;
+	s_free(ctx, tok);
+}
+
+int	count_wildcards(char *input)
+{
+	int	i;
+	int	count;
+
+	count = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '*')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+void	init_is_quote(t_ctx *ctx, char *input)
 {
 	int		i;
-	char	*line;
-	char	**res;
-
-	res = s_malloc(ctx, sizeof(char *) * 1024);
-	if (!res)
-		return (NULL);
+	int		wildcard_index;
+	bool	quoted;
+	
 	i = 0;
-	line = get_next_line(fd);
-	while (line)
+	wildcard_index = 0;
+	quoted = false;
+	while (input[i])
 	{
-		if (line[0])
-		{
-			ft_trim(&line, "\n");
-			res[i++] = line;
-		}
-		else
-			free(line);
-		line = get_next_line(fd);
+		if (input[i] == '"')
+			quoted = !quoted;
+		else if (input[i] == '*')
+			ctx->is_quoted[wildcard_index++] = quoted;
+		i++;
 	}
-	res[i] = NULL;
-	return (res);
 }
 
-static void	init_get_files(char ***res, char **argv, char **envp)
-{
-	*res = NULL;
-	argv[0] = "/bin/ls";
-	argv[1] = "-1";
-	argv[2] = NULL;
-	envp[0] = NULL;
-}
-
-char	**get_files(t_ctx *ctx)
-{
-	pid_t	pid;
-	char	**res;
-	char	*argv[3];
-	char	*envp[1];
-	int		pipefd[2];
-
-	init_get_files(&res, argv, envp);
-	if (pipe(pipefd) == -1)
-		return (NULL);
-	pid = fork();
-	if (pid == -1)
-		return (NULL);
-	if (pid == 0)
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-		execve(argv[0], argv, envp);
-		secure_exit(ctx);
-	}
-	close(pipefd[1]);
-	res = get_files_from_pipe(ctx, pipefd[0]);
-	close_unregistered_fds(ctx);
-	wait(NULL);
-	return (res);
-}

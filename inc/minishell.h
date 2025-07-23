@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:58:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/13 10:03:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/23 00:56:48 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ typedef struct s_ctx
 	bool		err_in_tokens;
 	bool		has_found_err;
 	bool		sigint_in_heredoc;
+	bool		has_wildcard;
+	bool		*is_quoted;
+	int			index_wildcards;
 }			t_ctx;
 
 /* -- Macros -- */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/15 10:05:21 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/23 00:57:01 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,14 @@ static void	init_context(t_ctx *ctx, char **argv, char **envp)
 	ctx->fds = NULL;
 	ctx->ast = NULL;
 	ctx->status = 0;
+	ctx->index_wildcards = 0;
 	ctx->input = NULL;
 	ctx->tokens = NULL;
 	ctx->allocs = NULL;
 	ctx->has_found_err = false;
 	ctx->err_in_tokens = false;
+	ctx->has_wildcard = false;
+	ctx->is_quoted = NULL;
 	ctx->env = init_env(ctx, argv, envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);

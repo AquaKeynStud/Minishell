@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/15 09:25:00 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/23 03:04:55 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@
 # include "libft.h"
 # include <stddef.h>
 # include <stdbool.h>
+# include <dirent.h>
+# include <sys/stat.h>
 # include "minishell.h"
+
+#define QSTAR '\x01'
 
 typedef enum e_token_type
 {
@@ -50,6 +54,14 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+typedef struct s_wildcards
+{
+	DIR				*d;
+	struct dirent	*e;
+	char			*pattern;
+	char			*dir;
+}				t_wildcards;
+
 /* Tokenisation */
 t_token	*tokenize(t_ctx *ctx, char *input, bool is_var);
 
@@ -71,8 +83,17 @@ t_token	*expand_args(t_ctx *ctx, t_token *tokens, t_lexing *lx, char *s);
 bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
 
 /* -- Bonus - Functions -- */
-char	**get_files(t_ctx *ctx);
-t_token	*expand_wildcard(t_ctx *ctx, const char *pattern);
 void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens);
+size_t	ft_strncpy(char *dst, const char *src, size_t n);
+int		wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i);
+t_token	*expand_wildcards(t_ctx *ctx, const char *pattern);
+char	*ft_strcpy(char *dst, const char *src);
+char	*ft_strcat(char *dest, const char *src);
+void	flush_pending_word(t_ctx *ctx, t_lexing *s, t_token **tokens);
+int		contains_wildcard(const char *s);
+void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
+void	free_token(t_ctx *ctx, t_token *tok);
+int		count_wildcards(char *input);
+void	init_is_quote(t_ctx *ctx, char *input);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenisation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/13 08:43:28 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/23 01:59:18 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 		str = s_save(ctx, ft_strndup(&s->str[start], len));
 		if (!str)
 			return ;
+		if (ft_strchr(str, '*'))
+			ctx->has_wildcard = true;
 		expanded = expand_args(ctx, *tokens, s, str);
 		s_free(ctx, str);
 		s->merge = add_or_merge(ctx, tokens, s, expanded);
@@ -134,21 +136,37 @@ t_token	*tokenize(t_ctx *ctx, char *input, bool is_var)
 
 	tokens = NULL;
 	init_s(&s, input, is_var);
+	ctx->is_quoted = s_malloc(ctx, count_wildcards(input) * sizeof(bool));
 	while (input[s.i])
 	{
 		ajust_data(&s);
+		init_is_quote(ctx, input);
 		if (s.i < s.end_quote && s.quoted)
 			handle_quotes(ctx, &s, &tokens, '"');
 		else if (input[s.i] == '"' || input[s.i] == '\'')
 			handle_quotes(ctx, &s, &tokens, input[s.i]);
 		else if (!is_var && (input[s.i] == '|' || input[s.i] == '&'))
+		{
+			if (ctx->has_wildcard)
+				expand_last_token_if_needed(ctx, &tokens);
 			handle_bonus(ctx, &s, &tokens, input[s.i]);
+		}
 		else if (!is_var && (input[s.i] == '>' || input[s.i] == '<'))
+		{
+			if (ctx->has_wildcard)
+				expand_last_token_if_needed(ctx, &tokens);
 			handle_redir(ctx, &s, &tokens);
+		}
 		else if (!is_var && (input[s.i] == '(' || input[s.i] == ')'))
+		{
+			if (ctx->has_wildcard)
+				expand_last_token_if_needed(ctx, &tokens);
 			handle_parenthesis(ctx, &s, &tokens);
+		}
 		else
 			handle_word(ctx, &s, &tokens);
 	}
+	if (ctx->has_wildcard)
+		expand_last_token_if_needed(ctx, &tokens);
 	return (tokens);
 }
