@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/23 03:04:55 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/07/29 09:18:55 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,7 @@ void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
 void	free_token(t_ctx *ctx, t_token *tok);
 int		count_wildcards(char *input);
 void	init_is_quote(t_ctx *ctx, char *input);
+void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op);
+void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens);
 
 #endif

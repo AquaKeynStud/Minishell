@@ -48,6 +48,9 @@ LST_TOK		=	add_token.c			\
 				parenthesis.c		\
 				expand_wildcards.c	\
 				wildcards_utils.c	\
+				wildcards_process.c	\
+				token_operator.c	\
+				ft_string.c			\
 				tokenisation.c
 
 LST_PAR		=	redir.c				\
