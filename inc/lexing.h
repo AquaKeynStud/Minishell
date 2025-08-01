@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/29 09:18:55 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:36:08 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include "minishell.h"
-
-#define QSTAR '\x01'
 
 typedef enum e_token_type
 {
@@ -89,8 +87,6 @@ int		wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i);
 t_token	*expand_wildcards(t_ctx *ctx, const char *pattern);
 char	*ft_strcpy(char *dst, const char *src);
 char	*ft_strcat(char *dest, const char *src);
-void	flush_pending_word(t_ctx *ctx, t_lexing *s, t_token **tokens);
-int		contains_wildcard(const char *s);
 void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
 void	free_token(t_ctx *ctx, t_token *tok);
 int		count_wildcards(char *input);

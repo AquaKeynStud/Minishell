@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 02:24:51 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/29 09:37:47 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:34:04 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexing.h"
-
-int	contains_wildcard(const char *s)
-{
-	while (s && *s)
-	{
-		if (*s == '*')
-			return (1);
-		s++;
-	}
-	return (0);
-}
 
 void	free_token(t_ctx *ctx, t_token *tok)
 {
