@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenisation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 10:37:36 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/29 09:06:19 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:29:13 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ static void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	s->merge = add_or_merge(ctx, tokens, s, expanded);
 }
 
-static int skip_word(t_lexing *s)
+static int	skip_word(t_lexing *s)
 {
 	int	start;
-	
+
 	start = s->i;
 	while (s->str[s->i] && !is_whitespace(s->str[s->i])
 		&& (s->is_var || !is_operator(s->str[s->i]))
@@ -59,7 +59,7 @@ static int skip_word(t_lexing *s)
 	return (s->i - start);
 }
 
-static void handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
+static void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 {
 	int		start;
 	int		len;
@@ -81,6 +81,35 @@ static void handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	}
 }
 
+static void	process_token(t_ctx *ctx, t_lexing *s,
+			t_token **tokens, bool is_var)
+{
+	if (s->i < s->end_quote && s->quoted)
+		handle_quotes(ctx, s, tokens, '"');
+	else if (s->str[s->i] == '"' || s->str[s->i] == '\'')
+		handle_quotes(ctx, s, tokens, s->str[s->i]);
+	else if (!is_var && (s->str[s->i] == '|' || s->str[s->i] == '&'))
+	{
+		if (ctx->has_wildcard)
+			expand_last_token_if_needed(ctx, tokens);
+		handle_bonus(ctx, s, tokens, s->str[s->i]);
+	}
+	else if (!is_var && (s->str[s->i] == '>' || s->str[s->i] == '<'))
+	{
+		if (ctx->has_wildcard)
+			expand_last_token_if_needed(ctx, tokens);
+		handle_redir(ctx, s, tokens);
+	}
+	else if (!is_var && (s->str[s->i] == '(' || s->str[s->i] == ')'))
+	{
+		if (ctx->has_wildcard)
+			expand_last_token_if_needed(ctx, tokens);
+		handle_parenthesis(ctx, s, tokens);
+	}
+	else
+		handle_word(ctx, s, tokens);
+}
+
 t_token	*tokenize(t_ctx *ctx, char *input, bool is_var)
 {
 	t_lexing	s;
@@ -93,30 +122,7 @@ t_token	*tokenize(t_ctx *ctx, char *input, bool is_var)
 	{
 		ajust_data(&s);
 		init_is_quote(ctx, input);
-		if (s.i < s.end_quote && s.quoted)
-			handle_quotes(ctx, &s, &tokens, '"');
-		else if (input[s.i] == '"' || input[s.i] == '\'')
-			handle_quotes(ctx, &s, &tokens, input[s.i]);
-		else if (!is_var && (input[s.i] == '|' || input[s.i] == '&'))
-		{
-			if (ctx->has_wildcard)
-				expand_last_token_if_needed(ctx, &tokens);
-			handle_bonus(ctx, &s, &tokens, input[s.i]);
-		}
-		else if (!is_var && (input[s.i] == '>' || input[s.i] == '<'))
-		{
-			if (ctx->has_wildcard)
-				expand_last_token_if_needed(ctx, &tokens);
-			handle_redir(ctx, &s, &tokens);
-		}
-		else if (!is_var && (input[s.i] == '(' || input[s.i] == ')'))
-		{
-			if (ctx->has_wildcard)
-				expand_last_token_if_needed(ctx, &tokens);
-			handle_parenthesis(ctx, &s, &tokens);
-		}
-		else
-			handle_word(ctx, &s, &tokens);
+		process_token(ctx, &s, &tokens, is_var);
 	}
 	if (ctx->has_wildcard)
 		expand_last_token_if_needed(ctx, &tokens);
