@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:08:42 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/10 19:15:37 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 11:34:42 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ int	is_builtin(char *cmd)
 	);
 }
 
+static int	verif_env(t_ctx *ctx, char **args, t_env *env)
+{
+	if (get_from_env(env, "PATH"))
+		return (ft_env(ctx, env, count_args(args), args));
+	s_free(ctx, args);
+	ft_dprintf(2, "minishell: ");
+	ft_dprintf(2, "env: No such file or directory\n");
+	return (127);
+}
+
 int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 {
 	if (!args)
@@ -56,7 +66,7 @@ int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 	if (!ft_strcmp(args[0], "unset"))
 		return (ft_unset(ctx, args, env));
 	if (!ft_strcmp(args[0], "env"))
-		return (ft_env(ctx, env, count_args(args), args));
+		return (verif_env(ctx, args, env));
 	if (!ft_strcmp(args[0], "exit"))
 		return (ft_exit(ctx, count_args(args), args));
 	if (!ft_strcmp(args[0], ":"))

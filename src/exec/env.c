@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:49:56 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 13:00:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/13 11:37:41 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ static bool	fill_envp(t_ctx *ctx, char **envp, t_env *env)
 static void	add_env(t_ctx *ctx, t_env **env, char **args)
 {
 	char	*shlvl;
+	char	*path_env;
 
+	path_env = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	if (!get_from_env(*env, "PWD"))
 		add_or_update_env(ctx, env, "PWD", get_working_dir("pwd"));
 	if (get_from_env(*env, "SHLVL"))
@@ -55,6 +57,8 @@ static void	add_env(t_ctx *ctx, t_env **env, char **args)
 		add_or_update_env(ctx, env, "SHLVL", "1");
 	if (!get_from_env(*env, "_") && args[0])
 		add_or_update_env(ctx, env, "_", args[0]);
+	if (!get_from_env(*env, "PATH"))
+		add_or_update_env(ctx, env, "PATH", path_env);
 }
 
 char	**env_to_envp(t_ctx *ctx, t_env *env)
