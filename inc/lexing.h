@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: student <student@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 08:34:52 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/13 08:35:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/01 11:36:08 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "libft.h"
 # include <stddef.h>
 # include <stdbool.h>
+# include <dirent.h>
+# include <sys/stat.h>
 # include "minishell.h"
 
 typedef enum e_token_type
@@ -50,6 +52,14 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+typedef struct s_wildcards
+{
+	DIR				*d;
+	struct dirent	*e;
+	char			*pattern;
+	char			*dir;
+}				t_wildcards;
+
 /* Tokenisation */
 t_token	*tokenize(t_ctx *ctx, char *input, bool is_var);
 
@@ -72,5 +82,16 @@ bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
 
 /* -- Bonus - Functions -- */
 void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens);
+size_t	ft_strncpy(char *dst, const char *src, size_t n);
+int		wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i);
+t_token	*expand_wildcards(t_ctx *ctx, const char *pattern);
+char	*ft_strcpy(char *dst, const char *src);
+char	*ft_strcat(char *dest, const char *src);
+void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
+void	free_token(t_ctx *ctx, t_token *tok);
+int		count_wildcards(char *input);
+void	init_is_quote(t_ctx *ctx, char *input);
+void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op);
+void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens);
 
 #endif
