@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:15:48 by abouclie          #+#    #+#             */
-/*   Updated: 2025/07/10 19:11:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/06 09:05:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_env(t_ctx *ctx, t_env *env, int argc, char **args)
 			i++;
 		}
 		s_free(ctx, args);
-		return (1);
+		return (127);
 	}
 	while (env)
 	{

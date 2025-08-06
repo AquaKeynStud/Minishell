@@ -107,7 +107,7 @@ static int	exec_command(t_ctx *ctx, t_ast *node)
 	sig_set(SIG_IGN);
 	pid = fork();
 	if (pid < 0)
-		return (perror_code("command fork", 1));
+		return (perror_code("command fork", 2));
 	if (pid == 0)
 	{
 		sig_set(SIG_DFL);
