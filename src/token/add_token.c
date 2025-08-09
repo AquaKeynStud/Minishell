@@ -56,7 +56,7 @@ bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *curr)
 	return (lx->merge);
 }
 
-t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char *quote)
+t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char typed)
 {
 	t_token	*token;
 
@@ -70,7 +70,7 @@ t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char *quote)
 	token->type = type;
 	token->next = NULL;
 	token->prev = NULL;
-	token->expand = s_save(ctx, ft_strdup(quote));
+	token->expand = s_save(ctx, has_expand(ctx, typed, value));
 	return (token);
 }
 

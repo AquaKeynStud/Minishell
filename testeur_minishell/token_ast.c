@@ -253,10 +253,14 @@ int main(int argc, char **argv, char **envp)
 		"echo $PATH",
 		"echo src/*"
 	};
+
+	char *refonte[] = {
+		"echo 'test'\"$USER*.\"c *rc"
+	};
 	
 	if (argc < 2)
 	{
-		fprintf(stderr, "Usage: %s [ 1 | 2 | 3 | 4 ]\n", argv[0]);
+		fprintf(stderr, "Usage: %s [ 1 | 2 | 3 | 4 | 5 ]\n", argv[0]);
 		return 1;
 	}
 
@@ -268,6 +272,8 @@ int main(int argc, char **argv, char **envp)
 		run_tests("my tests", my_tests, sizeof(my_tests) / sizeof(my_tests[0]), &ctx);
 	else if (strcmp(argv[1], "4") == 0)
 		run_tests("bonus", bonus, sizeof(bonus) / sizeof(bonus[0]), &ctx);
+	else if (strcmp(argv[1], "5") == 0)
+		run_tests("refonte", refonte, sizeof(refonte) / sizeof(refonte[0]), &ctx);
 	else
 		fprintf(stderr, "Argument invalide. Utilise : 1, 2, 3 ou 4\n");
 

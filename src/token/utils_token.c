@@ -12,19 +12,12 @@
 
 #include "lexing.h"
 
-// void	ajust_data(t_lexing *s)
-// {
-// 	if (s->i >= s->end_quote)
-// 	{
-// 		s->quoted = false;
-// 		s->end_quote = 0;
-// 	}
-// 	if (is_whitespace(s->str[s->i]))
-// 	{
-// 		s->i++;
-// 		s->merge = false;
-// 	}
-// }
+void	init_s(t_lexing *s, char *input)
+{
+	s->i = 0;
+	s->merge = false;
+	s->str = input;
+}
 
 t_token	*get_last_token(t_token *tokens)
 {
@@ -35,19 +28,30 @@ t_token	*get_last_token(t_token *tokens)
 	return (tokens);
 }
 
-void	init_s(t_lexing *s, char *input)
+char	*has_expand(t_ctx *ctx, char type, char *s)
 {
-	s->i = 0;
-	s->merge = false;
-	s->str = input;
-}
+	int		i;
+	int		len;
+	char	*res;
 
-// bool	is_eof(t_token *token)
-// {
-// 	if (!token)
-// 		return (false);
-// 	return (get_last_token(token)->type == TOKEN_HEREDOC);
-// }
+	i = 0;
+	len = 1;
+	res = s_save(ctx, ft_strdup(""));
+	if (!type || !s || !*s)
+		return (NULL);
+	while (s[i])
+	{
+		if ((s[i] == '~' || s[i] == '$' || s[i] == '*'))
+		{
+			res = s_realloc(ctx, res, len, len + 1);
+			res[len - 1] = type;
+			res[len] = '\0';
+			len += 1;
+		}
+		i++;
+	}
+	return (res);
+}
 
 int	is_operator(char c)
 {

@@ -64,7 +64,7 @@ t_token	*tokenize(t_ctx *ctx, char *input);
 /* -- // Allocations \\ -- */
 void	free_tokens(t_ctx *ctx, t_token **list);
 void	add_token(t_token **head, t_token *new);
-t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char *quote);
+t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char typed);
 bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
 
 /* -- // Handlers \\ -- */
@@ -79,6 +79,7 @@ int		is_operator(char c);
 t_token	*get_last_token(t_token *tokens);
 void	init_s(t_lexing *s, char *input);
 char	*append_char(t_ctx *ctx, char *res, char c);
+char	*has_expand(t_ctx *ctx, char type, char *s);
 
 
 char	*ft_strcpy(char *dst, const char *src);
