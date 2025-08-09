@@ -121,6 +121,11 @@ static int	exec_command(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(ctx->status));
 }
 
+// void	expand_args(t_ctx *ctx, t_ast *node)
+// {
+
+// }
+
 int	execute_ast(t_ctx *ctx, t_ast *node)
 {
 	if (!node)
@@ -135,6 +140,7 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 		ctx->status = exec_subshell(ctx, node->childs[0]);
 	else if (node->type == AST_COMMAND && node->value)
 	{
+		// expand_args(ctx, node);
 		if (!ft_strcmp(node->value, "!"))
 			ctx->status = 1;
 		else if (is_builtin(node->value))

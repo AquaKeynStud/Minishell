@@ -54,8 +54,8 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 	(*ctx)->tokens = NULL;
 	(*ctx)->has_found_err = false;
 	(*ctx)->err_in_tokens = false;
-	if ((*ctx)->status != 0 && ((*ctx)->status - 128) == SIGQUIT)
-		ft_dprintf(2, "Quit (core dumped)\n");
+	// if ((*ctx)->status != 0 && ((*ctx)->status - 128) == SIGQUIT)
+	// 	ft_dprintf(2, "Quit (core dumped)\n");
 	return ;
 }
 
@@ -64,7 +64,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_ast	*ast;
 	t_token	*tokens;
 
-	tokens = tokenize(ctx, cmd, false);
+	tokens = tokenize(ctx, cmd);
 	if (!check_parenthesis(ctx, tokens))
 	{
 		close_unregistered_fds(ctx);
@@ -115,12 +115,12 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	// {
-	// 	if (isatty(STDERR_FILENO))
-	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
-	// 	exit(EXIT_FAILURE);
-	// }
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	{
+		if (isatty(STDERR_FILENO))
+			ft_dprintf(2, "minishell: interactive mode not allowed\n");
+		exit(EXIT_FAILURE);
+	}
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();

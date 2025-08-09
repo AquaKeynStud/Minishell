@@ -12,29 +12,19 @@
 
 #include "lexing.h"
 
-void	init_s(t_lexing *s, char *input, bool is_var)
-{
-	s->i = 0;
-	s->merge = false;
-	s->is_var = is_var;
-	s->quoted = false;
-	s->end_quote = 0;
-	s->str = input;
-}
-
-void	ajust_data(t_lexing *s)
-{
-	if (s->i >= s->end_quote)
-	{
-		s->quoted = false;
-		s->end_quote = 0;
-	}
-	if (is_whitespace(s->str[s->i]))
-	{
-		s->i++;
-		s->merge = false;
-	}
-}
+// void	ajust_data(t_lexing *s)
+// {
+// 	if (s->i >= s->end_quote)
+// 	{
+// 		s->quoted = false;
+// 		s->end_quote = 0;
+// 	}
+// 	if (is_whitespace(s->str[s->i]))
+// 	{
+// 		s->i++;
+// 		s->merge = false;
+// 	}
+// }
 
 t_token	*get_last_token(t_token *tokens)
 {
@@ -45,12 +35,19 @@ t_token	*get_last_token(t_token *tokens)
 	return (tokens);
 }
 
-bool	is_eof(t_token *token)
+void	init_s(t_lexing *s, char *input)
 {
-	if (!token)
-		return (false);
-	return (get_last_token(token)->type == TOKEN_HEREDOC);
+	s->i = 0;
+	s->merge = false;
+	s->str = input;
 }
+
+// bool	is_eof(t_token *token)
+// {
+// 	if (!token)
+// 		return (false);
+// 	return (get_last_token(token)->type == TOKEN_HEREDOC);
+// }
 
 int	is_operator(char c)
 {

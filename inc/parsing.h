@@ -37,8 +37,10 @@ typedef struct s_ast
 	int				fd;
 	t_ast_type		type;
 	char			*value;
+	char			*quotes;
 	struct s_ast	**childs;
 	int				sub_count;
+	char			*wildcards;
 }				t_ast;
 
 /* -- Functions -- */
@@ -49,7 +51,7 @@ int		parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr);
 void	*free_ast(t_ctx *ctx, t_ast *node);
 void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child);
 void	*double_free_ast(t_ctx *ctx, t_ast *left, t_ast *right);
-t_ast	*new_ast(t_ctx *ctx, t_ast_type type, const char *value);
+t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr);
 
 /* -- Bonus - Functions -- */
 bool	is_binary_op(t_token_type type);

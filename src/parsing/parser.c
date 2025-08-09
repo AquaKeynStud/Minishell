@@ -14,24 +14,19 @@
 #include "parsing.h"
 #include "minishell.h"
 
+
 static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 {
 	t_ast	*stub;
 
 	if (!*cmd)
-		*cmd = new_ast(ctx, AST_COMMAND, (*curr)->value);
-	else
-	{
-		stub = *cmd;
-		while (stub->type == AST_REDIR)
-			stub = stub->childs[1];
-		if (stub->value)
-			s_free(ctx, stub->value);
-		stub->value = s_save(ctx, ft_strdup((*curr)->value));
-	}
+		*cmd = new_ast(ctx, AST_COMMAND, *curr);
 	stub = *cmd;
 	while (stub->type == AST_REDIR)
 		stub = stub->childs[1];
+	if (stub->value)
+		s_free(ctx, stub->value);
+	stub->value = s_save(ctx, ft_strdup((*curr)->value));
 	*curr = (*curr)->next;
 	return (stub);
 }
@@ -55,7 +50,7 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 				stub = overwrite_stub(ctx, curr, &cmd);
 			else
 			{
-				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, (*curr)->value));
+				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, *curr));
 				*curr = (*curr)->next;
 			}
 		}
@@ -84,7 +79,7 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 		right = parse_command(ctx, curr, NULL);
 		if (!right || !right->value)
 			return (double_free_ast(ctx, right, left));
-		pipe_node = new_ast(ctx, AST_PIPE, tmp->value);
+		pipe_node = new_ast(ctx, AST_PIPE, tmp);
 		ast_add(ctx, pipe_node, left);
 		ast_add(ctx, pipe_node, right);
 		left = pipe_node;
@@ -110,9 +105,9 @@ t_ast	*parse_logical(t_ctx *ctx, t_token **curr)
 		if (!right)
 			return (double_free_ast(ctx, right, left));
 		if (tmp->type == TOKEN_OR)
-			logical_node = new_ast(ctx, AST_OR, tmp->value);
+			logical_node = new_ast(ctx, AST_OR, tmp);
 		else
-			logical_node = new_ast(ctx, AST_AND, tmp->value);
+			logical_node = new_ast(ctx, AST_AND, tmp);
 		ast_add(ctx, logical_node, left);
 		ast_add(ctx, logical_node, right);
 		left = logical_node;

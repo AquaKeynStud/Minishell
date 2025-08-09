@@ -17,8 +17,6 @@
 
 void	handle_sigint(int signal)
 {
-	t_ctx	*ctx;
-
 	(void)signal;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
@@ -26,11 +24,12 @@ void	handle_sigint(int signal)
 	rl_redisplay();
 	set_status(NULL, 130);
 	if (COLOR)
-		print_status(ctx);
+		print_status(NULL);
 }
 
 void	handle_sigint_heredoc(int signal)
 {
 	(void)signal;
 	write(1, "\n", 1);
+	exit(130);
 }

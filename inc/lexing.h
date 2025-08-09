@@ -39,17 +39,15 @@ typedef struct s_lexing
 	int		i;
 	char	*str;
 	bool	merge;
-	bool	is_var;
-	bool	quoted;
-	int		end_quote;
 }				t_lexing;
 
 typedef struct s_token
 {
-	char			*value;
 	t_token_type	type;
 	struct s_token	*next;
 	struct s_token	*prev;
+	char			*value;
+	char			*expand;
 }	t_token;
 
 typedef struct s_wildcards
@@ -60,38 +58,44 @@ typedef struct s_wildcards
 	char			*dir;
 }				t_wildcards;
 
-/* Tokenisation */
-t_token	*tokenize(t_ctx *ctx, char *input, bool is_var);
+/* -- // Tokenisation \\ -- */
+t_token	*tokenize(t_ctx *ctx, char *input);
 
-/* Add token */
+/* -- // Allocations \\ -- */
 void	free_tokens(t_ctx *ctx, t_token **list);
 void	add_token(t_token **head, t_token *new);
-t_token	*simple_tok(t_ctx *ctx, t_lexing *lx, char **res, int len);
-t_token	*create_token(t_ctx *ctx, const char *value, t_token_type type);
-
-/* Utils */
-int		is_operator(char c);
-bool	is_eof(t_token *token);
-void	ajust_data(t_lexing *s);
-t_token	*get_last_token(t_token *tokens);
-char	*append_char(t_ctx *ctx, char *res, char c);
-void	init_s(t_lexing *s, char *input, bool is_var);
-t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res);
-t_token	*expand_args(t_ctx *ctx, t_token *tokens, t_lexing *lx, char *s);
+t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char *quote);
 bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
 
-/* -- Bonus - Functions -- */
+/* -- // Handlers \\ -- */
+void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens);
+void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens);
 void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens);
-size_t	ft_strncpy(char *dst, const char *src, size_t n);
-int		wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i);
-t_token	*expand_wildcards(t_ctx *ctx, const char *pattern);
+void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op);
+void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote);
+
+/* -- // Utils \\ -- */
+int		is_operator(char c);
+t_token	*get_last_token(t_token *tokens);
+void	init_s(t_lexing *s, char *input);
+char	*append_char(t_ctx *ctx, char *res, char c);
+
+
 char	*ft_strcpy(char *dst, const char *src);
 char	*ft_strcat(char *dest, const char *src);
-void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
-void	free_token(t_ctx *ctx, t_token *tok);
-int		count_wildcards(char *input);
-void	init_is_quote(t_ctx *ctx, char *input);
-void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op);
-void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens);
 
 #endif
+
+/* Utils */
+// t_token	*simple_tok(t_ctx *ctx, t_lexing *lx, char **res, int len);
+// bool	is_eof(t_token *token);
+// void	ajust_data(t_lexing *s);
+// t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res);
+// t_token	*expand_args(t_ctx *ctx, t_token *tokens, t_lexing *lx, char *s);
+
+/* -- Bonus - Functions -- */
+// int		wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i);
+// t_token	*expand_wildcards(t_ctx *ctx, const char *pattern);
+// void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
+// int		count_wildcards(char *input);
+// void	init_is_quote(t_ctx *ctx, char *input);

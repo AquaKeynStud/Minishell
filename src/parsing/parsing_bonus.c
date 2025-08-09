@@ -61,6 +61,9 @@ bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd)
 	subcommand = NULL;
 	if (!*curr || (*curr)->type != TOKEN_LPAR)
 		return (false);
+	s_free(ctx, (*curr)->value);
+	(*curr)->value = s_save(ctx, ft_strdup("()"));
+	*cmd = new_ast(ctx, AST_SUB, *curr);
 	*curr = (*curr)->next;
 	subcommand = parse_logical(ctx, curr);
 	if (!subcommand || !*curr || (*curr)->type != TOKEN_RPAR)
@@ -71,7 +74,6 @@ bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd)
 		return (false);
 	}
 	*curr = (*curr)->next;
-	*cmd = new_ast(ctx, AST_SUB, "()");
 	ast_add(ctx, *cmd, subcommand);
 	return (true);
 }

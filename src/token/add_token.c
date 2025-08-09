@@ -28,34 +28,35 @@ void	free_tokens(t_ctx *ctx, t_token **list)
 	*list = NULL;
 }
 
-bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content)
+bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *curr)
 {
 	t_token	*last;
 	char	*merged;
 
-	if (!content)
+	if (!ctx || !tok || !curr)
 		return (lx->merge);
 	if (!lx->merge)
 	{
-		add_token(tok, content);
-		if (content->next)
+		add_token(tok, curr);
+		if (curr->next)
 			return (lx->merge);
 		return (true);
 	}
 	last = get_last_token(*tok);
 	if (last && last->type == TOKEN_WORD)
 	{
-		merged = s_save(ctx, ft_strjoin_free(ctx, last->value, content->value));
+		merged = s_save(ctx, ft_strjoin_free(ctx, last->value, curr->value));
 		if (merged)
 			last->value = merged;
-		last->next = content->next;
-		s_free(ctx, content);
+		last->expand = s_save(ctx, ft_strjoin_free(ctx, last->expand, curr->expand));
+		last->next = curr->next;
+		s_free(ctx, curr);
 		return (true);
 	}
 	return (lx->merge);
 }
 
-t_token	*create_token(t_ctx *ctx, const char *value, t_token_type type)
+t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char *quote)
 {
 	t_token	*token;
 
@@ -69,6 +70,7 @@ t_token	*create_token(t_ctx *ctx, const char *value, t_token_type type)
 	token->type = type;
 	token->next = NULL;
 	token->prev = NULL;
+	token->expand = s_save(ctx, ft_strdup(quote));
 	return (token);
 }
 
@@ -88,17 +90,4 @@ void	add_token(t_token **head, t_token *new)
 		tmp = tmp->next;
 	tmp->next = new;
 	new->prev = tmp;
-}
-
-t_token	*simple_tok(t_ctx *ctx, t_lexing *lx, char **res, int len)
-{
-	t_token	*tok;
-
-	tok = create_token(ctx, *res, TOKEN_WORD);
-	if (len)
-		lx->i -= len;
-	s_free(ctx, *res);
-	if (tok)
-		return (tok);
-	return (NULL);
 }

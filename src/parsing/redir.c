@@ -47,13 +47,16 @@ static int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
 static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 {
 	t_ast	*stub;
+	t_token	*temp;
 
 	if (!*cmd)
 	{
 		if (tmp->type == TOKEN_HEREDOC)
-			*cmd = new_ast(ctx, AST_COMMAND, "cat");
+			temp = s_save(ctx, create_token(ctx, "cat", TOKEN_WORD, "0"));
 		else
-			*cmd = new_ast(ctx, AST_COMMAND, NULL);
+			temp = s_save(ctx, create_token(ctx, NULL, TOKEN_WORD, "0"));
+		*cmd = new_ast(ctx, AST_COMMAND, temp);
+		s_free(ctx, temp);
 		return ;
 	}
 	if (tmp->type == TOKEN_HEREDOC)
@@ -107,8 +110,8 @@ int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 	if (err != 2)
 		return (err);
 	cat_empty_heredoc(ctx, cmd, tmp);
-	redir = new_ast(ctx, AST_REDIR, tmp->value);
-	file_node = new_ast(ctx, AST_COMMAND, (*curr)->value);
+	redir = new_ast(ctx, AST_REDIR, tmp);
+	file_node = new_ast(ctx, AST_COMMAND, *curr);
 	ast_add(ctx, redir, file_node);
 	redir_priority(ctx, cmd, redir);
 	*curr = (*curr)->next;

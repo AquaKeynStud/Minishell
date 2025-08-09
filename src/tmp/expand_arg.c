@@ -108,25 +108,25 @@ static t_token	*handle_quote_var(t_ctx *ctx, t_lexing *lx, char **res)
 	return (simple_tok(ctx, lx, res, 0));
 }
 
-t_token	*expand_args(t_ctx *ctx, t_token *tok, t_lexing *lx, char *s)
-{
-	char	*res;
+// t_token	*expand_args(t_ctx *ctx, t_token *tok, t_lexing *lx, char *s)
+// {
+// 	char	*res;
 
-	if (!s || !*s)
-		return (NULL);
-	res = s_save(ctx, ft_strdup(""));
-	if (!res)
-		return (NULL);
-	while (*s)
-	{
-		if (*s == '$' && !is_eof(tok) && in_str(s[1], "?_", true))
-			return (handle_var(ctx, lx, &s, &res));
-		else if (*s == '$' && !is_eof(tok) && in_str(lx->str[lx->i], "\"'", 0))
-			return (handle_quote_var(ctx, lx, &res));
-		else if (*s == '~' && !is_eof(tok) && !lx->quoted
-			&& !*res && (!s[1] || s[1] == '/'))
-			return (expand_tilde(ctx, lx, &s, &res));
-		res = append_char(ctx, res, *s++);
-	}
-	return (simple_tok(ctx, lx, &res, ft_strlen(s)));
-}
+// 	if (!s || !*s)
+// 		return (NULL);
+// 	res = s_save(ctx, ft_strdup(""));
+// 	if (!res)
+// 		return (NULL);
+// 	while (*s)
+// 	{
+// 		if (*s == '$' && !is_eof(tok) && in_str(s[1], "?_", true))
+// 			return (handle_var(ctx, lx, &s, &res));
+// 		else if (*s == '$' && !is_eof(tok) && in_str(lx->str[lx->i], "\"'", 0))
+// 			return (handle_quote_var(ctx, lx, &res));
+// 		else if (*s == '~' && !is_eof(tok) && !lx->quoted
+// 			&& !*res && (!s[1] || s[1] == '/'))
+// 			return (expand_tilde(ctx, lx, &s, &res));
+// 		res = append_char(ctx, res, *s++);
+// 	}
+// 	return (simple_tok(ctx, lx, &res, ft_strlen(s)));
+// }
