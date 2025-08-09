@@ -23,16 +23,11 @@ t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr)
 	node->fd = -1;
 	node->type = type;
 	node->value = NULL;
-	node->quotes = NULL;
 	node->childs = NULL;
 	node->sub_count = 0;
-	if (curr)
-	{
-		if (curr->value)
-			node->value = s_save(ctx, ft_strdup(curr->value));
-		if (curr->expand)
-			node->quotes = s_save(ctx, ft_strdup(curr->expand));
-	}
+	node->quote = curr->quote;
+	if (curr && curr->value)
+		node->value = s_save(ctx, ft_strdup(curr->value));
 	return (node);
 }
 
@@ -61,7 +56,6 @@ void	*free_ast(t_ctx *ctx, t_ast *node)
 	}
 	s_free(ctx, node->childs);
 	s_free(ctx, node->value);
-	s_free(ctx, node->quotes);
 	s_free(ctx, node);
 	return (NULL);
 }

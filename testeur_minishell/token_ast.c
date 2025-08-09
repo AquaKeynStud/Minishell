@@ -15,6 +15,7 @@ void print_token_list(t_token *head)
     while (head)
     {
         const char *type_str;
+        const char *type_quote;
         switch (head->type)
         {
             case TOKEN_WORD:          type_str = "WORD";        break;
@@ -29,7 +30,14 @@ void print_token_list(t_token *head)
             case TOKEN_RPAR:          type_str = "RIGHT_PAR";   break;
             default:                  type_str = "UNKNOWN";     break;
         }
-        printf("\"%s\" -> %s : %s\n", head->value, type_str, head->expand);
+		switch (head->quote)
+		{
+			case NONE:				type_quote = "NONE";		break;
+			case SINGLE:			type_quote = "SINGLE";		break;
+			case DOUBLE:			type_quote = "DOUBLE";		break;
+			default:				type_quote = "/";			break;
+		}
+        printf("\"%s\" -> %s : %s\n", head->value, type_str, type_quote);
         head = head->next;
     }
 }
@@ -37,10 +45,18 @@ void print_token_list(t_token *head)
 // Affiche l'AST en forme d'arbre ASCII
 void print_ast_tree_rec(t_ast *node, const char *prefix, bool is_last)
 {
+	const char *type_quote;
+	switch (node->quote)
+	{
+		case NONE:				type_quote = "NONE";		break;
+		case SINGLE:			type_quote = "SINGLE";		break;
+		case DOUBLE:			type_quote = "DOUBLE";		break;
+		default:				type_quote = "/";			break;
+	};
     // Affiche le préfixe puis la branche et la valeur
     printf("%s", prefix);
     printf(is_last ? "└─ " : "├─ ");
-    printf("%s [%s]\n", node->value ? node->value : "(null)", node->quotes ? node->quotes : "/");
+    printf("%s - [%s]\n", node->value ? node->value : "(null)", type_quote);
 
     // Prépare le nouveau préfixe pour les enfants
     char new_prefix[1024];
@@ -255,9 +271,10 @@ int main(int argc, char **argv, char **envp)
 	};
 
 	char *refonte[] = {
-		"echo 'test'\"$USER*.\"c *rc"
+		"echo 'test'\"$USER*.\"c *rc",
+		"echo 'test'$\"USER*\".c *rc"
 	};
-	
+
 	if (argc < 2)
 	{
 		fprintf(stderr, "Usage: %s [ 1 | 2 | 3 | 4 | 5 ]\n", argv[0]);

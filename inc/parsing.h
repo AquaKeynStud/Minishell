@@ -36,11 +36,10 @@ typedef struct s_ast
 {
 	int				fd;
 	t_ast_type		type;
+	t_quote			quote;
 	char			*value;
-	char			*quotes;
 	struct s_ast	**childs;
 	int				sub_count;
-	char			*wildcards;
 }				t_ast;
 
 /* -- Functions -- */

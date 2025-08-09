@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:48:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/09 18:06:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/09 23:00:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op)
 	if (op == '|')
 	{
 		if (ft_strlen(value) > 1)
-			add_token(tokens, create_token(ctx, value, TOKEN_OR, 0));
+			add_token(tokens, create_token(ctx, value, TOKEN_OR, NONE));
 		else
-			add_token(tokens, create_token(ctx, value, TOKEN_PIPE, 0));
+			add_token(tokens, create_token(ctx, value, TOKEN_PIPE, NONE));
 	}
 	else
-		add_token(tokens, create_token(ctx, value, TOKEN_AND, 0));
+		add_token(tokens, create_token(ctx, value, TOKEN_AND, NONE));
 	s_free(ctx, value);
 	s->merge = false;
 }
@@ -46,9 +46,9 @@ void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens)
 
 	c = s->str[s->i];
 	if (c == '(')
-		token = create_token(ctx, "(", TOKEN_LPAR, 0);
+		token = create_token(ctx, "(", TOKEN_LPAR, NONE);
 	else
-		token = create_token(ctx, ")", TOKEN_RPAR, 0);
+		token = create_token(ctx, ")", TOKEN_RPAR, NONE);
 	if (token)
 		add_token(tokens, token);
 	(s->i)++;
@@ -68,13 +68,13 @@ void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	if (!str)
 		return ;
 	if (op == '>' && len == 2)
-		token = create_token(ctx, str, TOKEN_REDIR_APPEND, 0);
+		token = create_token(ctx, str, TOKEN_REDIR_APPEND, NONE);
 	else if (op == '<' && len == 2)
-		token = create_token(ctx, str, TOKEN_HEREDOC, 0);
+		token = create_token(ctx, str, TOKEN_HEREDOC, NONE);
 	else if (op == '>')
-		token = create_token(ctx, str, TOKEN_REDIR_OUT, 0);
+		token = create_token(ctx, str, TOKEN_REDIR_OUT, NONE);
 	else
-		token = create_token(ctx, str, TOKEN_REDIR_IN, 0);
+		token = create_token(ctx, str, TOKEN_REDIR_IN, NONE);
 	if (token)
 		add_token(tokens, token);
 	s_free(ctx, str);
@@ -101,11 +101,11 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	if (!content || len < 0)
 		return ;
 	if (len > 0 && quote == '"')
-		new_token = create_token(ctx, content, TOKEN_WORD, '2');
+		new_token = create_token(ctx, content, TOKEN_WORD, DOUBLE);
 	else if (len > 0)
-		new_token = create_token(ctx, content, TOKEN_WORD, '1');
+		new_token = create_token(ctx, content, TOKEN_WORD, SINGLE);
 	s_free(ctx, content);
-	s->merge = add_or_merge(ctx, tokens, s, new_token);
+	add_token(tokens, new_token);
 }
 
 void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
@@ -128,8 +128,8 @@ void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 		str = s_save(ctx, ft_strndup(&s->str[start], len));
 		if (!str)
 			return ;
-		new_token = create_token(ctx, str, TOKEN_WORD, '0');
+		new_token = create_token(ctx, str, TOKEN_WORD, NONE);
 		s_free(ctx, str);
-		s->merge = add_or_merge(ctx, tokens, s, new_token);
+		add_token(tokens, new_token);
 	}
 }

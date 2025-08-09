@@ -52,9 +52,9 @@ static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 	if (!*cmd)
 	{
 		if (tmp->type == TOKEN_HEREDOC)
-			temp = s_save(ctx, create_token(ctx, "cat", TOKEN_WORD, '0'));
+			temp = s_save(ctx, create_token(ctx, "cat", TOKEN_WORD, NONE));
 		else
-			temp = s_save(ctx, create_token(ctx, NULL, TOKEN_WORD, '0'));
+			temp = s_save(ctx, create_token(ctx, NULL, TOKEN_WORD, NONE));
 		*cmd = new_ast(ctx, AST_COMMAND, temp);
 		s_free(ctx, temp);
 		return ;

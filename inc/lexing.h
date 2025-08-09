@@ -32,7 +32,14 @@ typedef enum e_token_type
 	TOKEN_REDIR_IN,
 	TOKEN_REDIR_OUT,
 	TOKEN_REDIR_APPEND
-}	t_token_type;
+}			t_token_type;
+
+typedef enum e_quote
+{
+	NONE,
+	SINGLE,
+	DOUBLE
+}			t_quote;
 
 typedef struct s_lexing
 {
@@ -46,8 +53,8 @@ typedef struct s_token
 	t_token_type	type;
 	struct s_token	*next;
 	struct s_token	*prev;
+	t_quote			quote;
 	char			*value;
-	char			*expand;
 }	t_token;
 
 typedef struct s_wildcards
@@ -64,8 +71,7 @@ t_token	*tokenize(t_ctx *ctx, char *input);
 /* -- // Allocations \\ -- */
 void	free_tokens(t_ctx *ctx, t_token **list);
 void	add_token(t_token **head, t_token *new);
-t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, char typed);
-bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *content);
+t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote);
 
 /* -- // Handlers \\ -- */
 void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens);
