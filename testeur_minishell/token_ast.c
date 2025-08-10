@@ -272,7 +272,9 @@ int main(int argc, char **argv, char **envp)
 
 	char *refonte[] = {
 		"echo 'test'\"$USER*.\"c *rc",
-		"echo 'test'$\"USER*\".c *rc"
+		"echo 'test'$\"USER*\".c *rc",
+		"echo $USER $USER",
+		"echo *"
 	};
 
 	if (argc < 2)
@@ -292,7 +294,7 @@ int main(int argc, char **argv, char **envp)
 	else if (strcmp(argv[1], "5") == 0)
 		run_tests("refonte", refonte, sizeof(refonte) / sizeof(refonte[0]), &ctx);
 	else
-		fprintf(stderr, "Argument invalide. Utilise : 1, 2, 3 ou 4\n");
+		fprintf(stderr, "Argument invalide. Utilise : 1, 2, 3, 4 ou 5\n");
 
 	secure_exit(&ctx);
 

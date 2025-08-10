@@ -37,4 +37,6 @@ int		execute_ast(t_ctx *ctx, t_ast *node);
 int		exec_operators(t_ctx *ctx, t_ast *ast);
 int		exec_subshell(t_ctx *ctx, t_ast *subtree);
 
+void	expand_childs(t_ctx *ctx, t_ast *node);
+
 #endif

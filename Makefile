@@ -55,6 +55,7 @@ LST_PAR		=	redir.c				\
 LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
+				expand.c			\
 				cmd_utils.c			\
 				exec_bonus.c		\
 				builtin_exec.c		\
@@ -105,8 +106,9 @@ COLOR ?= false
 all:	$(NAME)
 
 $(NAME): $(LIBFT) $(OBJ) | $(D_OBJ) $(D_DEP) Makefile
+	@echo "\033[35mCompilation de $(NAME)...\033[0m"
 #	$(info ⏱️  Rebuild check: $?)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
 true:
@@ -121,7 +123,8 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-	$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
+	@$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
+	@echo "\033[34m$(NAME): $@ created\033[0m"
 
 -include $(DEPS)
 

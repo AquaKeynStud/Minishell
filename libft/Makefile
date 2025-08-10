@@ -60,7 +60,7 @@ all:	${NAME}
 
 ${NAME}:	${OBJS} ${HEADERS} ${MAKEFILE}
 	@ar -rcs $(NAME) $(OBJS)
-	@echo "$(GREEN)\n$(NAME): $(NAME) created$(RESET)"
+	@echo "$(GREEN)\n$(NAME): $(NAME) created$(RESET)\n\n"
 
 $(OBJ_DIR)/%.o: %.c ${HEADERS} ${MAKEFILE}
 	@$(MKDIR) $(dir $@) $(patsubst $(OBJ_DIR)%,$(DEP_DIR)%,$(dir $@))
