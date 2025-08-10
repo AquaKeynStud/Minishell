@@ -26,6 +26,7 @@ t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr)
 	node->childs = NULL;
 	node->sub_count = 0;
 	node->quote = curr->quote;
+	node->has_space = curr->has_space;
 	if (curr && curr->value)
 		node->value = s_save(ctx, ft_strdup(curr->value));
 	return (node);
@@ -41,6 +42,31 @@ void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child)
 	parent->childs = s_realloc(ctx, parent->childs, old_size, new_size);
 	parent->childs[parent->sub_count - 1] = child;
 }
+
+void remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
+{
+	int	i;
+
+	if (!parent || index < 0 || index >= parent->sub_count)
+		return;
+	free_ast(ctx, parent->childs[index]);
+	i = index;
+	while (i < parent->sub_count - 1)
+	{
+		parent->childs[i] = parent->childs[i + 1];
+		parent->childs[i]->sub_count--;
+		i++;
+	}
+	parent->sub_count--;
+	if (parent->sub_count == 0)
+	{
+		free(parent->childs);
+		parent->childs = NULL;
+	}
+	else
+		parent->childs = s_realloc(ctx, parent->childs, sizeof(t_ast *) * (parent->sub_count + 1), sizeof(t_ast *) * parent->sub_count);
+}
+
 
 void	*free_ast(t_ctx *ctx, t_ast *node)
 {

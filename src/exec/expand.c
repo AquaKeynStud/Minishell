@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 06:13:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/10 11:21:50 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/10 23:51:29 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,12 +170,43 @@ void	add_wlcd_value(t_ctx *ctx, t_ast *node, char **matches)
 	while (matches[i])
 	{
 		tmp = create_token(ctx, matches[i], TOKEN_WORD, NONE);
+		set_merge_value(&tmp, true);
 		ast_add(ctx, node, new_ast(ctx, AST_COMMAND, tmp));
 		free_tokens(ctx, &tmp);
 		i++;
 	}
 	double_free(ctx, (void **)matches, 0);
 }
+
+void merge_ast(t_ctx *ctx, t_ast *node)
+{
+	int	i;
+	t_ast *curr;
+	t_ast *next;
+
+	i = 0;
+	if (!node || !node->childs)
+		return;
+	while (i < node->sub_count - 1)
+	{
+		curr = node->childs[i];
+		next = node->childs[i + 1];
+		if (!curr || !next)
+		{
+			i++;
+			continue;
+		}
+		if (!next->has_space)
+		{
+			curr->value = ft_strjoin_free(ctx, curr->value, next->value);
+			next->value = NULL;
+			remove_ast_child(ctx, node, i + 1);
+		}
+		else
+			i++;
+	}
+}
+
 
 void	expand_childs(t_ctx *ctx, t_ast *node)
 {
@@ -203,5 +234,5 @@ void	expand_childs(t_ctx *ctx, t_ast *node)
 		}
 		i++;
 	}
-	return ;
+	return (merge_ast(ctx, node));
 }

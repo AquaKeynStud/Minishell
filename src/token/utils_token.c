@@ -16,6 +16,7 @@ void	init_s(t_lexing *s, char *input)
 {
 	s->i = 0;
 	s->str = input;
+	s->has_space = true;
 }
 
 t_token	*get_last_token(t_token *tokens)

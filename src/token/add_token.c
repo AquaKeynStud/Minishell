@@ -28,6 +28,14 @@ void	free_tokens(t_ctx *ctx, t_token **list)
 	*list = NULL;
 }
 
+t_token	*set_merge_value(t_token **token, bool has_space)
+{
+	if (!*token)
+		return (*token);
+	(*token)->has_space = has_space;
+	return (*token);
+}
+
 t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote)
 {
 	t_token	*token;
