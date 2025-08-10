@@ -43,6 +43,9 @@ static void	remove_env_var(t_ctx *ctx, char *key, t_env **env)
 			s_free(ctx, tmp->key);
 			s_free(ctx, tmp->value);
 			s_free(ctx, tmp);
+			printf("ctx->env: %p\n", (void *)ctx->env);
+			for (t_env *e = ctx->env; e; e = e->next)
+				printf("  %s=%s\n", e->key, e->value);
 			return ;
 		}
 		prev = tmp;
@@ -50,7 +53,7 @@ static void	remove_env_var(t_ctx *ctx, char *key, t_env **env)
 	}
 }
 
-int	ft_unset(t_ctx *ctx, char **args, t_env *env)
+int	ft_unset(t_ctx *ctx, char **args)
 {
 	int		i;
 	int		exit_code;
@@ -66,7 +69,7 @@ int	ft_unset(t_ctx *ctx, char **args, t_env *env)
 	exit_code = is_option(args);
 	while (args[i])
 	{
-		remove_env_var(ctx, args[i], &env);
+		remove_env_var(ctx, args[i], &ctx->env);
 		i++;
 	}
 	s_free(ctx, args);

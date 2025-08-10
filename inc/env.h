@@ -30,13 +30,13 @@ typedef struct s_env
 
 /* -- Functions -- */
 int		ft_echo(t_ctx *ctx, char **args);
+int		ft_unset(t_ctx *ctx, char **args);
 int		double_dot(t_ctx *ctx, char **args);
-int		ft_pwd(t_ctx *ctx, char **args, void *env);
 int		ft_cd(t_ctx *ctx, char **args, t_env *env);
-int		ft_unset(t_ctx *ctx, char **args, t_env *env);
+int		ft_pwd(t_ctx *ctx, char **args, void *env);
+int		ft_exit(t_ctx *ctx, int argc, char **args);
 int		ft_export(t_ctx *ctx, char **args, t_env **env);
 int		ft_env(t_ctx *ctx, t_env *env, int argc, char **args);
-int		ft_exit(t_ctx *ctx, int argc, char **args);
 
 void	free_env(t_ctx *ctx, t_env **env);
 int		count_args(char **args);

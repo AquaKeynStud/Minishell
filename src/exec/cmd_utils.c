@@ -20,7 +20,7 @@ char	*get_from_env(t_env *env, const char *key)
 {
 	while (env)
 	{
-		if (!ft_strcmp(env->key, key))
+		if (env->key && key && !ft_strcmp(env->key, key))
 			return (env->value);
 		env = env->next;
 	}

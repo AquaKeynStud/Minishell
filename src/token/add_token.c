@@ -28,34 +28,6 @@ void	free_tokens(t_ctx *ctx, t_token **list)
 	*list = NULL;
 }
 
-// bool	add_or_merge(t_ctx *ctx, t_token **tok, t_lexing *lx, t_token *curr)
-// {
-// 	t_token	*last;
-// 	char	*merged;
-
-// 	if (!ctx || !tok || !curr)
-// 		return (lx->merge);
-// 	if (!lx->merge)
-// 	{
-// 		add_token(tok, curr);
-// 		if (curr->next)
-// 			return (lx->merge);
-// 		return (true);
-// 	}
-// 	last = get_last_token(*tok);
-// 	if (last && last->type == TOKEN_WORD)
-// 	{
-// 		merged = s_save(ctx, ft_strjoin_free(ctx, last->value, curr->value));
-// 		if (merged)
-// 			last->value = merged;
-// 		last->expand = s_save(ctx, ft_strjoin_free(ctx, last->expand, curr->expand));
-// 		last->next = curr->next;
-// 		s_free(ctx, curr);
-// 		return (true);
-// 	}
-// 	return (lx->merge);
-// }
-
 t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote)
 {
 	t_token	*token;

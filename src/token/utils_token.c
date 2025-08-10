@@ -15,7 +15,6 @@
 void	init_s(t_lexing *s, char *input)
 {
 	s->i = 0;
-	s->merge = false;
 	s->str = input;
 }
 

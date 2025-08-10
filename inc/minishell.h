@@ -48,10 +48,6 @@ typedef struct s_ctx
 	int			stdout_fd;
 	bool		err_in_tokens;
 	bool		has_found_err;
-	bool		sigint_in_heredoc;
-	bool		has_wildcard;
-	bool		*is_quoted;
-	int			index_wildcards;
 }			t_ctx;
 
 /* -- Macros -- */

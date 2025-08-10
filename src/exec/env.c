@@ -18,8 +18,8 @@
 static bool	fill_envp(t_ctx *ctx, char **envp, t_env *env)
 {
 	int		i;
-	char	*key_val_str;
 	t_env	*current;
+	char	*key_val_str;
 
 	i = 0;
 	current = env;

@@ -16,7 +16,6 @@
 #include "lexing.h"
 #include <stdlib.h>
 #include "parsing.h"
-#include <sys/stat.h>
 #include "minishell.h"
 #include "sigaction.h"
 #include <readline/history.h>
@@ -29,14 +28,11 @@ static void	init_context(t_ctx *ctx, char **argv, char **envp)
 	ctx->fds = NULL;
 	ctx->ast = NULL;
 	ctx->status = 0;
-	ctx->index_wildcards = 0;
 	ctx->input = NULL;
 	ctx->tokens = NULL;
 	ctx->allocs = NULL;
 	ctx->has_found_err = false;
 	ctx->err_in_tokens = false;
-	ctx->has_wildcard = false;
-	ctx->is_quoted = NULL;
 	ctx->env = init_env(ctx, argv, envp);
 	ctx->stdin_fd = dup(STDIN_FILENO);
 	ctx->stdout_fd = dup(STDOUT_FILENO);
@@ -49,7 +45,7 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 {
 	free_tokens(*ctx, tokens);
 	free_ast(*ctx, *ast);
-	close_unregistered_fds(*ctx);
+	close_all_fds(&(*ctx)->fds);
 	(*ctx)->ast = NULL;
 	(*ctx)->tokens = NULL;
 	(*ctx)->has_found_err = false;

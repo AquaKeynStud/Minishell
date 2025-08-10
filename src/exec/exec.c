@@ -127,7 +127,7 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 		return (ctx->status);
 	if (node->type == AST_PIPE)
 		ctx->status = exec_pipe(ctx, node);
-	else if (node->type == AST_REDIR)
+	else if (node->type == AST_REDIR && node->fd == -1)
 		ctx->status = exec_redir(ctx, node);
 	else if (node->type == AST_AND || node->type == AST_OR)
 		ctx->status = exec_operators(ctx, node);

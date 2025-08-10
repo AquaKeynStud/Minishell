@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:48:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/09 23:00:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/10 15:26:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op)
 	else
 		add_token(tokens, create_token(ctx, value, TOKEN_AND, NONE));
 	s_free(ctx, value);
-	s->merge = false;
 }
 
 void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens)
@@ -52,7 +51,6 @@ void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	if (token)
 		add_token(tokens, token);
 	(s->i)++;
-	s->merge = false;
 }
 
 void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens)
@@ -79,7 +77,6 @@ void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens)
 		add_token(tokens, token);
 	s_free(ctx, str);
 	s->i += len;
-	s->merge = false;
 }
 
 void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)

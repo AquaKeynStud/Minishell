@@ -64,7 +64,7 @@ int	exec_builtin(t_ctx *ctx, char **args, t_env *env)
 	if (!ft_strcmp(args[0], "export"))
 		return (ft_export(ctx, args, &env));
 	if (!ft_strcmp(args[0], "unset"))
-		return (ft_unset(ctx, args, env));
+		return (ft_unset(ctx, args));
 	if (!ft_strcmp(args[0], "env"))
 		return (verif_env(ctx, args, env));
 	if (!ft_strcmp(args[0], "exit"))

@@ -24,10 +24,7 @@ t_token	*tokenize(t_ctx *ctx, char *input)
 	while (input[s.i])
 	{
 		if (is_whitespace(input[s.i]))
-		{
 			s.i++;
-			s.merge = false;
-		}
 		else if (s.str[s.i] == '"' || s.str[s.i] == '\'')
 			handle_quotes(ctx, &s, &tokens, s.str[s.i]);
 		else if (s.str[s.i] == '|' || s.str[s.i] == '&')

@@ -74,43 +74,21 @@ char	*append_char(t_ctx *ctx, char *res, char c)
 	return (final);
 }
 
-// t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res)
-// {
-// 	char	*home;
-// 	char	*path;
-
-// 	*s += 1;
-// 	s_free(ctx, *res);
-// 	home = s_save(ctx, ft_strdup(check_env(ctx->env, "HOME")));
-// 	if (!home)
-// 	{
-// 		home = s_save(ctx, ft_strdup(*s));
-// 		if (!home)
-// 			return (NULL);
-// 		return (simple_tok(ctx, lx, &home, 0));
-// 	}
-// 	path = s_save(ctx, ft_strjoin(home, *s));
-// 	if (!path)
-// 		return (simple_tok(ctx, lx, &home, 0));
-// 	s_free(ctx, home);
-// 	return (simple_tok(ctx, lx, &path, 0));
-// }
-
 void	print_status(t_ctx *ctx)
 {
 	char	*cwd;
 
 	if (ctx && ctx->status == 0)
-		ft_printf("\033[0m\033[1m\033[32m%s  ", "➜");
+		ft_printf("\033[0m\033[1m\033[32m%s  \033[0m", "➜");
 	else
-		ft_printf("\033[1m\033[31m%s  ", "➜");
+		ft_printf("\033[1m\033[31m%s  \033[0m", "➜");
 	if (ctx && get_from_env(ctx->env, "USER"))
-		ft_printf("\033[35m[%s] ", get_from_env(ctx->env, "USER"));
-	cwd = getcwd(NULL, 0);
+		ft_printf("\033[35m\033[1m[%s] \033[0m", get_from_env(ctx->env, "USER"));
+	cwd = s_save(ctx, getcwd(NULL, 0));
 	if (cwd)
 	{
-		ft_printf("\033[36m%s ", cwd);
+		ft_printf("\033[36m\033[1m%s \033[0m", cwd);
 		s_free(ctx, cwd);
 	}
-	ft_printf("\033[33m%s \033[0m\n", "✗");
+	ft_printf("\033[33m\033[1m%s \033[0m\n", "✗");
 }
