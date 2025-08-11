@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 06:13:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/10 23:51:29 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/11 22:05:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ void merge_ast(t_ctx *ctx, t_ast *node)
 			i++;
 			continue;
 		}
-		if (!next->has_space)
+		if (next->value && !next->has_space)
 		{
 			curr->value = ft_strjoin_free(ctx, curr->value, next->value);
 			next->value = NULL;

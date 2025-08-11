@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:48:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/10 23:06:42 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/11 20:43:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 
 	(s->i)++;
 	start = s->i;
+	new_token = NULL;
 	while (s->str[s->i] && s->str[s->i] != quote)
 		(s->i)++;
 	if (s->str[s->i] != quote)
@@ -111,7 +112,8 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	else if (len > 0)
 		new_token = create_token(ctx, content, TOKEN_WORD, SINGLE);
 	s_free(ctx, content);
-	add_token(tokens, set_merge_value(&new_token, s->has_space));
+	if (new_token)
+		add_token(tokens, set_merge_value(&new_token, s->has_space));
 	s->has_space = false;
 }
 

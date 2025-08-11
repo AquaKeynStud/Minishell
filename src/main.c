@@ -68,7 +68,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	}
 	ast = parse_input(ctx, tokens);
 	sig_set(SIG_DFL);
-	if (!get_redir(ctx, ast, tokens) || !syntax_error(ctx, tokens))
+	if (!get_redir(ctx, ast, tokens))
 		return (destroy_command(&ctx, &tokens, &ast));
 	close_unregistered_fds(ctx);
 	sig_init();
@@ -104,6 +104,7 @@ static void	get_input_loop(t_ctx *ctx)
 		ctx->input = NULL;
 	}
 	rl_clear_history();
+	printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -111,12 +112,12 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		if (isatty(STDERR_FILENO))
-			ft_dprintf(2, "minishell: interactive mode not allowed\n");
-		exit(EXIT_FAILURE);
-	}
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	// {
+	// 	if (isatty(STDERR_FILENO))
+	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
+	// 	exit(EXIT_FAILURE);
+	// }
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();

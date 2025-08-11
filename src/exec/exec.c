@@ -136,6 +136,8 @@ int	execute_ast(t_ctx *ctx, t_ast *node)
 	else if (node->type == AST_COMMAND && node->value)
 	{
 		expand_childs(ctx, node);
+		if (!syntax_error(ctx, ctx->tokens))
+			return (ctx->status);
 		if (node->value && !ft_strcmp(node->value, "!"))
 			ctx->status = 1;
 		else if (node->value && is_builtin(node->value))

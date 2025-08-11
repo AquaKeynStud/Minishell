@@ -27,7 +27,7 @@ t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr)
 	node->sub_count = 0;
 	node->quote = curr->quote;
 	node->has_space = curr->has_space;
-	if (curr && curr->value)
+	if (curr && curr->value && *curr->value)
 		node->value = s_save(ctx, ft_strdup(curr->value));
 	return (node);
 }

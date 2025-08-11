@@ -2,3 +2,9 @@
 .pdf
 .swp
 .vscode
+.dep/
+.obj/
+minishell
+testeur_minishell
+libft/obj
+libft/libft.a

@@ -23,7 +23,11 @@ static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 		*cmd = new_ast(ctx, AST_COMMAND, *curr);
 	stub = *cmd;
 	while (stub->type == AST_REDIR)
+	{
+		if (!stub->childs[1])
+			break ;
 		stub = stub->childs[1];
+	}
 	if (stub->value)
 		s_free(ctx, stub->value);
 	stub->value = s_save(ctx, ft_strdup((*curr)->value));
