@@ -19,7 +19,7 @@
 #include "minishell.h"
 #include "sigaction.h"
 
-static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
+static int	exec_side_pipe(t_ctx *ctx, t_ast *ast, int fds[2], bool is_l_side)
 {
 	int	pid;
 
@@ -33,7 +33,7 @@ static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 			dup2(fds[0], STDIN_FILENO);
 		close_fd(&ctx->fds, fds[0]);
 		close_fd(&ctx->fds, fds[1]);
-		ctx->status = execute_ast(ctx, node);
+		ctx->status = execute_ast(ctx, ast);
 		secure_exit(ctx);
 	}
 	else if (pid < 0)
@@ -41,7 +41,7 @@ static int	exec_side_pipe(t_ctx *ctx, t_ast *node, int fds[2], bool is_l_side)
 	return (pid);
 }
 
-static int	exec_pipe(t_ctx *ctx, t_ast *node)
+static int	exec_pipe(t_ctx *ctx, t_ast *ast)
 {
 	int	ret;
 	int	fds[2];
@@ -54,8 +54,8 @@ static int	exec_pipe(t_ctx *ctx, t_ast *node)
 	register_fd(&ctx->fds, fds[0]);
 	register_fd(&ctx->fds, fds[1]);
 	sig_set(SIG_IGN);
-	pid_left = exec_side_pipe(ctx, node->childs[0], fds, true);
-	pid_right = exec_side_pipe(ctx, node->childs[1], fds, false);
+	pid_left = exec_side_pipe(ctx, ast->childs[0], fds, true);
+	pid_right = exec_side_pipe(ctx, ast->childs[1], fds, false);
 	close_fd(&ctx->fds, fds[0]);
 	close_fd(&ctx->fds, fds[1]);
 	waitpid(pid_left, NULL, 0);
@@ -64,26 +64,26 @@ static int	exec_pipe(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(ctx->status));
 }
 
-static int	exec_redir(t_ctx *ctx, t_ast *node)
+static int	exec_redir(t_ctx *ctx, t_ast *ast)
 {
 	int	fd;
 	int	pid;
 
-	fd = pid_verification(ctx, node);
+	fd = pid_verification(ctx, ast);
 	if (fd < 0)
 		return (ctx->status);
 	pid = fork();
 	if (pid < 0)
-		return (redir_err(ctx, node, 0));
+		return (redir_err(ctx, ast, 0));
 	else if (pid == 0)
 	{
 		sig_set(SIG_DFL);
-		if (node->value[0] == '<')
+		if (ast->value[0] == '<')
 			dup2(fd, STDIN_FILENO);
 		else
 			dup2(fd, STDOUT_FILENO);
 		close(fd);
-		ctx->status = execute_ast(ctx, node->childs[1]);
+		ctx->status = execute_ast(ctx, ast->childs[1]);
 		secure_exit(ctx);
 	}
 	close_fd(&ctx->fds, fd);
@@ -92,7 +92,7 @@ static int	exec_redir(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(ctx->status));
 }
 
-static int	exec_command(t_ctx *ctx, t_ast *node)
+static int	exec_command(t_ctx *ctx, t_ast *ast)
 {
 	int		pid;
 	char	*path;
@@ -100,8 +100,8 @@ static int	exec_command(t_ctx *ctx, t_ast *node)
 	char	**args;
 
 	envp = env_to_envp(ctx, ctx->env);
-	args = ast_to_argv(ctx, node);
-	path = get_path(ctx, node->value, ctx->env);
+	args = ast_to_argv(ctx, ast);
+	path = get_path(ctx, ast->value, ctx->env);
 	if (!path || !args || !envp)
 		return (execve_err(ctx, args));
 	sig_set(SIG_IGN);
@@ -121,29 +121,48 @@ static int	exec_command(t_ctx *ctx, t_ast *node)
 	return (s_exec_exit(ctx->status));
 }
 
-int	execute_ast(t_ctx *ctx, t_ast *node)
+bool	syntax_err(t_ctx *ctx, t_ast *ast)
 {
-	if (!node)
-		return (ctx->status);
-	if (node->type == AST_PIPE)
-		ctx->status = exec_pipe(ctx, node);
-	else if (node->type == AST_REDIR && node->fd == -1)
-		ctx->status = exec_redir(ctx, node);
-	else if (node->type == AST_AND || node->type == AST_OR)
-		ctx->status = exec_operators(ctx, node);
-	else if (node->type == AST_SUB)
-		ctx->status = exec_subshell(ctx, node->childs[0]);
-	else if (node->type == AST_COMMAND && node->value)
+	int	i;
+
+	if (ast->type == AST_REDIR && !ft_strcmp(ast->value, "<<"))
 	{
-		expand_childs(ctx, node);
-		if (!syntax_error(ctx, ctx->tokens))
-			return (ctx->status);
-		if (node->value && !ft_strcmp(node->value, "!"))
+		if (!ast->childs[0] || !ast->childs[1])
+			return (true);
+	}
+	i = 0;
+	while (i < ast->sub_count)
+	{
+		if (syntax_err(ctx, ast->childs[i]))
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+int	execute_ast(t_ctx *ctx, t_ast *ast)
+{
+	if (!ast)
+		return (ctx->status);
+	if (ast->type == AST_PIPE)
+		ctx->status = exec_pipe(ctx, ast);
+	else if (ast->type == AST_REDIR && ast->fd == -1)
+		ctx->status = exec_redir(ctx, ast);
+	else if (ast->type == AST_AND || ast->type == AST_OR)
+		ctx->status = exec_operators(ctx, ast);
+	else if (ast->type == AST_SUB)
+		ctx->status = exec_subshell(ctx, ast->childs[0]);
+	else if (ast->type == AST_COMMAND && ast->value)
+	{
+		expand_childs(ctx, ast);
+		// if (!syntax_error(ctx, ctx->tokens))
+		// 	return (ctx->status);
+		if (ast->value && !ft_strcmp(ast->value, "!"))
 			ctx->status = 1;
-		else if (node->value && is_builtin(node->value))
-			ctx->status = exec_builtin(ctx, ast_to_argv(ctx, node), ctx->env);
+		else if (ast->value && is_builtin(ast->value))
+			ctx->status = exec_builtin(ctx, ast_to_argv(ctx, ast), ctx->env);
 		else
-			ctx->status = exec_command(ctx, node);
+			ctx->status = exec_command(ctx, ast);
 	}
 	return (ctx->status);
 }

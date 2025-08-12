@@ -58,26 +58,26 @@ int	exit_with_code(t_ctx *ctx, int code)
 	return (ctx->status);
 }
 
-bool	check_parenthesis(t_ctx *ctx, t_token *tokens)
-{
-	t_token	*curr;
-	int		counter;
+// bool	check_parenthesis(t_ctx *ctx, t_token *tokens)
+// {
+// 	t_token	*curr;
+// 	int		counter;
 
-	counter = 0;
-	curr = tokens;
-	while (curr)
-	{
-		if (curr->type == TOKEN_LPAR)
-			counter++;
-		else if (curr->type == TOKEN_RPAR)
-		{
-			counter--;
-			if (counter < 0)
-				return (parsing_err(ctx, ")", 2));
-		}
-		curr = curr->next;
-	}
-	if (counter != 0)
-		return (parsing_err(ctx, "(", 2));
-	return (true);
-}
+// 	counter = 0;
+// 	curr = tokens;
+// 	while (curr)
+// 	{
+// 		if (curr->type == TOKEN_LPAR)
+// 			counter++;
+// 		else if (curr->type == TOKEN_RPAR)
+// 		{
+// 			counter--;
+// 			if (counter < 0)
+// 				return (parsing_err(ctx, ")", 2));
+// 		}
+// 		curr = curr->next;
+// 	}
+// 	if (counter != 0)
+// 		return (parsing_err(ctx, "(", 2));
+// 	return (true);
+// }

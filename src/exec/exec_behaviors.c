@@ -82,6 +82,8 @@ static int	here_doc(t_ctx *ctx, char *eof)
 	char	*prompt;
 	int		pipefd[2];
 
+	if (!eof || !*eof)
+		return (-1);
 	if (pipe(pipefd) < 0)
 		return (-1);
 	sig_set(SIG_IGN);
@@ -103,30 +105,29 @@ static int	here_doc(t_ctx *ctx, char *eof)
 	return (pipefd[0]);
 }
 
-int	get_redir(t_ctx *ctx, t_ast *ast, t_token *tok)
+int	check_heredoc(t_ctx *ctx, t_ast *ast)
 {
 	int	fd;
 
 	if (!ast)
 		return (1);
 	if (ast->type == AST_SUB)
-		return (get_redir(ctx, ast->childs[0], tok));
+		return (check_heredoc(ctx, ast->childs[0]));
 	if (ast->type == AST_PIPE || ast->type == AST_AND || ast->type == AST_OR)
-		return (get_redir(ctx, ast->childs[0], tok)
-			&& get_redir(ctx, ast->childs[1], tok));
+		return (check_heredoc(ctx, ast->childs[0]) && check_heredoc(ctx, ast->childs[1]));
 	else if (ast->type == AST_REDIR)
 	{
 		if (!ft_strcmp(ast->value, "<<"))
 		{
-			ctx->ast = ast;
-			ctx->tokens = tok;
+			if (!ast->childs[0]->value || !*ast->childs[0]->value)
+				return (parsing_err(ctx, "newline", 2));
 			fd = here_doc(ctx, ast->childs[0]->value);
 			if (fd < 0)
 				return (0);
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		if (!get_redir(ctx, ast->childs[1], tok))
+		if (!check_heredoc(ctx, ast->childs[1]))
 			return (0);
 	}
 	return (1);

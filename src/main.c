@@ -55,25 +55,59 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 	return ;
 }
 
+bool	tokens_err(t_ctx *ctx, t_token *tokens)
+{
+	t_token *tmp;
+	int		lpar_counter;
+
+	tmp = tokens;
+	lpar_counter = 0;
+	if (tmp->type == TOKEN_AND || tmp->type == TOKEN_OR || tmp->type == TOKEN_PIPE || tmp->type == TOKEN_RPAR)
+		return (parsing_err(ctx, tmp->value, 2));
+	while (tmp->next)
+	{
+		if (tmp->type == TOKEN_LPAR)
+		{
+			if (tmp->next->type != TOKEN_WORD && tmp->next->type != TOKEN_LPAR)
+				return (parsing_err(ctx, tmp->next->value, 2));
+			lpar_counter++;
+		}
+		else if (tmp->type == TOKEN_RPAR)
+		{
+			if (lpar_counter <= 0)
+				return (parsing_err(ctx, tmp->value, 2));
+			lpar_counter--;
+		}
+		else if ((tmp->type == TOKEN_HEREDOC || tmp->type == TOKEN_REDIR_APPEND || tmp->type == TOKEN_REDIR_IN || tmp->type == TOKEN_REDIR_OUT) && tmp->next->type != TOKEN_WORD)
+			return (parsing_err(ctx, tmp->next->value, 2));
+		else if (tmp->type != TOKEN_WORD && tmp->next->type != TOKEN_WORD)
+			return (parsing_err(ctx, tmp->next->value, 2));
+		tmp = tmp->next;
+	}
+	if (tmp->type != TOKEN_WORD && tmp->type != TOKEN_RPAR)
+		return (parsing_err(ctx, "newline", 2));
+	return (true);
+}
+
 static void	command_handler(t_ctx *ctx, char *cmd)
 {
 	t_ast	*ast;
 	t_token	*tokens;
 
 	tokens = tokenize(ctx, cmd);
-	if (!check_parenthesis(ctx, tokens))
+	if (!tokens_err(ctx, tokens))
 	{
 		close_unregistered_fds(ctx);
 		return (free_tokens(ctx, &tokens));
 	}
 	ast = parse_input(ctx, tokens);
+	ctx->ast = ast;
+	ctx->tokens = tokens;
 	sig_set(SIG_DFL);
-	if (!get_redir(ctx, ast, tokens))
+	if (!check_heredoc(ctx, ast))
 		return (destroy_command(&ctx, &tokens, &ast));
 	close_unregistered_fds(ctx);
 	sig_init();
-	ctx->ast = ast;
-	ctx->tokens = tokens;
 	execute_ast(ctx, ast);
 	destroy_command(&ctx, &tokens, &ast);
 }

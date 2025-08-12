@@ -20,9 +20,9 @@
 /* -- Functions -- */
 int		execve_err(t_ctx *ctx, char **value);
 int		exit_with_code(t_ctx *ctx, int code);
+int		check_heredoc(t_ctx *ctx, t_ast *ast);
 int		pid_verification(t_ctx *ctx, t_ast *node);
 int		redir_err(t_ctx *ctx, t_ast *ast, int exit_code);
-int		get_redir(t_ctx *ctx, t_ast *ast, t_token *tokens);
 
 char	**env_to_envp(t_ctx *ctx, t_env *env);
 char	**ast_to_argv(t_ctx *ctx, t_ast *node);
