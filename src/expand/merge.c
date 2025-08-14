@@ -6,14 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 09:22:53 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/14 17:00:12 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include "minishell.h"
 
-void	split_ifs(t_ctx *ctx, t_ast *ast)
+void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast)
 {
 	int		i;
 	t_token	*tmp;
@@ -32,7 +32,10 @@ void	split_ifs(t_ctx *ctx, t_ast *ast)
 	while (splitted[i])
 	{
 		tmp = create_token(ctx, splitted[i], TOKEN_WORD, NONE);
-		ast_add_first(ctx, ast, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)));
+		if (!parent)
+			ast_add_first(ctx, ast, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)));
+		else
+			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)));
 		free_tokens(ctx, &tmp);
 		i++;
 	}
@@ -67,15 +70,10 @@ void	merge_ast(t_ctx *ctx, t_ast *node)
 		return;
 	if (node->type == AST_REDIR)
 		return (merge_redir(ctx, node));
-	if (node->childs[0] && !node->childs[0]->has_space)
-	{
-		node->value = ft_strjoin_free(ctx, node->value, node->childs[0]->value);
-		node->childs[0]->value = NULL;
-		remove_ast_child(ctx, node, 0);
-	}
 	if (node->value && node->sub_count == 1 && !node->childs[0]->has_space)
 	{
 		node->value = ft_strjoin_free(ctx, node->value, node->childs[0]->value);
+		node->quote = node->childs[0]->quote;
 		node->childs[0]->value = NULL;
 		remove_ast_child(ctx, node, 0);
 	}
@@ -91,10 +89,18 @@ void	merge_ast(t_ctx *ctx, t_ast *node)
 		if (next->value && !next->has_space)
 		{
 			curr->value = ft_strjoin_free(ctx, curr->value, next->value);
+			curr->quote = next->quote;
 			next->value = NULL;
 			remove_ast_child(ctx, node, i + 1);
 		}
 		else
 			i++;
+	}
+	if (node->value && node->sub_count > 0 && !node->childs[0]->has_space)
+	{
+		node->value = ft_strjoin_free(ctx, node->value, node->childs[0]->value);
+		node->quote = node->childs[0]->quote;
+		node->childs[0]->value = NULL;
+		remove_ast_child(ctx, node, 0);
 	}
 }

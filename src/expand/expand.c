@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 06:13:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 09:22:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/14 16:35:58 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ t_ast	*expand_childs(t_ctx *ctx, t_ast *node)
 	expand_args(ctx, node);
 	if (!check_parent(ctx, node))
 		return (NULL);
-	split_ifs(ctx, node);
+	split_ifs(ctx, NULL, node);
 	childs = node->childs;
 	sub = node->sub_count;
 	while (childs && i < sub)
@@ -132,10 +132,12 @@ t_ast	*expand_childs(t_ctx *ctx, t_ast *node)
 			sub = node->sub_count;
 			continue ;
 		}
-		split_ifs(ctx, childs[i]);
+		split_ifs(ctx, node, childs[i]);
+		childs = node->childs;
 		sub = node->sub_count;
 		i++;
 	}
 	merge_ast(ctx, node);
+	glob_ast(ctx, node);
 	return (node);
 }

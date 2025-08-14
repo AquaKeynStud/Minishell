@@ -40,7 +40,8 @@ int		exec_subshell(t_ctx *ctx, t_ast *subtree);
 t_ast	*expand_childs(t_ctx *ctx, t_ast *node);
 void 	merge_ast(t_ctx *ctx, t_ast *node);
 void 	sort_char_table(char **arr);
-void	split_ifs(t_ctx *ctx, t_ast *ast);
-void	set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child, int i);
+void	globbing_all(t_ctx *ctx, t_ast *node);
+void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast);
+void	glob_ast(t_ctx *ctx, t_ast *node);
 
 #endif

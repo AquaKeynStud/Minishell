@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:27:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 07:24:42 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/14 16:44:42 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,28 @@ void	set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child, int i)
 			}
 			double_free(ctx, (void **)matches, 0);
 		}
+	}
+}
+
+void	glob_ast(t_ctx *ctx, t_ast *node)
+{
+	int	i;
+
+	if (!node)
+		return ;
+	if (node->type == AST_COMMAND)
+	{
+		i = 0;
+		while (i < node->sub_count && node->childs && node->childs[i])
+		{
+			set_globbing(ctx, node, node->childs[i], 1);
+			i++;
+		}
+	}
+	i = 0;
+	while (i < node->sub_count && node->childs && node->childs[i])
+	{
+		glob_ast(ctx, node->childs[i]);
+		i++;
 	}
 }
