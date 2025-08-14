@@ -144,7 +144,7 @@ static void	get_input_loop(t_ctx *ctx)
 		ctx->input = NULL;
 	}
 	rl_clear_history();
-	printf("exit\n");
+	ft_printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)

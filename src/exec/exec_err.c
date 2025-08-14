@@ -64,6 +64,7 @@ int	execve_err(t_ctx *ctx, char **value)
 	{
 		ft_dprintf(2, "minishell: ");
 		ft_dprintf(2, ".: filename argument required\n");
+		ft_dprintf(2, ".: usage: . filename [arguments]\n");
 		return (exit_with_code(ctx, 2));
 	}
 	if (saved_errno == ENOENT || (*value && !ft_strcmp(*value, "..")))

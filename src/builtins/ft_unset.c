@@ -43,9 +43,6 @@ static void	remove_env_var(t_ctx *ctx, char *key, t_env **env)
 			s_free(ctx, tmp->key);
 			s_free(ctx, tmp->value);
 			s_free(ctx, tmp);
-			printf("ctx->env: %p\n", (void *)ctx->env);
-			for (t_env *e = ctx->env; e; e = e->next)
-				printf("  %s=%s\n", e->key, e->value);
 			return ;
 		}
 		prev = tmp;

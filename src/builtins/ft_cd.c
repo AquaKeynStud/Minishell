@@ -19,7 +19,7 @@ char	*check_env(t_env *env, char *req)
 	path = get_from_env(env, req);
 	if (!path)
 	{
-		ft_dprintf(2, "cd: %s not set\n", req);
+		ft_dprintf(2, "minishell: cd: %s not set\n", req);
 		return (NULL);
 	}
 	return (path);

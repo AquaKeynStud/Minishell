@@ -140,6 +140,23 @@ bool	syntax_err(t_ctx *ctx, t_ast *ast)
 	return (false);
 }
 
+bool	has_one_redir(t_ctx *ctx, t_ast *ast)
+{
+	char	*err;
+
+	err = "ambiguous redirect";
+	if (ast->sub_count > 2)
+	{
+		if (ast->sub_count && ast->childs)
+			ft_dprintf(2, "minishell: %s: %s\n", ast->childs[0]->value, err);
+		else
+			perror("minishell");
+		ctx->status = 1;
+		return (false);
+	}
+	return (true);
+}
+
 int	execute_ast(t_ctx *ctx, t_ast *ast)
 {
 	ast = expand_childs(ctx, ast);
@@ -147,7 +164,7 @@ int	execute_ast(t_ctx *ctx, t_ast *ast)
 		return (ctx->status);
 	if (ast->type == AST_PIPE)
 		ctx->status = exec_pipe(ctx, ast);
-	else if (ast->type == AST_REDIR && ast->fd == -1)
+	else if (ast->type == AST_REDIR && ast->fd == -1 && has_one_redir(ctx, ast))
 		ctx->status = exec_redir(ctx, ast);
 	else if (ast->type == AST_AND || ast->type == AST_OR)
 		ctx->status = exec_operators(ctx, ast);
