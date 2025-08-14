@@ -164,22 +164,22 @@ supp_file: | $(D_OBJ)
 valgrind: supp_file
 	@$(MAKE)
 	@clear
-	valgrind							\
-		--leak-check=full					\
-		--show-leak-kinds=all				\
-		--track-origins=yes 				\
-		--track-fds=yes						\
-		--suppressions=$(D_OBJ)$(SUPP_FILE)	\
+	valgrind										\
+		--leak-check=full								\
+		--show-leak-kinds=all							\
+		--track-origins=yes 							\
+		--track-fds=yes									\
+		--suppressions=$(CURDIR)$(D_OBJ)$(SUPP_FILE)	\
 		./$(NAME)
 
 childs: supp_file
 	@$(MAKE)
 	@clear
-	valgrind							\
-		--leak-check=full					\
-		--show-leak-kinds=all				\
-		--track-origins=yes 				\
-		--track-fds=yes						\
-		--trace-children=yes				\
-		--suppressions=$(D_OBJ)$(SUPP_FILE)	\
+	valgrind										\
+		--leak-check=full								\
+		--show-leak-kinds=all							\
+		--track-origins=yes 							\
+		--track-fds=yes									\
+		--trace-children=yes							\
+		--suppressions=$(CURDIR)/$(D_OBJ)$(SUPP_FILE)	\
 		./$(NAME)
