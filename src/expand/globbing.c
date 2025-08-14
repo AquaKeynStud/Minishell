@@ -6,24 +6,24 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:27:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 17:38:24 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/14 22:57:42 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static int match(const char *str, const char *pattern)
+static int	match(const char *str, const char *pattern)
 {
 	if (*pattern == '\0')
 		return (*str == '\0');
 	if (*pattern == '*')
-		return (match(str, pattern+1) || (*str && match(str+1, pattern)));
+		return (match(str, pattern+1) || (*str && match(str + 1, pattern)));
 	if (*pattern == *str)
-		return (match(str+1, pattern+1));
+		return (match(str + 1, pattern + 1));
 	return (0);
 }
 
-static void sort_char_table(char **arr)
+static void	sort_char_table(char **arr)
 {
 	int		i;
 	int		j;
@@ -51,7 +51,7 @@ static void sort_char_table(char **arr)
 	}
 }
 
-static char **expand_glob(t_ctx *ctx, const char *pattern, int count)
+static char	**expand_glob(t_ctx *ctx, const char *pattern, int count)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -60,14 +60,14 @@ static char **expand_glob(t_ctx *ctx, const char *pattern, int count)
 	matches = NULL;
 	dir = opendir(".");
 	if (!dir)
-		return NULL;
+		return (NULL);
 	while (1)
 	{
 		entry = readdir(dir);
 		if (!entry)
 			break ;
 		if (entry->d_name[0] == '.' && pattern[0] != '.')
-			continue;
+			continue ;
 		if (match(entry->d_name, pattern))
 		{
 			count++;
@@ -80,58 +80,53 @@ static char **expand_glob(t_ctx *ctx, const char *pattern, int count)
 	return (matches);
 }
 
-void set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child)
+void	set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child)
 {
-    t_token *tmp;
-    char    **matches;
-    int      match_i;
+	t_token	*tmp;
+	int		match_i;
+	char	**matches;
 
-    if (child->quote == NONE && ft_strchr(child->value, '*'))
-    {
-        matches = expand_glob(ctx, child->value, 0);
-        if (matches && matches[0] && parent->childs)
-        {
-            sort_char_table(matches);
-
-            // Si c'est une cible de redirection ET qu'on a plusieurs matches => ne pas remplacer
-            if (!(parent->type == AST_REDIR && matches[1] != NULL))
-            {
-                s_free(ctx, child->value);
-                child->value = s_save(ctx, ft_strdup(matches[0]));
-            }
-
-            // Ajoute les autres matches
-            match_i = 1;
-            while (matches[match_i])
-            {
-                tmp = create_token(ctx, matches[match_i], TOKEN_WORD, NONE);
-                set_merge_value(&tmp, true);
-                ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp));
-                free_tokens(ctx, &tmp);
-                match_i++;
-            }
-            double_free(ctx, (void **)matches, 0);
-        }
-    }
+	if (child->quote == NONE && ft_strchr(child->value, '*'))
+	{
+		matches = expand_glob(ctx, child->value, 0);
+		if (matches && matches[0] && parent->childs)
+		{
+			sort_char_table(matches);
+			if (!(parent->type == AST_REDIR && matches[1] != NULL))
+			{
+				s_free(ctx, child->value);
+				child->value = s_save(ctx, ft_strdup(matches[0]));
+			}
+			match_i = 1;
+			while (matches[match_i])
+			{
+				tmp = create_token(ctx, matches[match_i], TOKEN_WORD, NONE);
+				set_merge_value(&tmp, true);
+				ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp));
+				free_tokens(ctx, &tmp);
+				match_i++;
+			}
+			double_free(ctx, (void **)matches, 0);
+		}
+	}
 }
 
-void glob_ast(t_ctx *ctx, t_ast *node)
+void	glob_ast(t_ctx *ctx, t_ast *node)
 {
-    int i;
+	int	i;
 
-    if (!node)
-        return;
-
-    i = 0;
-    while (i < node->sub_count && node->childs && node->childs[i])
-    {
-        set_globbing(ctx, node, node->childs[i]);
-        i++;
-    }
-    i = 0;
-    while (i < node->sub_count && node->childs && node->childs[i])
-    {
-        glob_ast(ctx, node->childs[i]);
-        i++;
-    }
+	i = 0;
+	if (!node)
+		return ;
+	while (i < node->sub_count && node->childs && node->childs[i])
+	{
+		set_globbing(ctx, node, node->childs[i]);
+		i++;
+	}
+	i = 0;
+	while (i < node->sub_count && node->childs && node->childs[i])
+	{
+		glob_ast(ctx, node->childs[i]);
+		i++;
+	}
 }

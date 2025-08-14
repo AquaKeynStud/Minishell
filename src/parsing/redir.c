@@ -53,7 +53,7 @@ static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 	{
 		temp = s_save(ctx, create_token(ctx, "", TOKEN_WORD, NONE));
 		set_merge_value(&temp, true);
-		*cmd = new_ast(ctx, AST_COMMAND, temp); 
+		*cmd = new_ast(ctx, AST_COMMAND, temp);
 		s_free(ctx, temp);
 		return ;
 	}

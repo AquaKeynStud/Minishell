@@ -14,7 +14,6 @@
 #include "parsing.h"
 #include "minishell.h"
 
-
 static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 {
 	t_ast	*stub;

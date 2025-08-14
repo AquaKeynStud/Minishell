@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 17:00:12 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/14 22:55:33 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,13 @@ void	merge_redir(t_ctx *ctx, t_ast *node)
 
 void	merge_ast(t_ctx *ctx, t_ast *node)
 {
-	int	i;
-	t_ast *curr;
-	t_ast *next;
+	int		i;
+	t_ast	*curr;
+	t_ast	*next;
 
 	i = 0;
 	if (!node || !node->childs || (node->type != AST_COMMAND && node->type != AST_REDIR))
-		return;
+		return ;
 	if (node->type == AST_REDIR)
 		return (merge_redir(ctx, node));
 	if (node->value && node->sub_count == 1 && !node->childs[0]->has_space)

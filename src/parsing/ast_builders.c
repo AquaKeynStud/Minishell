@@ -45,13 +45,14 @@ void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child)
 
 void	ast_add_first(t_ctx *ctx, t_ast *parent, t_ast *child)
 {
+	int		i;
 	size_t	old_size;
 	size_t	new_size;
 
 	old_size = sizeof(t_ast *) * parent->sub_count;
 	new_size = sizeof(t_ast *) * (++parent->sub_count);
 	parent->childs = s_realloc(ctx, parent->childs, old_size, new_size);
-	int i = parent->sub_count - 1;
+	i = parent->sub_count - 1;
 	while (i > 0)
 	{
 		parent->childs[i] = parent->childs[i - 1];
@@ -61,12 +62,12 @@ void	ast_add_first(t_ctx *ctx, t_ast *parent, t_ast *child)
 	parent->childs[0] = child;
 }
 
-void remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
+void	remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
 {
 	int	i;
 
 	if (!parent || index < 0 || index >= parent->sub_count)
-		return;
+		return ;
 	free_ast(ctx, parent->childs[index]);
 	i = index;
 	while (i < parent->sub_count - 1)
@@ -84,7 +85,6 @@ void remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
 	else
 		parent->childs = s_realloc(ctx, parent->childs, sizeof(t_ast *) * (parent->sub_count + 1), sizeof(t_ast *) * parent->sub_count);
 }
-
 
 void	*free_ast(t_ctx *ctx, t_ast *node)
 {

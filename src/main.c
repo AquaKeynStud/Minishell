@@ -57,7 +57,7 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 
 bool	tokens_err(t_ctx *ctx, t_token *tokens)
 {
-	t_token *tmp;
+	t_token	*tmp;
 	int		lpar_counter;
 
 	tmp = tokens;
@@ -152,12 +152,12 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	// {
-	// 	if (isatty(STDERR_FILENO))
-	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
-	// 	exit(EXIT_FAILURE);
-	// }
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	{
+		if (isatty(STDERR_FILENO))
+			ft_dprintf(2, "minishell: interactive mode not allowed\n");
+		exit(EXIT_FAILURE);
+	}
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();

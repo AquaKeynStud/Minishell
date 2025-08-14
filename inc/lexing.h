@@ -81,7 +81,6 @@ void	init_s(t_lexing *s, char *input);
 char	*append_char(t_ctx *ctx, char *res, char c);
 char	*has_expand(t_ctx *ctx, char type, char *s);
 
-
 char	*ft_strcpy(char *dst, const char *src);
 char	*ft_strcat(char *dest, const char *src);
 

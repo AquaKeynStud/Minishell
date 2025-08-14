@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:48:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/12 19:12:42 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/14 22:51:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	while (s->str[s->i] && s->str[s->i] != quote)
 		(s->i)++;
 	if (s->str[s->i] != quote)
-		return ; // Ici on peut lancer en tant que mot ?
+		return ;
 	len = s->i - start;
 	content = s_save(ctx, ft_strndup(&s->str[start], len));
 	(s->i)++;
