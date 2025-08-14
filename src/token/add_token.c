@@ -51,6 +51,7 @@ t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote)
 	token->next = NULL;
 	token->prev = NULL;
 	token->quote = quote;
+	token->has_space = false;
 	return (token);
 }
 

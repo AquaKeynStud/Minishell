@@ -30,11 +30,12 @@ D_LFT	=	libft/
 D_EXE	=	$(D_SRC)exec/
 D_UTL	=	$(D_SRC)utils/
 D_TOK	=	$(D_SRC)token/
+D_EXP	=	$(D_SRC)expand/
 D_PAR	=	$(D_SRC)parsing/
 D_BLT	=	$(D_SRC)builtins/
 D_SIG	=	$(D_SRC)signal_handlers/
 
-D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
+D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_EXP) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
 
 # file lists
 LST_SRC		=	main.c
@@ -52,10 +53,13 @@ LST_PAR		=	redir.c				\
 				parsing_bonus.c		\
 				ast_builders.c
 
+LST_EXP		=	merge.c				\
+				expand.c			\
+				globbing.c
+
 LST_EXE		=	env.c				\
 				exec.c				\
 				exec_err.c			\
-				expand.c			\
 				cmd_utils.c			\
 				exec_bonus.c		\
 				builtin_exec.c		\
@@ -83,7 +87,7 @@ LST_INC		=	lexing.h			\
 				sigaction.h			\
 				minishell.h
 
-LST_SRCS	=	$(LST_SRC) $(LST_EXE) $(LST_TOK) $(LST_BLT) $(LST_PAR) $(LST_SIG) $(LST_UTL)
+LST_SRCS	=	$(LST_SRC) $(LST_EXE) $(LST_TOK) $(LST_EXP) $(LST_BLT) $(LST_PAR) $(LST_SIG) $(LST_UTL)
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 

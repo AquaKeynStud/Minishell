@@ -27,7 +27,7 @@ t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr)
 	node->sub_count = 0;
 	node->quote = curr->quote;
 	node->has_space = curr->has_space;
-	if (curr && curr->value && *curr->value)
+	if (curr && curr->value)
 		node->value = s_save(ctx, ft_strdup(curr->value));
 	return (node);
 }
@@ -41,6 +41,24 @@ void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child)
 	new_size = sizeof(t_ast *) * (++parent->sub_count);
 	parent->childs = s_realloc(ctx, parent->childs, old_size, new_size);
 	parent->childs[parent->sub_count - 1] = child;
+}
+
+void	ast_add_first(t_ctx *ctx, t_ast *parent, t_ast *child)
+{
+	size_t	old_size;
+	size_t	new_size;
+
+	old_size = sizeof(t_ast *) * parent->sub_count;
+	new_size = sizeof(t_ast *) * (++parent->sub_count);
+	parent->childs = s_realloc(ctx, parent->childs, old_size, new_size);
+	int i = parent->sub_count - 1;
+	while (i > 0)
+	{
+		parent->childs[i] = parent->childs[i - 1];
+		parent->childs[i - 1] = NULL;
+		i--;
+	}
+	parent->childs[0] = child;
 }
 
 void remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
@@ -60,7 +78,7 @@ void remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
 	parent->sub_count--;
 	if (parent->sub_count == 0)
 	{
-		free(parent->childs);
+		s_free(ctx, parent->childs);
 		parent->childs = NULL;
 	}
 	else

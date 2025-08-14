@@ -142,6 +142,7 @@ bool	syntax_err(t_ctx *ctx, t_ast *ast)
 
 int	execute_ast(t_ctx *ctx, t_ast *ast)
 {
+	ast = expand_childs(ctx, ast);
 	if (!ast)
 		return (ctx->status);
 	if (ast->type == AST_PIPE)
@@ -154,9 +155,6 @@ int	execute_ast(t_ctx *ctx, t_ast *ast)
 		ctx->status = exec_subshell(ctx, ast->childs[0]);
 	else if (ast->type == AST_COMMAND && ast->value)
 	{
-		expand_childs(ctx, ast);
-		// if (!syntax_error(ctx, ctx->tokens))
-		// 	return (ctx->status);
 		if (ast->value && !ft_strcmp(ast->value, "!"))
 			ctx->status = 1;
 		else if (ast->value && is_builtin(ast->value))

@@ -76,16 +76,22 @@ bool	tokens_err(t_ctx *ctx, t_token *tokens)
 		{
 			if (lpar_counter <= 0)
 				return (parsing_err(ctx, tmp->value, 2));
+			if (tmp->next->type == TOKEN_WORD || tmp->next->type == TOKEN_LPAR)
+				return (parsing_err(ctx, tmp->next->value, 2));
 			lpar_counter--;
 		}
 		else if ((tmp->type == TOKEN_HEREDOC || tmp->type == TOKEN_REDIR_APPEND || tmp->type == TOKEN_REDIR_IN || tmp->type == TOKEN_REDIR_OUT) && tmp->next->type != TOKEN_WORD)
 			return (parsing_err(ctx, tmp->next->value, 2));
-		else if (tmp->type != TOKEN_WORD && tmp->next->type != TOKEN_WORD)
+		else if ((tmp->type == TOKEN_PIPE || tmp->type == TOKEN_AND || tmp->type == TOKEN_OR) && (tmp->next->type == TOKEN_PIPE || tmp->next->type == TOKEN_AND || tmp->next->type == TOKEN_OR || tmp->next->type == TOKEN_RPAR))
 			return (parsing_err(ctx, tmp->next->value, 2));
 		tmp = tmp->next;
 	}
 	if (tmp->type != TOKEN_WORD && tmp->type != TOKEN_RPAR)
 		return (parsing_err(ctx, "newline", 2));
+	if (tmp->type == TOKEN_RPAR && (lpar_counter--) <= 0)
+		return (parsing_err(ctx, ")", 2));
+	if (lpar_counter > 0)
+		return (parsing_err(ctx, "(", 2));
 	return (true);
 }
 
@@ -95,7 +101,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_token	*tokens;
 
 	tokens = tokenize(ctx, cmd);
-	if (!tokens_err(ctx, tokens))
+	if (!tokens || !tokens_err(ctx, tokens))
 	{
 		close_unregistered_fds(ctx);
 		return (free_tokens(ctx, &tokens));

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:48:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/11 20:43:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/12 19:12:42 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	(s->i)++;
 	if (!content || len < 0)
 		return ;
-	if (len > 0 && quote == '"')
+	if (quote == '"')
 		new_token = create_token(ctx, content, TOKEN_WORD, DOUBLE);
-	else if (len > 0)
+	else
 		new_token = create_token(ctx, content, TOKEN_WORD, SINGLE);
 	s_free(ctx, content);
 	if (new_token)
