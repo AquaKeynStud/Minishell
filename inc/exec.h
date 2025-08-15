@@ -49,4 +49,6 @@ bool	has_one_redir(t_ctx *ctx, t_ast *ast);
 bool	fill_envp(t_ctx *ctx, char **envp, t_env *env);
 void	sort_char_table(char **arr);
 
+void	expand_args(t_ctx *ctx, t_ast *node);
+
 #endif

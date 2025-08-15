@@ -55,7 +55,8 @@ LST_PAR		=	redir.c				\
 
 LST_EXP		=	merge.c				\
 				expand.c			\
-				globbing.c
+				globbing.c			\
+				expand_handlers.c
 
 LST_EXE		=	env.c				\
 				exec.c				\
