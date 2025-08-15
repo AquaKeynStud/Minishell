@@ -11,21 +11,11 @@
 /* ************************************************************************** */
 
 #include "env.h"
+#include "exec.h"
 #include <errno.h>
 #include "parsing.h"
 #include "minishell.h"
 #include "sigaction.h"
-
-char	*get_from_env(t_env *env, const char *key)
-{
-	while (env)
-	{
-		if (env->key && key && !ft_strcmp(env->key, key))
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL);
-}
 
 static int	count_argv(t_ast *node)
 {
@@ -45,6 +35,28 @@ static int	count_argv(t_ast *node)
 		}
 	}
 	return (count);
+}
+
+char	**env_to_envp(t_ctx *ctx, t_env *env)
+{
+	int		i;
+	t_env	*tmp;
+	char	**envp;
+
+	i = 0;
+	tmp = env;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	envp = (char **)s_malloc(ctx, (i + 1) * sizeof(char *));
+	if (!fill_envp(ctx, envp, env))
+	{
+		double_free(ctx, (void **)envp, 0);
+		return (NULL);
+	}
+	return (envp);
 }
 
 char	**ast_to_argv(t_ctx *ctx, t_ast *node)

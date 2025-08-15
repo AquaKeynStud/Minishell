@@ -121,42 +121,6 @@ static int	exec_command(t_ctx *ctx, t_ast *ast)
 	return (s_exec_exit(ctx->status));
 }
 
-bool	syntax_err(t_ctx *ctx, t_ast *ast)
-{
-	int	i;
-
-	if (ast->type == AST_REDIR && !ft_strcmp(ast->value, "<<"))
-	{
-		if (!ast->childs[0] || !ast->childs[1])
-			return (true);
-	}
-	i = 0;
-	while (i < ast->sub_count)
-	{
-		if (syntax_err(ctx, ast->childs[i]))
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-bool	has_one_redir(t_ctx *ctx, t_ast *ast)
-{
-	char	*err;
-
-	err = "ambiguous redirect";
-	if (ast->sub_count > 2)
-	{
-		if (ast->sub_count && ast->childs)
-			ft_dprintf(2, "minishell: %s: %s\n", ast->childs[0]->value, err);
-		else
-			perror("minishell");
-		ctx->status = 1;
-		return (false);
-	}
-	return (true);
-}
-
 int	execute_ast(t_ctx *ctx, t_ast *ast)
 {
 	ast = expand_childs(ctx, ast);

@@ -63,7 +63,7 @@ LST_EXE		=	env.c				\
 				cmd_utils.c			\
 				exec_bonus.c		\
 				builtin_exec.c		\
-				exec_behaviors.c
+				exec_heredoc.c
 
 LST_BLT		=	ft_cd.c				\
 				ft_env.c			\

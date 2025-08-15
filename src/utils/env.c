@@ -15,7 +15,18 @@
 #include <sys/stat.h>
 #include "minishell.h"
 
-static bool	fill_envp(t_ctx *ctx, char **envp, t_env *env)
+char	*get_from_env(t_env *env, const char *key)
+{
+	while (env)
+	{
+		if (env->key && key && !ft_strcmp(env->key, key))
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+bool	fill_envp(t_ctx *ctx, char **envp, t_env *env)
 {
 	int		i;
 	t_env	*current;
@@ -59,28 +70,6 @@ static void	add_env(t_ctx *ctx, t_env **env, char **args)
 		add_or_update_env(ctx, env, "_", args[0]);
 	if (!get_from_env(*env, "PATH"))
 		add_or_update_env(ctx, env, "PATH", path_env);
-}
-
-char	**env_to_envp(t_ctx *ctx, t_env *env)
-{
-	int		i;
-	t_env	*tmp;
-	char	**envp;
-
-	i = 0;
-	tmp = env;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	envp = (char **)s_malloc(ctx, (i + 1) * sizeof(char *));
-	if (!fill_envp(ctx, envp, env))
-	{
-		double_free(ctx, (void **)envp, 0);
-		return (NULL);
-	}
-	return (envp);
 }
 
 void	free_env(t_ctx *ctx, t_env **env)

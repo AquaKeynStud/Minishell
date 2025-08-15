@@ -26,7 +26,7 @@ int		redir_err(t_ctx *ctx, t_ast *ast, int exit_code);
 
 char	**env_to_envp(t_ctx *ctx, t_env *env);
 char	**ast_to_argv(t_ctx *ctx, t_ast *node);
-char	*get_path(t_ctx *ctx, const char *cmd, t_env *env);
+char	*get_path(t_ctx *ctx, char *cmd, t_env *env);
 
 int		is_builtin(char *cmd);
 int		exec_builtin(t_ctx *ctx, char **args, t_env *env);
@@ -43,5 +43,9 @@ void	sort_char_table(char **arr);
 void	globbing_all(t_ctx *ctx, t_ast *node);
 void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast);
 void	glob_ast(t_ctx *ctx, t_ast *node);
+
+bool	syntax_err(t_ctx *ctx, t_ast *ast);
+bool	has_one_redir(t_ctx *ctx, t_ast *ast);
+bool	fill_envp(t_ctx *ctx, char **envp, t_env *env);
 
 #endif
