@@ -14,6 +14,52 @@
 #include "lexing.h"
 #include <stdbool.h>
 
+void	init_s(t_lexing *s, char *input)
+{
+	s->i = 0;
+	s->str = input;
+	s->has_space = true;
+}
+
+t_token	*get_last_token(t_token *tokens)
+{
+	if (!tokens)
+		return (NULL);
+	while (tokens->next)
+		tokens = tokens->next;
+	return (tokens);
+}
+
+char	*has_expand(t_ctx *ctx, char type, char *s)
+{
+	int		i;
+	int		len;
+	char	*res;
+
+	i = 0;
+	len = 1;
+	res = s_save(ctx, ft_strdup(""));
+	if (!type || !s || !*s)
+		return (NULL);
+	while (s[i])
+	{
+		if ((s[i] == '~' || s[i] == '$' || s[i] == '*'))
+		{
+			res = s_realloc(ctx, res, len, len + 1);
+			res[len - 1] = type;
+			res[len] = '\0';
+			len += 1;
+		}
+		i++;
+	}
+	return (res);
+}
+
+int	is_op(char c)
+{
+	return (c == '|' || c == '<' || c == '>');
+}
+
 t_token	*tokenize(t_ctx *ctx, char *input)
 {
 	t_lexing	s;

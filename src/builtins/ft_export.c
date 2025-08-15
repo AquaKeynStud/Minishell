@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "env.h"
+#include "exec.h"
 #include "libft.h"
-#include "minishell.h"
 
 static int	is_valid_key(char *key, char *arg)
 {

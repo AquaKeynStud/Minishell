@@ -14,7 +14,7 @@
 #include "parsing.h"
 #include "minishell.h"
 
-static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
+t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 {
 	t_ast	*stub;
 
@@ -32,90 +32,6 @@ static t_ast	*overwrite_stub(t_ctx *ctx, t_token **curr, t_ast **cmd)
 	stub->value = s_save(ctx, ft_strdup((*curr)->value));
 	*curr = (*curr)->next;
 	return (stub);
-}
-
-static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
-{
-	t_ast	*cmd;
-
-	if (parse_parenthesis(ctx, curr, &cmd))
-		return (cmd);
-	while (*curr && !is_binary_op((*curr)->type) && (*curr)->type != TOKEN_RPAR)
-	{
-		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)
-		{
-			if (!parse_redirs(ctx, &cmd, curr))
-				return (free_ast(ctx, cmd));
-		}
-		else if ((*curr)->type == TOKEN_WORD)
-		{
-			if (!cmd || !stub)
-				stub = overwrite_stub(ctx, curr, &cmd);
-			else
-			{
-				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, *curr), false);
-				*curr = (*curr)->next;
-			}
-		}
-		else
-			break ;
-	}
-	return (cmd);
-}
-
-static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
-{
-	t_token	*tmp;
-	t_ast	*left;
-	t_ast	*right;
-	t_ast	*pipe_node;
-
-	left = parse_command(ctx, curr, NULL);
-	if (!left)
-		return (NULL);
-	if (!left->value)
-		return (free_ast(ctx, left));
-	while (*curr && (*curr)->type == TOKEN_PIPE)
-	{
-		tmp = *curr;
-		*curr = (*curr)->next;
-		right = parse_command(ctx, curr, NULL);
-		if (!right || !right->value)
-			return (double_free_ast(ctx, right, left));
-		pipe_node = new_ast(ctx, AST_PIPE, tmp);
-		ast_add(ctx, pipe_node, left, false);
-		ast_add(ctx, pipe_node, right, false);
-		left = pipe_node;
-	}
-	return (left);
-}
-
-t_ast	*parse_logical(t_ctx *ctx, t_token **curr)
-{
-	t_token	*tmp;
-	t_ast	*left;
-	t_ast	*right;
-	t_ast	*logical_node;
-
-	left = parse_pipeline(ctx, curr);
-	if (!left)
-		return (NULL);
-	while (*curr && ((*curr)->type == TOKEN_AND || (*curr)->type == TOKEN_OR))
-	{
-		tmp = *curr;
-		*curr = (*curr)->next;
-		right = parse_pipeline(ctx, curr);
-		if (!right)
-			return (double_free_ast(ctx, right, left));
-		if (tmp->type == TOKEN_OR)
-			logical_node = new_ast(ctx, AST_OR, tmp);
-		else
-			logical_node = new_ast(ctx, AST_AND, tmp);
-		ast_add(ctx, logical_node, left, false);
-		ast_add(ctx, logical_node, right, false);
-		left = logical_node;
-	}
-	return (left);
 }
 
 t_ast	*parse_input(t_ctx *ctx, t_token *tokens)

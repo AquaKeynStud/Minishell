@@ -28,7 +28,8 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
-/* -- Functions -- */
+/* -- Builtins - Functions -- */
+int		is_builtin(char *cmd);
 int		ft_echo(t_ctx *ctx, char **args);
 int		ft_unset(t_ctx *ctx, char **args);
 int		double_dot(t_ctx *ctx, char **args);
@@ -38,15 +39,15 @@ int		ft_exit(t_ctx *ctx, int argc, char **args);
 int		ft_export(t_ctx *ctx, char **args, t_env **env);
 int		ft_env(t_ctx *ctx, t_env *env, int argc, char **args);
 
+/* -- Env - Functions -- */
 void	free_env(t_ctx *ctx, t_env **env);
-int		count_args(char **args);
-void	print_sorted_env(t_ctx *ctx, t_env *env);
 char	*check_env(t_env *env, char *req);
-char	*get_working_dir(char *cmd_request);
+void	print_sorted_env(t_ctx *ctx, t_env *env);
 char	*get_from_env(t_env *env, const char *key);
 void	append_env_node(t_env **env, t_env *new_node);
-int		update_env(t_ctx *ctx, t_env *env, char *key, char *value);
+bool	fill_envp(t_ctx *ctx, char **envp, t_env *env);
 t_env	*init_env(t_ctx *ctx, char **args, char **envp);
+int		update_env(t_ctx *ctx, t_env *env, char *key, char *value);
 t_env	*create_env_node(t_ctx *ctx, const char *key, const char *value);
 void	add_or_update_env(t_ctx *ctx, t_env **env, char *key, char *value);
 

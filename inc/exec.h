@@ -17,38 +17,38 @@
 # include "parsing.h"
 # include "minishell.h"
 
-/* -- Functions -- */
+/* -- Error - Functions -- */
+bool	syntax_err(t_ctx *ctx, t_ast *ast);
 int		execve_err(t_ctx *ctx, char **value);
 int		exit_with_code(t_ctx *ctx, int code);
-int		check_hd(t_ctx *ctx, t_ast *ast);
-int		pid_verification(t_ctx *ctx, t_ast *node);
+bool	has_one_redir(t_ctx *ctx, t_ast *ast);
 int		redir_err(t_ctx *ctx, t_ast *ast, int exit_code);
+
+/* -- Exec - Functions -- */
+int		count_args(char **args);
+void	sort_char_table(char **arr);
+int		check_hd(t_ctx *ctx, t_ast *ast);
+char	*get_working_dir(char *cmd_request);
+int		pid_verification(t_ctx *ctx, t_ast *node);
 
 char	**env_to_envp(t_ctx *ctx, t_env *env);
 char	**ast_to_argv(t_ctx *ctx, t_ast *node);
 char	*get_path(t_ctx *ctx, char *cmd, t_env *env);
 
-int		is_builtin(char *cmd);
-int		exec_builtin(t_ctx *ctx, char **args, t_env *env);
-
 int		execute_ast(t_ctx *ctx, t_ast *node);
+int		exec_builtin(t_ctx *ctx, char **args, t_env *env);
 
 /* -- Bonus - Functions -- */
 int		exec_operators(t_ctx *ctx, t_ast *ast);
 int		exec_subshell(t_ctx *ctx, t_ast *subtree);
 
-t_ast	*expand_childs(t_ctx *ctx, t_ast *node);
-void	merge_ast(t_ctx *ctx, t_ast *node);
+/* -- Expand - Functions -- */
 void	sort_char_table(char **arr);
-void	globbing_all(t_ctx *ctx, t_ast *node);
-void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast);
 void	glob_ast(t_ctx *ctx, t_ast *node);
-
-bool	syntax_err(t_ctx *ctx, t_ast *ast);
-bool	has_one_redir(t_ctx *ctx, t_ast *ast);
-bool	fill_envp(t_ctx *ctx, char **envp, t_env *env);
-void	sort_char_table(char **arr);
-
+void	merge_ast(t_ctx *ctx, t_ast *node);
 void	expand_args(t_ctx *ctx, t_ast *node);
+void	globbing_all(t_ctx *ctx, t_ast *node);
+t_ast	*expand_childs(t_ctx *ctx, t_ast *node);
+void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast);
 
 #endif

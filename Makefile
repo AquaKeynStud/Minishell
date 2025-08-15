@@ -43,15 +43,14 @@ LST_SRC		=	main.c
 LST_SIG		=	sig_setup.c			\
 				sig_handlers.c
 
-LST_TOK		=	add_token.c			\
-				utils_token.c		\
+LST_TOK		=	token_allocs.c		\
 				tokenisation.c		\
 				lexing_handlers.c
 
-LST_PAR		=	redir.c				\
-				parser.c			\
-				parsing_bonus.c		\
-				ast_builders.c
+LST_PAR		=	parser.c			\
+				ast_builders.c		\
+				parsing_utils.c		\
+				parsing_handlers.c
 
 LST_EXP		=	merge.c				\
 				expand.c			\

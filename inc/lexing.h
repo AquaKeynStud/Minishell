@@ -22,10 +22,10 @@
 
 typedef enum e_token_type
 {
-	TOKEN_OR,			// Bonus part
-	TOKEN_AND,			// Bonus part
-	TOKEN_LPAR,			// Bonus part
-	TOKEN_RPAR,			// Bonus part
+	TOKEN_OR,
+	TOKEN_AND,
+	TOKEN_LPAR,
+	TOKEN_RPAR,
 	TOKEN_WORD,
 	TOKEN_PIPE,
 	TOKEN_HEREDOC,

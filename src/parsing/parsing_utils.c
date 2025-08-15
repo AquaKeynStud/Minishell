@@ -13,6 +13,13 @@
 #include "parsing.h"
 #include "minishell.h"
 
+bool	is_binary_op(t_token_type type)
+{
+	return (type == TOKEN_OR
+		|| type == TOKEN_AND
+		|| type == TOKEN_PIPE);
+}
+
 int	parsing_err(t_ctx *ctx, const char *msg, int code)
 {
 	char	*err;
@@ -28,7 +35,7 @@ int	parsing_err(t_ctx *ctx, const char *msg, int code)
 	return (0);
 }
 
-static int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
+int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
 {
 	if (tmp->type != TOKEN_HEREDOC && !*curr)
 		return (parsing_err(ctx, "newline", 2));
@@ -44,7 +51,7 @@ static int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
 	return (2);
 }
 
-static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
+void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 {
 	t_ast	*stub;
 	t_token	*temp;
@@ -67,7 +74,7 @@ static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 	}
 }
 
-static void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
+void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
 {
 	t_ast	*leaf;
 	t_ast	*parent;
@@ -91,27 +98,4 @@ static void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
 		ast_add(ctx, redir, *cmd, false);
 		*cmd = redir;
 	}
-}
-
-int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
-{
-	int		err;
-	t_token	*tmp;
-	t_ast	*redir;
-	t_ast	*file_node;
-
-	if (!*curr)
-		return (1);
-	tmp = *curr;
-	*curr = (*curr)->next;
-	err = err_redir(ctx, tmp, curr);
-	if (err != 2)
-		return (err);
-	cat_empty_heredoc(ctx, cmd, tmp);
-	redir = new_ast(ctx, AST_REDIR, tmp);
-	file_node = new_ast(ctx, AST_COMMAND, *curr);
-	ast_add(ctx, redir, file_node, false);
-	redir_priority(ctx, cmd, redir);
-	*curr = (*curr)->next;
-	return (1);
 }

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
 #include <limits.h>
-#include "minishell.h"
 
 static void	pwd_args(t_ctx *ctx, char **args, int	*situation)
 {

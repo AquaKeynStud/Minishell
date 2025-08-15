@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 
 #include "exec.h"
-#include "libft.h"
-#include <stdio.h>
-#include "lexing.h"
-#include <stdlib.h>
-#include "parsing.h"
-#include "minishell.h"
 #include "sigaction.h"
 #include <readline/history.h>
 #include <readline/readline.h>
