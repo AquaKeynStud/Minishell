@@ -49,17 +49,15 @@ int		parsing_err(t_ctx *ctx, const char *msg, int code);
 int		parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr);
 
 void	*free_ast(t_ctx *ctx, t_ast *node);
-void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child);
 t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr);
-void	ast_add_first(t_ctx *ctx, t_ast *parent, t_ast *child);
 void	remove_ast_child(t_ctx *ctx, t_ast *parent, int index);
 void	*double_free_ast(t_ctx *ctx, t_ast *left, t_ast *right);
+void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child, bool in_first);
 
 /* -- Bonus - Functions -- */
 bool	is_binary_op(t_token_type type);
 int		syntax_error(t_ctx *ctx, t_token *tokens);
 t_ast	*parse_logical(t_ctx *ctx, t_token **curr);
-bool	check_parenthesis(t_ctx *ctx, t_token *tokens);
 bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd);
 
 #endif

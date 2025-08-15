@@ -65,7 +65,7 @@ t_token	*tokenize(t_ctx *ctx, char *input);
 void	free_tokens(t_ctx *ctx, t_token **list);
 void	add_token(t_token **head, t_token *new);
 t_token	*set_merge_value(t_token **token, bool has_space);
-t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote);
+t_token	*new_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote);
 
 /* -- // Handlers \\ -- */
 void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens);
@@ -75,27 +75,10 @@ void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op);
 void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote);
 
 /* -- // Utils \\ -- */
-int		is_operator(char c);
+int		is_op(char c);
 t_token	*get_last_token(t_token *tokens);
 void	init_s(t_lexing *s, char *input);
 char	*append_char(t_ctx *ctx, char *res, char c);
 char	*has_expand(t_ctx *ctx, char type, char *s);
 
-char	*ft_strcpy(char *dst, const char *src);
-char	*ft_strcat(char *dest, const char *src);
-
 #endif
-
-/* Utils */
-// t_token	*simple_tok(t_ctx *ctx, t_lexing *lx, char **res, int len);
-// bool	is_eof(t_token *token);
-// void	ajust_data(t_lexing *s);
-// t_token	*expand_tilde(t_ctx *ctx, t_lexing *lx, char **s, char **res);
-// t_token	*expand_args(t_ctx *ctx, t_token *tokens, t_lexing *lx, char *s);
-
-/* -- Bonus - Functions -- */
-// int		wildcards_match(t_ctx *ctx, const char *pat, const char *str, int wc_i);
-// t_token	*expand_wildcards(t_ctx *ctx, const char *pattern);
-// void	expand_last_token_if_needed(t_ctx *ctx, t_token **tokens);
-// int		count_wildcards(char *input);
-// void	init_is_quote(t_ctx *ctx, char *input);

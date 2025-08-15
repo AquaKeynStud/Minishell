@@ -40,6 +40,6 @@ bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd)
 		return (false);
 	}
 	*curr = (*curr)->next;
-	ast_add(ctx, *cmd, subcommand);
+	ast_add(ctx, *cmd, subcommand, false);
 	return (true);
 }

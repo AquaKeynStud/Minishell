@@ -51,7 +51,7 @@ static void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 
 	if (!*cmd)
 	{
-		temp = s_save(ctx, create_token(ctx, "", TOKEN_WORD, NONE));
+		temp = s_save(ctx, new_token(ctx, "", TOKEN_WORD, NONE));
 		set_merge_value(&temp, true);
 		*cmd = new_ast(ctx, AST_COMMAND, temp);
 		s_free(ctx, temp);
@@ -83,12 +83,12 @@ static void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
 		}
 		if (!leaf)
 			return ;
-		ast_add(ctx, redir, leaf);
+		ast_add(ctx, redir, leaf, false);
 		parent->childs[1] = redir;
 	}
 	else
 	{
-		ast_add(ctx, redir, *cmd);
+		ast_add(ctx, redir, *cmd, false);
 		*cmd = redir;
 	}
 }
@@ -110,7 +110,7 @@ int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 	cat_empty_heredoc(ctx, cmd, tmp);
 	redir = new_ast(ctx, AST_REDIR, tmp);
 	file_node = new_ast(ctx, AST_COMMAND, *curr);
-	ast_add(ctx, redir, file_node);
+	ast_add(ctx, redir, file_node, false);
 	redir_priority(ctx, cmd, redir);
 	*curr = (*curr)->next;
 	return (1);

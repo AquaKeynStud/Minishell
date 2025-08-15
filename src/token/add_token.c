@@ -36,7 +36,7 @@ t_token	*set_merge_value(t_token **token, bool has_space)
 	return (*token);
 }
 
-t_token	*create_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote)
+t_token	*new_token(t_ctx *ctx, char *value, t_token_type type, t_quote quote)
 {
 	t_token	*token;
 

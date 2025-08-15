@@ -50,49 +50,9 @@ static void	destroy_command(t_ctx **ctx, t_token **tokens, t_ast **ast)
 	(*ctx)->tokens = NULL;
 	(*ctx)->has_found_err = false;
 	(*ctx)->err_in_tokens = false;
-	// if ((*ctx)->status != 0 && ((*ctx)->status - 128) == SIGQUIT)
-	// 	ft_dprintf(2, "Quit (core dumped)\n");
+	if ((*ctx)->status != 0 && ((*ctx)->status - 128) == SIGQUIT)
+		ft_dprintf(2, "Quit (core dumped)\n");
 	return ;
-}
-
-bool	tokens_err(t_ctx *ctx, t_token *tokens)
-{
-	t_token	*tmp;
-	int		lpar_counter;
-
-	tmp = tokens;
-	lpar_counter = 0;
-	if (tmp->type == TOKEN_AND || tmp->type == TOKEN_OR || tmp->type == TOKEN_PIPE || tmp->type == TOKEN_RPAR)
-		return (parsing_err(ctx, tmp->value, 2));
-	while (tmp->next)
-	{
-		if (tmp->type == TOKEN_LPAR)
-		{
-			if (tmp->next->type != TOKEN_WORD && tmp->next->type != TOKEN_LPAR)
-				return (parsing_err(ctx, tmp->next->value, 2));
-			lpar_counter++;
-		}
-		else if (tmp->type == TOKEN_RPAR)
-		{
-			if (lpar_counter <= 0)
-				return (parsing_err(ctx, tmp->value, 2));
-			if (tmp->next->type == TOKEN_WORD || tmp->next->type == TOKEN_LPAR)
-				return (parsing_err(ctx, tmp->next->value, 2));
-			lpar_counter--;
-		}
-		else if ((tmp->type == TOKEN_HEREDOC || tmp->type == TOKEN_REDIR_APPEND || tmp->type == TOKEN_REDIR_IN || tmp->type == TOKEN_REDIR_OUT) && tmp->next->type != TOKEN_WORD)
-			return (parsing_err(ctx, tmp->next->value, 2));
-		else if ((tmp->type == TOKEN_PIPE || tmp->type == TOKEN_AND || tmp->type == TOKEN_OR) && (tmp->next->type == TOKEN_PIPE || tmp->next->type == TOKEN_AND || tmp->next->type == TOKEN_OR || tmp->next->type == TOKEN_RPAR))
-			return (parsing_err(ctx, tmp->next->value, 2));
-		tmp = tmp->next;
-	}
-	if (tmp->type != TOKEN_WORD && tmp->type != TOKEN_RPAR)
-		return (parsing_err(ctx, "newline", 2));
-	if (tmp->type == TOKEN_RPAR && (lpar_counter--) <= 0)
-		return (parsing_err(ctx, ")", 2));
-	if (lpar_counter > 0)
-		return (parsing_err(ctx, "(", 2));
-	return (true);
 }
 
 static void	command_handler(t_ctx *ctx, char *cmd)
@@ -110,7 +70,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	ctx->ast = ast;
 	ctx->tokens = tokens;
 	sig_set(SIG_DFL);
-	if (!check_heredoc(ctx, ast))
+	if (!check_hd(ctx, ast))
 		return (destroy_command(&ctx, &tokens, &ast));
 	close_unregistered_fds(ctx);
 	sig_init();
@@ -134,8 +94,10 @@ static void	get_input_loop(t_ctx *ctx)
 			input = readline("minishell => ");
 		if (!input)
 			break ;
-		if (*input)
+		if (*input || !*input)
 			add_history(input);
+		if (is_only_whitespaces(input))
+			continue ;
 		ft_trim(&input, " \t");
 		s_save(ctx, input);
 		ctx->input = input;
@@ -143,8 +105,6 @@ static void	get_input_loop(t_ctx *ctx)
 		s_free(ctx, input);
 		ctx->input = NULL;
 	}
-	rl_clear_history();
-	ft_printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -152,16 +112,18 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		if (isatty(STDERR_FILENO))
-			ft_dprintf(2, "minishell: interactive mode not allowed\n");
-		exit(EXIT_FAILURE);
-	}
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	// {
+	// 	if (isatty(STDERR_FILENO))
+	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
+	// 	exit(EXIT_FAILURE);
+	// }
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();
 	get_input_loop(&ctx);
+	rl_clear_history();
+	ft_printf("exit\n");
 	secure_exit(&ctx);
 	return (0);
 }

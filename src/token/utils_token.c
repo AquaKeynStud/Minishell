@@ -53,7 +53,7 @@ char	*has_expand(t_ctx *ctx, char type, char *s)
 	return (res);
 }
 
-int	is_operator(char c)
+int	is_op(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }

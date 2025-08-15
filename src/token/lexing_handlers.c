@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:48:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 22:51:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/15 12:18:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ void	handle_bonus(t_ctx *ctx, t_lexing *s, t_token **tokens, char op)
 	if (op == '|')
 	{
 		if (ft_strlen(value) > 1)
-			new = create_token(ctx, value, TOKEN_OR, NONE);
+			new = new_token(ctx, value, TOKEN_OR, NONE);
 		else
-			new = create_token(ctx, value, TOKEN_PIPE, NONE);
+			new = new_token(ctx, value, TOKEN_PIPE, NONE);
 	}
 	else
-		new = create_token(ctx, value, TOKEN_AND, NONE);
+		new = new_token(ctx, value, TOKEN_AND, NONE);
 	set_merge_value(&new, true);
 	add_token(tokens, new);
 	s_free(ctx, value);
@@ -48,9 +48,9 @@ void	handle_parenthesis(t_ctx *ctx, t_lexing *s, t_token **tokens)
 
 	c = s->str[s->i];
 	if (c == '(')
-		token = create_token(ctx, "(", TOKEN_LPAR, NONE);
+		token = new_token(ctx, "(", TOKEN_LPAR, NONE);
 	else
-		token = create_token(ctx, ")", TOKEN_RPAR, NONE);
+		token = new_token(ctx, ")", TOKEN_RPAR, NONE);
 	if (token)
 	{
 		set_merge_value(&token, true);
@@ -72,13 +72,13 @@ void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens)
 	if (!str)
 		return ;
 	if (op == '>' && len == 2)
-		token = create_token(ctx, str, TOKEN_REDIR_APPEND, NONE);
+		token = new_token(ctx, str, TOKEN_REDIR_APPEND, NONE);
 	else if (op == '<' && len == 2)
-		token = create_token(ctx, str, TOKEN_HEREDOC, NONE);
+		token = new_token(ctx, str, TOKEN_HEREDOC, NONE);
 	else if (op == '>')
-		token = create_token(ctx, str, TOKEN_REDIR_OUT, NONE);
+		token = new_token(ctx, str, TOKEN_REDIR_OUT, NONE);
 	else
-		token = create_token(ctx, str, TOKEN_REDIR_IN, NONE);
+		token = new_token(ctx, str, TOKEN_REDIR_IN, NONE);
 	if (token)
 	{
 		set_merge_value(&token, true);
@@ -91,13 +91,13 @@ void	handle_redir(t_ctx *ctx, t_lexing *s, t_token **tokens)
 void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 {
 	int		len;
+	t_token	*new;
 	int		start;
 	char	*content;
-	t_token	*new_token;
 
 	(s->i)++;
 	start = s->i;
-	new_token = NULL;
+	new = NULL;
 	while (s->str[s->i] && s->str[s->i] != quote)
 		(s->i)++;
 	if (s->str[s->i] != quote)
@@ -108,12 +108,12 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote)
 	if (!content || len < 0)
 		return ;
 	if (quote == '"')
-		new_token = create_token(ctx, content, TOKEN_WORD, DOUBLE);
+		new = new_token(ctx, content, TOKEN_WORD, DOUBLE);
 	else
-		new_token = create_token(ctx, content, TOKEN_WORD, SINGLE);
+		new = new_token(ctx, content, TOKEN_WORD, SINGLE);
 	s_free(ctx, content);
-	if (new_token)
-		add_token(tokens, set_merge_value(&new_token, s->has_space));
+	if (new)
+		add_token(tokens, set_merge_value(&new, s->has_space));
 	s->has_space = false;
 }
 
@@ -121,11 +121,12 @@ void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 {
 	int		len;
 	char	*str;
+	t_token	*new;
 	int		start;
-	t_token	*new_token;
 
 	start = s->i;
-	while (s->str[s->i] && !is_whitespace(s->str[s->i]) && !is_operator(s->str[s->i]) && (s->str[s->i] != '(' && s->str[s->i] != ')'))
+	while (s->str[s->i] && !is_whitespace(s->str[s->i]) && !is_op(s->str[s->i])
+		&& (s->str[s->i] != '(' && s->str[s->i] != ')'))
 	{
 		if (s->str[s->i] == '"' || s->str[s->i] == '\'')
 			break ;
@@ -137,10 +138,10 @@ void	handle_word(t_ctx *ctx, t_lexing *s, t_token **tokens)
 		str = s_save(ctx, ft_strndup(&s->str[start], len));
 		if (!str)
 			return ;
-		new_token = create_token(ctx, str, TOKEN_WORD, NONE);
+		new = new_token(ctx, str, TOKEN_WORD, NONE);
 		s_free(ctx, str);
-		if (new_token)
-			add_token(tokens, set_merge_value(&new_token, s->has_space));
+		if (new)
+			add_token(tokens, set_merge_value(&new, s->has_space));
 		s->has_space = false;
 	}
 }

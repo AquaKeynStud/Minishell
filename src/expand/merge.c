@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 22:55:33 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/15 12:17:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast)
 	i = 1;
 	while (splitted[i])
 	{
-		tmp = create_token(ctx, splitted[i], TOKEN_WORD, NONE);
+		tmp = new_token(ctx, splitted[i], TOKEN_WORD, NONE);
 		if (!parent)
-			ast_add_first(ctx, ast, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)));
+			ast_add(ctx, ast, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)), true);
 		else
-			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)));
+			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, set_merge_value(&tmp, true)), false);
 		free_tokens(ctx, &tmp);
 		i++;
 	}

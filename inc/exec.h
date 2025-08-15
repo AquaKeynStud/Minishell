@@ -20,7 +20,7 @@
 /* -- Functions -- */
 int		execve_err(t_ctx *ctx, char **value);
 int		exit_with_code(t_ctx *ctx, int code);
-int		check_heredoc(t_ctx *ctx, t_ast *ast);
+int		check_hd(t_ctx *ctx, t_ast *ast);
 int		pid_verification(t_ctx *ctx, t_ast *node);
 int		redir_err(t_ctx *ctx, t_ast *ast, int exit_code);
 

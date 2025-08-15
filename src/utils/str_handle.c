@@ -13,6 +13,16 @@
 #include "lexing.h"
 #include "minishell.h"
 
+bool	is_only_whitespaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
+		i++;
+	return (str[i] == '\0');
+}
+
 char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2)
 {
 	char	*final;
@@ -83,7 +93,7 @@ void	print_status(t_ctx *ctx)
 	else
 		ft_printf("\033[1m\033[31m%s  \033[0m", "➜");
 	if (ctx && get_from_env(ctx->env, "USER"))
-		ft_printf("\033[35m\033[1m[%s] \033[0m", get_from_env(ctx->env, "USER"));
+		ft_printf("\033[35m\033[1m[%s] ", get_from_env(ctx->env, "USER"));
 	cwd = s_save(ctx, getcwd(NULL, 0));
 	if (cwd)
 	{

@@ -105,16 +105,16 @@ static int	here_doc(t_ctx *ctx, char *eof)
 	return (pipefd[0]);
 }
 
-int	check_heredoc(t_ctx *ctx, t_ast *ast)
+int	check_hd(t_ctx *ctx, t_ast *ast)
 {
 	int	fd;
 
 	if (!ast)
 		return (1);
 	if (ast->type == AST_SUB)
-		return (check_heredoc(ctx, ast->childs[0]));
+		return (check_hd(ctx, ast->childs[0]));
 	if (ast->type == AST_PIPE || ast->type == AST_AND || ast->type == AST_OR)
-		return (check_heredoc(ctx, ast->childs[0]) && check_heredoc(ctx, ast->childs[1]));
+		return (check_hd(ctx, ast->childs[0]) && check_hd(ctx, ast->childs[1]));
 	else if (ast->type == AST_REDIR)
 	{
 		if (!ft_strcmp(ast->value, "<<"))
@@ -127,7 +127,7 @@ int	check_heredoc(t_ctx *ctx, t_ast *ast)
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		if (!check_heredoc(ctx, ast->childs[1]))
+		if (!check_hd(ctx, ast->childs[1]))
 			return (0);
 	}
 	return (1);

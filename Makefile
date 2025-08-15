@@ -77,6 +77,7 @@ LST_BLT		=	ft_cd.c				\
 				ft_export_utils.c
 
 LST_UTL		=	str_handle.c		\
+				token_error.c		\
 				secure_exit.c		\
 				secure_alloc.c		\
 				fd_collector.c		\

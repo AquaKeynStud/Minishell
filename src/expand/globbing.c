@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:27:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/14 22:57:42 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/15 12:17:54 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ void	set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child)
 			match_i = 1;
 			while (matches[match_i])
 			{
-				tmp = create_token(ctx, matches[match_i], TOKEN_WORD, NONE);
+				tmp = new_token(ctx, matches[match_i], TOKEN_WORD, NONE);
 				set_merge_value(&tmp, true);
-				ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp));
+				ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp), false);
 				free_tokens(ctx, &tmp);
 				match_i++;
 			}

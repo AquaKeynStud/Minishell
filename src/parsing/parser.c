@@ -53,7 +53,7 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 				stub = overwrite_stub(ctx, curr, &cmd);
 			else
 			{
-				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, *curr));
+				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, *curr), false);
 				*curr = (*curr)->next;
 			}
 		}
@@ -83,8 +83,8 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 		if (!right || !right->value)
 			return (double_free_ast(ctx, right, left));
 		pipe_node = new_ast(ctx, AST_PIPE, tmp);
-		ast_add(ctx, pipe_node, left);
-		ast_add(ctx, pipe_node, right);
+		ast_add(ctx, pipe_node, left, false);
+		ast_add(ctx, pipe_node, right, false);
 		left = pipe_node;
 	}
 	return (left);
@@ -111,8 +111,8 @@ t_ast	*parse_logical(t_ctx *ctx, t_token **curr)
 			logical_node = new_ast(ctx, AST_OR, tmp);
 		else
 			logical_node = new_ast(ctx, AST_AND, tmp);
-		ast_add(ctx, logical_node, left);
-		ast_add(ctx, logical_node, right);
+		ast_add(ctx, logical_node, left, false);
+		ast_add(ctx, logical_node, right, false);
 		left = logical_node;
 	}
 	return (left);
