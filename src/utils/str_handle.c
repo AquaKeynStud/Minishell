@@ -13,14 +13,32 @@
 #include "lexing.h"
 #include "minishell.h"
 
-bool	is_only_whitespaces(char *str)
+void	sort_char_table(char **arr)
 {
-	int	i;
+	int		i;
+	int		j;
+	int		len;
+	char	*tmp;
 
 	i = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
+	len = 0;
+	while (arr[len])
+		len++;
+	while (i < len)
+	{
+		j = 0;
+		while (j < len - i - 1)
+		{
+			if (ft_strcmp(arr[j], arr[j + 1]) > 0)
+			{
+				tmp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = tmp;
+			}
+			j++;
+		}
 		i++;
-	return (str[i] == '\0');
+	}
 }
 
 char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2)

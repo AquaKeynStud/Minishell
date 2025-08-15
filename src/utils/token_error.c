@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 10:54:02 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 12:13:24 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/15 12:33:15 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,14 @@ bool	tokens_err(t_ctx *ctx, t_token *tokens)
 	if (lpar_counter > 0)
 		return (parsing_err(ctx, "(", 2));
 	return (true);
+}
+
+bool	is_only_whitespaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
+		i++;
+	return (str[i] == '\0');
 }

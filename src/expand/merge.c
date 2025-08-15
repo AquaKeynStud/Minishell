@@ -6,10 +6,11 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 12:17:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/15 13:28:40 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
 #include "parsing.h"
 #include "minishell.h"
 
@@ -42,7 +43,6 @@ void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast)
 	double_free(ctx, (void **)splitted, 0);
 	return ;
 }
-void	merge_ast(t_ctx *ctx, t_ast *node);
 
 void	merge_redir(t_ctx *ctx, t_ast *node)
 {

@@ -47,5 +47,6 @@ void	glob_ast(t_ctx *ctx, t_ast *node);
 bool	syntax_err(t_ctx *ctx, t_ast *ast);
 bool	has_one_redir(t_ctx *ctx, t_ast *ast);
 bool	fill_envp(t_ctx *ctx, char **envp, t_env *env);
+void	sort_char_table(char **arr);
 
 #endif

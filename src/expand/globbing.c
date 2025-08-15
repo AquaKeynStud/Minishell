@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
 #include "parsing.h"
 
 static int	match(const char *str, const char *pattern)
@@ -17,41 +18,29 @@ static int	match(const char *str, const char *pattern)
 	if (*pattern == '\0')
 		return (*str == '\0');
 	if (*pattern == '*')
-		return (match(str, pattern+1) || (*str && match(str + 1, pattern)));
+		return (match(str, pattern + 1) || (*str && match(str + 1, pattern)));
 	if (*pattern == *str)
 		return (match(str + 1, pattern + 1));
 	return (0);
 }
 
-static void	sort_char_table(char **arr)
+char	**append_str_to_array(t_ctx *ctx, char **arr, const char *str)
 {
-	int		i;
-	int		j;
-	int		len;
-	char	*tmp;
+	size_t	count;
 
-	i = 0;
-	len = 0;
-	while (arr[len])
-		len++;
-	while (i < len)
-	{
-		j = 0;
-		while (j < len - i - 1)
-		{
-			if (ft_strcmp(arr[j], arr[j + 1]) > 0)
-			{
-				tmp = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = tmp;
-			}
-			j++;
-		}
-		i++;
-	}
+	count = 0;
+	if (arr)
+		while (arr[count])
+			count++;
+	arr = s_realloc(ctx, arr,
+			sizeof(char *) * count,
+			sizeof(char *) * (count + 1 + 1));
+	arr[count] = s_save(ctx, ft_strdup(str));
+	arr[count + 1] = NULL;
+	return (arr);
 }
 
-static char	**expand_glob(t_ctx *ctx, const char *pattern, int count)
+static char	**expand_glob(t_ctx *ctx, const char *pattern)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -69,12 +58,7 @@ static char	**expand_glob(t_ctx *ctx, const char *pattern, int count)
 		if (entry->d_name[0] == '.' && pattern[0] != '.')
 			continue ;
 		if (match(entry->d_name, pattern))
-		{
-			count++;
-			matches = s_realloc(ctx, matches, sizeof(char *) * count, sizeof(char *) * (count + 1));
-			matches[count - 1] = s_save(ctx, ft_strdup(entry->d_name));
-			matches[count] = NULL;
-		}
+			matches = append_str_to_array(ctx, matches, entry->d_name);
 	}
 	closedir(dir);
 	return (matches);
@@ -86,41 +70,41 @@ void	set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child)
 	int		match_i;
 	char	**matches;
 
-	if (child->quote == NONE && ft_strchr(child->value, '*'))
+	matches = expand_glob(ctx, child->value);
+	if (matches && matches[0] && parent->childs)
 	{
-		matches = expand_glob(ctx, child->value, 0);
-		if (matches && matches[0] && parent->childs)
+		sort_char_table(matches);
+		if (!(parent->type == AST_REDIR && matches[1] != NULL))
 		{
-			sort_char_table(matches);
-			if (!(parent->type == AST_REDIR && matches[1] != NULL))
-			{
-				s_free(ctx, child->value);
-				child->value = s_save(ctx, ft_strdup(matches[0]));
-			}
-			match_i = 1;
-			while (matches[match_i])
-			{
-				tmp = new_token(ctx, matches[match_i], TOKEN_WORD, NONE);
-				set_merge_value(&tmp, true);
-				ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp), false);
-				free_tokens(ctx, &tmp);
-				match_i++;
-			}
-			double_free(ctx, (void **)matches, 0);
+			s_free(ctx, child->value);
+			child->value = s_save(ctx, ft_strdup(matches[0]));
 		}
+		match_i = 1;
+		while (matches[match_i])
+		{
+			tmp = new_token(ctx, matches[match_i], TOKEN_WORD, NONE);
+			set_merge_value(&tmp, true);
+			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp), false);
+			free_tokens(ctx, &tmp);
+			match_i++;
+		}
+		double_free(ctx, (void **)matches, 0);
 	}
 }
 
 void	glob_ast(t_ctx *ctx, t_ast *node)
 {
-	int	i;
+	int		i;
+	t_ast	*child;
 
 	i = 0;
 	if (!node)
 		return ;
 	while (i < node->sub_count && node->childs && node->childs[i])
 	{
-		set_globbing(ctx, node, node->childs[i]);
+		child = node->childs[i];
+		if (child->quote == NONE && ft_strchr(child->value, '*'))
+			set_globbing(ctx, node, child);
 		i++;
 	}
 	i = 0;
