@@ -36,6 +36,7 @@ char	**ast_to_argv(t_ctx *ctx, t_ast *node);
 char	*get_path(t_ctx *ctx, char *cmd, t_env *env);
 
 int		execute_ast(t_ctx *ctx, t_ast *node);
+int		exec_command(t_ctx *ctx, t_ast *ast);
 int		exec_builtin(t_ctx *ctx, char **args, t_env *env);
 
 /* -- Bonus - Functions -- */
@@ -48,6 +49,7 @@ void	glob_ast(t_ctx *ctx, t_ast *node);
 void	merge_ast(t_ctx *ctx, t_ast *node);
 void	expand_args(t_ctx *ctx, t_ast *node);
 void	globbing_all(t_ctx *ctx, t_ast *node);
+void	check_command(t_ctx *ctx, t_ast *ast);
 t_ast	*expand_childs(t_ctx *ctx, t_ast *node);
 void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast, int index);
 

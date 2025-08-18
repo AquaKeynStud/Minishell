@@ -57,7 +57,6 @@ void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child, int index)
 	parent->sub_count++;
 }
 
-
 void	remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
 {
 	int	i;

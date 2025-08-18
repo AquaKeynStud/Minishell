@@ -106,18 +106,18 @@ int	main(int argc, char **argv, char **envp)
 	t_ctx	ctx;
 
 	(void)argc;
-	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	// {
-	// 	if (isatty(STDERR_FILENO))
-	// 		ft_dprintf(2, "minishell: interactive mode not allowed\n");
-	// 	exit(EXIT_FAILURE);
-	// }
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	{
+		if (isatty(STDERR_FILENO))
+			ft_dprintf(2, "minishell: interactive mode not allowed\n");
+		exit(EXIT_FAILURE);
+	}
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();
 	get_input_loop(&ctx);
 	rl_clear_history();
-	// ft_printf("exit\n");
+	ft_printf("exit\n");
 	secure_exit(&ctx);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/18 21:31:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 23:27:01 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static void	merge_splitted(t_ctx *ctx, char **table, t_ast *parent, int index)
 	while (table[i])
 	{
 		tmp = new_token(ctx, table[i], TOKEN_WORD, NONE);
-			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND,
-					set_merge_value(&tmp, true)), index + i);
+		ast_add(ctx, parent, new_ast(ctx, AST_COMMAND,
+				set_merge_value(&tmp, true)), index + i);
 		free_tokens(ctx, &tmp);
 		i++;
 	}
@@ -43,21 +43,17 @@ void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast, int index)
 	if (!ifs || !*ifs)
 		ifs = " \t\n";
 	splitted = ft_split_str(ast->value, ifs);
-	if (!splitted[1] || !*splitted[1])
+	if ((!splitted[1] || !*splitted[1]) || !parent)
 	{
 		s_free(ctx, ast->value);
 		ast->value = s_save(ctx, ft_strdup(splitted[0]));
-	}
-	else if (parent)
-	{
-		remove_ast_child(ctx, parent, index);
-		merge_splitted(ctx, splitted, parent, index);
+		if (!parent)
+			merge_splitted(ctx, splitted, ast, -1);
 	}
 	else
 	{
-		s_free(ctx, ast->value);
-		ast->value = s_save(ctx, ft_strdup(splitted[0]));
-		merge_splitted(ctx, splitted, ast, -1);
+		remove_ast_child(ctx, parent, index);
+		merge_splitted(ctx, splitted, parent, index);
 	}
 	double_free(ctx, (void **)splitted, 0);
 	return ;

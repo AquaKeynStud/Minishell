@@ -92,7 +92,7 @@ static int	exec_redir(t_ctx *ctx, t_ast *ast)
 	return (s_exec_exit(ctx->status));
 }
 
-static int	exec_command(t_ctx *ctx, t_ast *ast)
+int	exec_command(t_ctx *ctx, t_ast *ast)
 {
 	int		pid;
 	char	*path;
@@ -143,12 +143,7 @@ int	execute_ast(t_ctx *ctx, t_ast *ast)
 		ast = expand_childs(ctx, ast);
 		if (!ast)
 			return (ctx->status);
-		if (ast->value && !ft_strcmp(ast->value, "!"))
-			ctx->status = 1;
-		else if (ast->value && is_builtin(ast->value))
-			ctx->status = exec_builtin(ctx, ast_to_argv(ctx, ast), ctx->env);
-		else
-			ctx->status = exec_command(ctx, ast);
+		check_command(ctx, ast);
 	}
 	return (ctx->status);
 }

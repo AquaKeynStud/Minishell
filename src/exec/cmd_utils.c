@@ -117,3 +117,14 @@ char	*get_path(t_ctx *ctx, char *cmd, t_env *env)
 	double_free(ctx, (void **)paths, 0);
 	return (full_cmd);
 }
+
+void	check_command(t_ctx *ctx, t_ast *ast)
+{
+	if (ast->value && !ft_strcmp(ast->value, "!"))
+		ctx->status = 1;
+	else if (ast->value && is_builtin(ast->value))
+		ctx->status = exec_builtin(ctx, ast_to_argv(ctx, ast), ctx->env);
+	else
+		ctx->status = exec_command(ctx, ast);
+	return ;
+}

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 06:13:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/18 21:41:07 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 23:43:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,45 @@ bool	check_parent(t_ctx *ctx, t_ast *ast)
 	return (true);
 }
 
-static bool	expand_child(t_ctx *ctx, t_ast *node, int *i)
+static bool	no_value_no_space(t_ctx *ctx, t_ast *ast, int *i, int checker)
 {
 	int		sub;
+	char	*new;
+	t_ast	**cur;
+
+	cur = ast->childs;
+	sub = ast->sub_count;
+	if ((!cur[*i]->value || !*cur[*i]->value) && !cur[*i]->has_space)
+	{
+		if ((*i + 1) < sub && cur[*i]->has_space
+			&& !cur[*i + 1]->has_space)
+			cur[*i + 1]->has_space = cur[*i]->has_space;
+		remove_ast_child(ctx, ast, *i);
+		return (true);
+	}
+	else if (*cur[*i]->value && cur[*i]->value[checker] == '$'
+		&& cur[*i]->quote == NONE && (*i + 1) < sub && !cur[*i + 1]->has_space)
+	{
+		new = s_save(ctx, ft_strndup(cur[*i]->value, checker));
+		s_free(ctx, cur[*i]->value);
+		cur[*i]->value = s_save(ctx, ft_strjoin(new, cur[*i + 1]->value));
+		s_free(ctx, new);
+		remove_ast_child(ctx, ast, (*i) + 1);
+		return (true);
+	}
+	return (false);
+}
+
+static bool	expand_child(t_ctx *ctx, t_ast *node, int *i)
+{
 	t_ast	**childs;
 
 	childs = node->childs;
-	sub = node->sub_count;
 	if (!childs[*i] || childs[*i]->type != AST_COMMAND)
 		return (false);
 	expand_args(ctx, childs[*i]);
-	if ((!childs[*i]->value || !*childs[*i]->value) && !childs[*i]->has_space)
-	{
-		if ((*i + 1) < sub && childs[*i]->has_space
-			&& !childs[*i + 1]->has_space)
-			childs[*i + 1]->has_space = childs[*i]->has_space;
-		remove_ast_child(ctx, node, *i);
+	if (no_value_no_space(ctx, node, i, ft_strlen(childs[*i]->value) - 1))
 		return (true);
-	}
-	else if (*childs[*i]->value && childs[*i]->value[ft_strlen(childs[*i]->value) - 1] == '$'
-		&& childs[*i]->quote == NONE && (*i + 1) < sub && !childs[*i + 1]->has_space)
-	{
-		char *new = s_save(ctx, ft_strndup(childs[*i]->value, ft_strlen(childs[*i]->value) - 1));
-		s_free(ctx, childs[*i]->value);
-		childs[*i]->value = s_save(ctx, ft_strjoin(new, childs[*i + 1]->value));
-		s_free(ctx, new);
-		remove_ast_child(ctx, node, (*i) + 1);
-		return (true);
-	}
 	split_ifs(ctx, node, childs[*i], *i);
 	(*i)++;
 	return (false);
