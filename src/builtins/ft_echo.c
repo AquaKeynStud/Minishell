@@ -18,7 +18,7 @@
 
 static bool	is_dash_n_flag(char *arg)
 {
-	if (!arg || !*arg || *arg != '-')
+	if (!arg || !*arg || *arg != '-' || arg[1] != 'n')
 		return (false);
 	while (*++arg)
 	{

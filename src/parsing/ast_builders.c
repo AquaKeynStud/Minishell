@@ -32,29 +32,31 @@ t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr)
 	return (node);
 }
 
-void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child, bool in_first)
+void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child, int index)
 {
 	int		i;
 	size_t	old_size;
 	size_t	new_size;
 
 	old_size = sizeof(t_ast *) * parent->sub_count;
-	new_size = sizeof(t_ast *) * (++parent->sub_count);
+	new_size = sizeof(t_ast *) * (parent->sub_count + 1);
 	parent->childs = s_realloc(ctx, parent->childs, old_size, new_size);
-	if (!in_first)
+	if (index == -1 || index >= parent->sub_count)
 	{
-		parent->childs[parent->sub_count - 1] = child;
+		parent->childs[parent->sub_count] = child;
+		parent->sub_count++;
 		return ;
 	}
-	i = parent->sub_count - 1;
-	while (i > 0)
+	i = parent->sub_count;
+	while (i > index)
 	{
 		parent->childs[i] = parent->childs[i - 1];
-		parent->childs[i - 1] = NULL;
 		i--;
 	}
-	parent->childs[0] = child;
+	parent->childs[index] = child;
+	parent->sub_count++;
 }
+
 
 void	remove_ast_child(t_ctx *ctx, t_ast *parent, int index)
 {
@@ -96,7 +98,8 @@ void	*free_ast(t_ctx *ctx, t_ast *node)
 		i++;
 	}
 	s_free(ctx, node->childs);
-	s_free(ctx, node->value);
+	if (node->value)
+		s_free(ctx, node->value);
 	s_free(ctx, node);
 	return (NULL);
 }

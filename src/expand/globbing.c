@@ -84,7 +84,7 @@ void	set_globbing(t_ctx *ctx, t_ast *parent, t_ast *child)
 		{
 			tmp = new_token(ctx, matches[match_i], TOKEN_WORD, NONE);
 			set_merge_value(&tmp, true);
-			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp), false);
+			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND, tmp), -1);
 			free_tokens(ctx, &tmp);
 			match_i++;
 		}

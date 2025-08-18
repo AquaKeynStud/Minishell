@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 14:55:02 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 16:08:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 20:47:10 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 	cat_empty_heredoc(ctx, cmd, tmp);
 	redir = new_ast(ctx, AST_REDIR, tmp);
 	file_node = new_ast(ctx, AST_COMMAND, *curr);
-	ast_add(ctx, redir, file_node, false);
+	ast_add(ctx, redir, file_node, -1);
 	redir_priority(ctx, cmd, redir);
 	*curr = (*curr)->next;
 	return (1);
@@ -56,7 +56,7 @@ bool	parse_parenthesis(t_ctx *ctx, t_token **curr, t_ast **cmd)
 		return (false);
 	}
 	*curr = (*curr)->next;
-	ast_add(ctx, *cmd, subcommand, false);
+	ast_add(ctx, *cmd, subcommand, -1);
 	return (true);
 }
 
@@ -79,7 +79,7 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 				stub = overwrite_stub(ctx, curr, &cmd);
 			else
 			{
-				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, *curr), false);
+				ast_add(ctx, stub, new_ast(ctx, AST_COMMAND, *curr), -1);
 				*curr = (*curr)->next;
 			}
 		}
@@ -109,8 +109,8 @@ static t_ast	*parse_pipeline(t_ctx *ctx, t_token **curr)
 		if (!right || !right->value)
 			return (double_free_ast(ctx, right, left));
 		pipe_node = new_ast(ctx, AST_PIPE, tmp);
-		ast_add(ctx, pipe_node, left, false);
-		ast_add(ctx, pipe_node, right, false);
+		ast_add(ctx, pipe_node, left, -1);
+		ast_add(ctx, pipe_node, right, -1);
 		left = pipe_node;
 	}
 	return (left);
@@ -137,8 +137,8 @@ t_ast	*parse_logical(t_ctx *ctx, t_token **curr)
 			logical_node = new_ast(ctx, AST_OR, tmp);
 		else
 			logical_node = new_ast(ctx, AST_AND, tmp);
-		ast_add(ctx, logical_node, left, false);
-		ast_add(ctx, logical_node, right, false);
+		ast_add(ctx, logical_node, left, -1);
+		ast_add(ctx, logical_node, right, -1);
 		left = logical_node;
 	}
 	return (left);

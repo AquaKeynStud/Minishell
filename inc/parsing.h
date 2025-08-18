@@ -53,7 +53,7 @@ void	*free_ast(t_ctx *ctx, t_ast *node);
 t_ast	*new_ast(t_ctx *ctx, t_ast_type type, t_token *curr);
 void	remove_ast_child(t_ctx *ctx, t_ast *parent, int index);
 void	*double_free_ast(t_ctx *ctx, t_ast *left, t_ast *right);
-void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child, bool in_first);
+void	ast_add(t_ctx *ctx, t_ast *parent, t_ast *child, int index);
 
 /* -- Bonus - Functions -- */
 bool	is_binary_op(t_token_type type);

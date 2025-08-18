@@ -30,7 +30,8 @@ static int	count_argv(t_ast *node)
 			i += 2;
 		else
 		{
-			count++;
+			if (node->quote != NONE || (node->value && *node->value))
+				count++;
 			i++;
 		}
 	}
@@ -80,8 +81,10 @@ char	**ast_to_argv(t_ctx *ctx, t_ast *node)
 	{
 		if (childs[i]->type == AST_REDIR)
 			i += 2;
-		else
+		else if (childs[i]->quote != NONE || *childs[i]->value)
 			argv[arg_idx++] = childs[i++]->value;
+		else
+			i++;
 	}
 	return (argv);
 }

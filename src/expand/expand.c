@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 06:13:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 14:18:02 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 20:59:46 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,17 @@ static bool	expand_child(t_ctx *ctx, t_ast *node, int *i)
 		remove_ast_child(ctx, node, *i);
 		return (true);
 	}
-	split_ifs(ctx, node, childs[*i]);
+	else if (*childs[*i]->value && childs[*i]->value[ft_strlen(childs[*i]->value) - 1] == '$'
+		&& childs[*i]->quote == NONE && (*i + 1) < sub && !childs[*i + 1]->has_space)
+	{
+		char *new = s_save(ctx, ft_strndup(childs[*i]->value, ft_strlen(childs[*i]->value) - 1));
+		s_free(ctx, childs[*i]->value);
+		childs[*i]->value = s_save(ctx, ft_strjoin(new, childs[*i + 1]->value));
+		s_free(ctx, new);
+		remove_ast_child(ctx, node, (*i) + 1);
+		return (true);
+	}
+	split_ifs(ctx, node, childs[*i], *i);
 	(*i)++;
 	return (false);
 }
@@ -62,7 +72,7 @@ t_ast	*expand_childs(t_ctx *ctx, t_ast *node)
 	expand_args(ctx, node);
 	if (!check_parent(ctx, node))
 		return (NULL);
-	split_ifs(ctx, NULL, node);
+	split_ifs(ctx, NULL, node, -1);
 	while (node->childs && i < node->sub_count)
 	{
 		childs = node->childs;

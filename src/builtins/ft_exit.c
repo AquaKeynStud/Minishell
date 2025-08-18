@@ -32,17 +32,17 @@ static int	str_is_numeric(char *arg)
 	return (0);
 }
 
-static void	interractive_exit(void)
-{
-	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO) && isatty(STDERR_FILENO))
-		ft_dprintf(2, "exit\n");
-}
+// static void	interractive_exit(void)
+// {
+// 	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO) && isatty(STDERR_FILENO))
+// 		ft_dprintf(2, "exit\n");
+// }
 
 static int	check_exit_args(int argc, char **args)
 {
 	if (argc > 2 && str_is_numeric(args[1]) == 0)
 	{
-		interractive_exit();
+		// interractive_exit();
 		ft_dprintf(2, "minishell: exit: too many arguments\n");
 		return (1);
 	}
@@ -50,7 +50,7 @@ static int	check_exit_args(int argc, char **args)
 	{
 		if (str_is_numeric(args[1]) == 2)
 		{
-			interractive_exit();
+			// interractive_exit();
 			ft_dprintf(2, "minishell: exit: ");
 			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
 			return (2);
@@ -68,7 +68,7 @@ static void	handle_exit(t_ctx *ctx, int argc, char **args)
 		arg = ft_atoll(args[1], &ctx->status) % 256;
 		if (ctx->status == 2)
 		{
-			interractive_exit();
+			// interractive_exit();
 			ft_dprintf(2, "minishell: exit: ");
 			ft_dprintf(2, "%s: numeric argument required\n", args[1]);
 			s_free(ctx, args);
@@ -76,11 +76,11 @@ static void	handle_exit(t_ctx *ctx, int argc, char **args)
 		}
 		ctx->status = arg % 256;
 		s_free(ctx, args);
-		interractive_exit();
+		// interractive_exit();
 		secure_exit(ctx);
 	}
 	s_free(ctx, args);
-	interractive_exit();
+	// interractive_exit();
 	secure_exit(ctx);
 }
 

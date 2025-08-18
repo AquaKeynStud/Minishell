@@ -90,12 +90,12 @@ void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)
 		}
 		if (!leaf)
 			return ;
-		ast_add(ctx, redir, leaf, false);
+		ast_add(ctx, redir, leaf, -1);
 		parent->childs[1] = redir;
 	}
 	else
 	{
-		ast_add(ctx, redir, *cmd, false);
+		ast_add(ctx, redir, *cmd, -1);
 		*cmd = redir;
 	}
 }

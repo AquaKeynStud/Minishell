@@ -49,6 +49,6 @@ void	merge_ast(t_ctx *ctx, t_ast *node);
 void	expand_args(t_ctx *ctx, t_ast *node);
 void	globbing_all(t_ctx *ctx, t_ast *node);
 t_ast	*expand_childs(t_ctx *ctx, t_ast *node);
-void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast);
+void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast, int index);
 
 #endif

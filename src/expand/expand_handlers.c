@@ -80,7 +80,12 @@ void	expand_args(t_ctx *ctx, t_ast *node)
 		else if (node->value[i] == '~' && node->quote == NONE)
 			i += 1 + expand_tilde(ctx, &res);
 		else if (node->value[i] == '$' && node->quote != SINGLE)
-			i += 1 + expand_env(ctx, node, &res, (i + 1));
+		{
+			if (!in_str(node->value[i + 1], "?_", true))
+				append(ctx, node, &res, &i);
+			else
+				i += 1 + expand_env(ctx, node, &res, (i + 1));
+		}
 		else
 			append(ctx, node, &res, &i);
 	}

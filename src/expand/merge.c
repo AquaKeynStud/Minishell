@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 13:51:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 21:09:45 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,25 @@
 #include "parsing.h"
 #include "minishell.h"
 
-static void	merge_splitted(t_ctx *ctx, char **table, t_ast *parent, t_ast *ast)
+static void	merge_splitted(t_ctx *ctx, char **table, t_ast *parent, int index)
 {
 	int		i;
 	t_token	*tmp;
 
-	i = 1;
+	i = 0;
+	if (index == -1)
+		i = 1;
 	while (table[i])
 	{
-		tmp = new_token(ctx, table[i++], TOKEN_WORD, NONE);
-		if (!parent)
-			ast_add(ctx, ast, new_ast(ctx, AST_COMMAND,
-					set_merge_value(&tmp, true)), true);
-		else
+		tmp = new_token(ctx, table[i], TOKEN_WORD, NONE);
 			ast_add(ctx, parent, new_ast(ctx, AST_COMMAND,
-					set_merge_value(&tmp, true)), false);
+					set_merge_value(&tmp, true)), index + i);
 		free_tokens(ctx, &tmp);
+		i++;
 	}
 }
 
-void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast)
+void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast, int index)
 {
 	char	*ifs;
 	char	**splitted;
@@ -44,9 +43,22 @@ void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast)
 	if (!ifs || !*ifs)
 		ifs = " \t\n";
 	splitted = ft_split_str(ast->value, ifs);
-	s_free(ctx, ast->value);
-	ast->value = s_save(ctx, ft_strdup(splitted[0]));
-	merge_splitted(ctx, splitted, parent, ast);
+	if (!splitted[1] || !*splitted[1])
+	{
+		double_free(ctx, (void **)splitted, 0);
+		return ;
+	}
+	if (parent)
+	{
+		remove_ast_child(ctx, parent, index);
+		merge_splitted(ctx, splitted, parent, index);
+	}
+	else
+	{
+		s_free(ctx, ast->value);
+		ast->value = s_save(ctx, ft_strdup(splitted[0]));
+		merge_splitted(ctx, splitted, ast, -1);
+	}
 	double_free(ctx, (void **)splitted, 0);
 	return ;
 }
@@ -87,6 +99,11 @@ static void	merge_childs(t_ctx *ctx, t_ast *node)
 			i++;
 			continue ;
 		}
+		// if (!*curr->value)
+		// {
+		// 	remove_ast_child(ctx, node, i);
+		// 	continue ;
+		// }
 		if (next->value && !next->has_space)
 		{
 			curr->value = ft_strjoin_free(ctx, curr->value, next->value);
