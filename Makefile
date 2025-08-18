@@ -170,7 +170,7 @@ valgrind: supp_file
 		--show-leak-kinds=all							\
 		--track-origins=yes 							\
 		--track-fds=yes									\
-		--suppressions=$(CURDIR)$(D_OBJ)$(SUPP_FILE)	\
+		--suppressions=$(CURDIR)/$(D_OBJ)$(SUPP_FILE)	\
 		./$(NAME)
 
 childs: supp_file

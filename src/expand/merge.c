@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:25:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/18 21:09:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 21:31:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast, int index)
 	splitted = ft_split_str(ast->value, ifs);
 	if (!splitted[1] || !*splitted[1])
 	{
-		double_free(ctx, (void **)splitted, 0);
-		return ;
+		s_free(ctx, ast->value);
+		ast->value = s_save(ctx, ft_strdup(splitted[0]));
 	}
-	if (parent)
+	else if (parent)
 	{
 		remove_ast_child(ctx, parent, index);
 		merge_splitted(ctx, splitted, parent, index);
@@ -99,11 +99,6 @@ static void	merge_childs(t_ctx *ctx, t_ast *node)
 			i++;
 			continue ;
 		}
-		// if (!*curr->value)
-		// {
-		// 	remove_ast_child(ctx, node, i);
-		// 	continue ;
-		// }
 		if (next->value && !next->has_space)
 		{
 			curr->value = ft_strjoin_free(ctx, curr->value, next->value);

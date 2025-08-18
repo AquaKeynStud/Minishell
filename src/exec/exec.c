@@ -123,19 +123,26 @@ static int	exec_command(t_ctx *ctx, t_ast *ast)
 
 int	execute_ast(t_ctx *ctx, t_ast *ast)
 {
-	ast = expand_childs(ctx, ast);
 	if (!ast)
 		return (ctx->status);
 	if (ast->type == AST_PIPE)
 		ctx->status = exec_pipe(ctx, ast);
-	else if (ast->type == AST_REDIR && ast->fd == -1 && has_one_redir(ctx, ast))
+	else if (ast->type == AST_REDIR && ast->fd == -1)
+	{
+		ast = expand_childs(ctx, ast);
+		if (!has_one_redir(ctx, ast))
+			return (ctx->status);
 		ctx->status = exec_redir(ctx, ast);
+	}
 	else if (ast->type == AST_AND || ast->type == AST_OR)
 		ctx->status = exec_operators(ctx, ast);
 	else if (ast->type == AST_SUB)
 		ctx->status = exec_subshell(ctx, ast->childs[0]);
 	else if (ast->type == AST_COMMAND && ast->value)
 	{
+		ast = expand_childs(ctx, ast);
+		if (!ast)
+			return (ctx->status);
 		if (ast->value && !ft_strcmp(ast->value, "!"))
 			ctx->status = 1;
 		else if (ast->value && is_builtin(ast->value))
