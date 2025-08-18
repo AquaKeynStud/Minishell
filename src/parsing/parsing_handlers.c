@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 14:55:02 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/18 20:47:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/18 22:43:57 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ static t_ast	*parse_command(t_ctx *ctx, t_token **curr, t_ast *stub)
 {
 	t_ast	*cmd;
 
-	if (parse_parenthesis(ctx, curr, &cmd))
-		return (cmd);
+	parse_parenthesis(ctx, curr, &cmd);
 	while (*curr && !is_binary_op((*curr)->type) && (*curr)->type != TOKEN_RPAR)
 	{
 		if ((*curr)->type != TOKEN_WORD && (*curr)->type != TOKEN_PIPE)

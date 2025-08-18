@@ -49,6 +49,7 @@ t_ast	*parse_input(t_ctx *ctx, t_token *tokens)
 	ast = parse_logical(ctx, &curr);
 	if (curr != NULL)
 	{
+		printf("C'est ici que ça coince\n");
 		parsing_err(ctx, curr->value, 2);
 		return (NULL);
 	}
