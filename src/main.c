@@ -85,7 +85,7 @@ static void	get_input_loop(t_ctx *ctx)
 			input = readline(NULL);
 		}
 		else
-			input = readline("minishell>");
+			input = readline("minishell => ");
 		if (!input)
 			break ;
 		if (*input || !*input)
