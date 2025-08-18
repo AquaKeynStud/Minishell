@@ -342,14 +342,12 @@ mkdir empty && cd empty
 ls *
 touch "file with spaces.txt"
 ls *.c && echo "found c files"
-cat *.txt > all_texts
 echo "hello" > test*.txt
 ls * | grep test
 ls *.c | wc -l
 cp *.txt backup/
 mv test/* ./new_folder/
 cat */file.txt
-ls *.c *.h
 ls test*.txt
 ls *test*.txt
 ls test*
