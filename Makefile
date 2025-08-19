@@ -128,7 +128,7 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
-	@$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
+	@$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
 	@echo "\033[34m$(NAME): $@ created\033[0m"
 
 -include $(DEPS)
