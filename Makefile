@@ -2,7 +2,7 @@
 
 .DELETE_ON_ERROR:
 
-NAME = minishell
+NAME := minishell
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ BASICS VARIABLES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
