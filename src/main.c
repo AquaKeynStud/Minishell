@@ -55,7 +55,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_token	*tokens;
 
 	tokens = tokenize(ctx, cmd);
-	if (!tokens || !tokens_err(ctx, tokens))
+	if (!tokens || !tokens_err(ctx, tokens) || !bonus_err(ctx, tokens))
 	{
 		close_unregistered_fds(ctx);
 		return (free_tokens(ctx, &tokens));

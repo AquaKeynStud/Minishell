@@ -25,6 +25,8 @@ void	free_tokens(t_ctx *ctx, t_token **list)
 		s_free(ctx, current);
 		current = next;
 	}
+	ctx->has_found_err = false;
+	ctx->err_in_tokens = false;
 	*list = NULL;
 }
 

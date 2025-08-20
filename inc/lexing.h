@@ -78,6 +78,8 @@ void	handle_quotes(t_ctx *ctx, t_lexing *s, t_token **tokens, char quote);
 int		is_op(char c);
 t_token	*get_last_token(t_token *tokens);
 void	init_s(t_lexing *s, char *input);
+bool	bonus_err(t_ctx *ctx, t_token *tokens);
+bool	tokens_err(t_ctx *ctx, t_token *tokens);
 char	*append_char(t_ctx *ctx, char *res, char c);
 char	*has_expand(t_ctx *ctx, char type, char *s);
 

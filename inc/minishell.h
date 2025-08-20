@@ -77,13 +77,11 @@ void	*s_realloc(t_ctx *ctx, void *ptr, size_t old_size, size_t new_size);
 int		s_exec_exit(int status);
 void	secure_exit(t_ctx *ctx);
 void	print_status(t_ctx *ctx);
+bool	is_only_whitespaces(char *str);
 int		set_status(t_ctx *ctx, int value);
 int		perror_code(const char *error, int exit_code);
 char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2);
 char	*join_with_delim(t_ctx *ctx, char *s1, char *s2, char *delimiter);
 void	double_free(t_ctx *ctx, void **ptr, size_t size_if_not_null_term);
-
-bool	is_only_whitespaces(char *str);
-bool	tokens_err(t_ctx *ctx, t_token *tokens);
 
 #endif

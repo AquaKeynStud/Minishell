@@ -80,12 +80,23 @@ bool	tokens_err(t_ctx *ctx, t_token *tokens)
 	return (true);
 }
 
-bool	is_only_whitespaces(char *str)
+bool	bonus_err(t_ctx *ctx, t_token *tokens)
 {
-	int	i;
+	t_token	*tmp;
 
-	i = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
-		i++;
-	return (str[i] == '\0');
+	tmp = tokens;
+	while (tmp)
+	{
+		if (tmp->type == TOKEN_AND && ft_strlen(tmp->value) != 2)
+		{
+			if (ft_strlen(tmp->value) > 2)
+				return (parsing_err(ctx, "&&", 2));
+			else if (ft_strlen(tmp->value) < 2)
+				return (parsing_err(ctx, "&", 2));
+		}
+		else if (tmp->type == TOKEN_OR && ft_strlen(tmp->value) != 2)
+			return (parsing_err(ctx, "||", 2));
+		tmp = tmp->next;
+	}
+	return (true);
 }

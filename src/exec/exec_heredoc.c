@@ -36,7 +36,7 @@ int	pid_verification(t_ctx *ctx, t_ast *node)
 	return (fd);
 }
 
-static void	exec_heredoc(t_ctx *ctx, char *prompt, const char *eof, int pipefd[2])
+static void	exec_heredoc(t_ctx *ctx, char *prompt, char *eof, int pipefd[2])
 {
 	char	*line;
 

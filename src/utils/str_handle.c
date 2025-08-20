@@ -102,21 +102,12 @@ char	*append_char(t_ctx *ctx, char *res, char c)
 	return (final);
 }
 
-void	print_status(t_ctx *ctx)
+bool	is_only_whitespaces(char *str)
 {
-	char	*cwd;
+	int	i;
 
-	if (ctx && ctx->status == 0)
-		ft_printf("\033[0m\033[1m\033[32m%s  \033[0m", "➜");
-	else
-		ft_printf("\033[1m\033[31m%s  \033[0m", "➜");
-	if (ctx && get_from_env(ctx->env, "USER"))
-		ft_printf("\033[35m\033[1m[%s] ", get_from_env(ctx->env, "USER"));
-	cwd = s_save(ctx, getcwd(NULL, 0));
-	if (cwd)
-	{
-		ft_printf("\033[36m\033[1m%s \033[0m", cwd);
-		s_free(ctx, cwd);
-	}
-	ft_printf("\033[33m\033[1m%s \033[0m\n", "✗");
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
+		i++;
+	return (str[i] == '\0');
 }

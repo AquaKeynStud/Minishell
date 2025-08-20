@@ -100,6 +100,8 @@ void	*free_ast(t_ctx *ctx, t_ast *node)
 	if (node->value)
 		s_free(ctx, node->value);
 	s_free(ctx, node);
+	ctx->err_in_tokens = false;
+	ctx->has_found_err = false;
 	return (NULL);
 }
 
