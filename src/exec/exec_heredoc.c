@@ -19,24 +19,6 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-static void	clear_hd_data(t_ctx *ctx)
-{
-	s_free(ctx, ctx->uid);
-	free_env(ctx, &ctx->env);
-	if (ctx->ast)
-		free_ast(ctx, ctx->ast);
-	if (ctx->tokens)
-		free_tokens(ctx, &ctx->tokens);
-	if (ctx->input)
-		s_free(ctx, ctx->input);
-	free_garbage(&ctx->allocs);
-	close_unregistered_fds(ctx);
-	if (ctx->stdin_fd > 2)
-		close(ctx->stdin_fd);
-	if (ctx->stdout_fd > 2)
-		close(ctx->stdout_fd);
-}
-
 int	pid_verification(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
@@ -58,11 +40,13 @@ static void	exec_heredoc(t_ctx *ctx, char *prompt, const char *eof, int pipefd[2
 {
 	char	*line;
 
-	clear_hd_data(ctx);
+	ctx->status = 0;
 	while (1)
 	{
+		if (ctx->status == 130)
+			break ;
 		line = readline(prompt);
-		if (!line || !ft_strcmp(line, eof))
+		if (!line || !ft_strcmp(line, eof) || ctx->status == 130)
 		{
 			if (line)
 				free(line);

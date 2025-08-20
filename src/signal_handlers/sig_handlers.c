@@ -30,6 +30,7 @@ void	handle_sigint(int signal)
 void	handle_sigint_heredoc(int signal)
 {
 	(void)signal;
+	set_status(NULL, 130);
+	close(STDIN_FILENO);
 	write(1, "\n", 1);
-	exit(130);
 }
