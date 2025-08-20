@@ -88,7 +88,7 @@ static void	get_input_loop(t_ctx *ctx)
 			input = readline("minishell => ");
 		if (!input)
 			break ;
-		if (*input || !*input)
+		if (input && *input)
 			add_history(input);
 		if (is_only_whitespaces(input))
 			continue ;

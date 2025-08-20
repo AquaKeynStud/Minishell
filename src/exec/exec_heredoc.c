@@ -19,6 +19,24 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
+static void	clear_hd_data(t_ctx *ctx)
+{
+	s_free(ctx, ctx->uid);
+	free_env(ctx, &ctx->env);
+	if (ctx->ast)
+		free_ast(ctx, ctx->ast);
+	if (ctx->tokens)
+		free_tokens(ctx, &ctx->tokens);
+	if (ctx->input)
+		s_free(ctx, ctx->input);
+	free_garbage(&ctx->allocs);
+	close_unregistered_fds(ctx);
+	if (ctx->stdin_fd > 2)
+		close(ctx->stdin_fd);
+	if (ctx->stdout_fd > 2)
+		close(ctx->stdout_fd);
+}
+
 int	pid_verification(t_ctx *ctx, t_ast *node)
 {
 	int	fd;
@@ -36,10 +54,11 @@ int	pid_verification(t_ctx *ctx, t_ast *node)
 	return (fd);
 }
 
-static void	exec_heredoc(char *prompt, const char *eof, int pipefd[2])
+static void	exec_heredoc(t_ctx *ctx, char *prompt, const char *eof, int pipefd[2])
 {
 	char	*line;
 
+	clear_hd_data(ctx);
 	while (1)
 	{
 		line = readline(prompt);
@@ -69,7 +88,7 @@ static pid_t	fork_heredoc(t_ctx *ctx, int pipefd[2], char *prompt, char *eof)
 	{
 		set_sigaction(SIGINT, handle_sigint_heredoc, "0000000");
 		close(pipefd[0]);
-		exec_heredoc(prompt, eof, pipefd);
+		exec_heredoc(ctx, prompt, eof, pipefd);
 		close_unregistered_fds(ctx);
 		secure_exit(ctx);
 	}
