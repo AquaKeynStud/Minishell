@@ -110,7 +110,7 @@ COLOR ?= false
 
 all:	$(NAME)
 
-$(NAME): $(LIBFT) $(OBJ) | $(D_OBJ) $(D_DEP) Makefile
+$(NAME): $(OBJ) $(INC) $(LIBFT) | $(D_OBJ) $(D_DEP) Makefile
 	@echo "\033[35mCompilation de $(NAME)...\033[0m"
 #	$(info ⏱️  Rebuild check: $?)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
@@ -127,14 +127,14 @@ $(D_DEP):
 
 vpath %.c $(D_SRCS)
 
-$(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
+$(D_OBJ)%.o: %.c $(INC) $(LIBFT) | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
 	@echo "\033[34m$(NAME): $@ created\033[0m"
 
 -include $(DEPS)
 
-$(LIBFT):
-	$(MAKE) -C $(D_LFT)
+$(LIBFT): $(shell find $(D_LFT) -name "*.c") $(shell find $(D_LFT) -name "*.h") $(D_LFT)Makefile
+	@$(MAKE) -C $(D_LFT)
 
 clean:
 ifeq ($(SHOW_MSG_CLEAN), true)
