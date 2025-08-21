@@ -32,7 +32,7 @@ static bool	is_ope(t_token *token)
 	);
 }
 
-static bool	check_parenthesis(t_ctx *ctx, t_token *tmp, int *count)
+static bool	check_bonus(t_ctx *ctx, t_token *tmp, int *count)
 {
 	if (tmp->type == TOKEN_LPAR)
 	{
@@ -48,6 +48,15 @@ static bool	check_parenthesis(t_ctx *ctx, t_token *tmp, int *count)
 			return (parsing_err(ctx, tmp->next->value, 2));
 		(*count)--;
 	}
+	else if (tmp->type == TOKEN_AND && ft_strlen(tmp->value) != 2)
+	{
+		if (ft_strlen(tmp->value) > 2)
+			return (parsing_err(ctx, "&&", 2));
+		else if (ft_strlen(tmp->value) < 2)
+			return (parsing_err(ctx, "&", 2));
+	}
+	else if (tmp->type == TOKEN_OR && ft_strlen(tmp->value) != 2)
+		return (parsing_err(ctx, "||", 2));
 	return (true);
 }
 
@@ -62,7 +71,7 @@ bool	tokens_err(t_ctx *ctx, t_token *tokens)
 		return (parsing_err(ctx, tmp->value, 2));
 	while (tmp->next)
 	{
-		if (!check_parenthesis(ctx, tmp, &lpar_counter))
+		if (!check_bonus(ctx, tmp, &lpar_counter))
 			return (false);
 		else if (is_redir(tmp) && tmp->next->type != TOKEN_WORD)
 			return (parsing_err(ctx, tmp->next->value, 2));
@@ -77,26 +86,5 @@ bool	tokens_err(t_ctx *ctx, t_token *tokens)
 		return (parsing_err(ctx, ")", 2));
 	if (lpar_counter > 0)
 		return (parsing_err(ctx, "(", 2));
-	return (true);
-}
-
-bool	bonus_err(t_ctx *ctx, t_token *tokens)
-{
-	t_token	*tmp;
-
-	tmp = tokens;
-	while (tmp)
-	{
-		if (tmp->type == TOKEN_AND && ft_strlen(tmp->value) != 2)
-		{
-			if (ft_strlen(tmp->value) > 2)
-				return (parsing_err(ctx, "&&", 2));
-			else if (ft_strlen(tmp->value) < 2)
-				return (parsing_err(ctx, "&", 2));
-		}
-		else if (tmp->type == TOKEN_OR && ft_strlen(tmp->value) != 2)
-			return (parsing_err(ctx, "||", 2));
-		tmp = tmp->next;
-	}
 	return (true);
 }
