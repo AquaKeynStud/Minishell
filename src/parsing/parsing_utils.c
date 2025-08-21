@@ -51,9 +51,8 @@ int	err_redir(t_ctx *ctx, t_token *tmp, t_token **curr)
 	return (2);
 }
 
-void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
+void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *op)
 {
-	t_ast	*stub;
 	t_token	*temp;
 
 	if (!*cmd)
@@ -62,16 +61,8 @@ void	cat_empty_heredoc(t_ctx *ctx, t_ast **cmd, t_token *tmp)
 		set_merge_value(&temp, true);
 		*cmd = new_ast(ctx, AST_COMMAND, temp);
 		s_free(ctx, temp);
-		return ;
 	}
-	if (tmp->type == TOKEN_HEREDOC)
-	{
-		stub = *cmd;
-		while (stub->type == AST_REDIR)
-			stub = stub->childs[1];
-		if (!stub->value)
-			stub->value = s_save(ctx, ft_strdup("cat"));
-	}
+	(void)op;
 }
 
 void	redir_priority(t_ctx *ctx, t_ast **cmd, t_ast *redir)

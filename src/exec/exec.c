@@ -127,7 +127,7 @@ int	execute_ast(t_ctx *ctx, t_ast *ast)
 		return (ctx->status);
 	if (ast->type == AST_PIPE)
 		ctx->status = exec_pipe(ctx, ast);
-	else if (ast->type == AST_REDIR && ast->fd == -1)
+	else if (ast->type == AST_REDIR)
 	{
 		ast = expand_childs(ctx, ast);
 		if (!has_one_redir(ctx, ast))

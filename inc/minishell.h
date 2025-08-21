@@ -44,6 +44,7 @@ typedef struct s_ctx
 	char		*input;
 	t_token		*tokens;
 	t_allocs	*allocs;
+	int			lines_nb;
 	int			stdin_fd;
 	int			stdout_fd;
 	bool		err_in_tokens;

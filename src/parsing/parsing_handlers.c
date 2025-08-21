@@ -14,21 +14,27 @@
 
 int	parse_redirs(t_ctx *ctx, t_ast **cmd, t_token **curr)
 {
-	int		err;
-	t_token	*tmp;
+	t_token	*op;
 	t_ast	*redir;
 	t_ast	*file_node;
 
 	if (!*curr)
 		return (1);
-	tmp = *curr;
+	op = *curr;
 	*curr = (*curr)->next;
-	err = err_redir(ctx, tmp, curr);
-	if (err != 2)
-		return (err);
-	cat_empty_heredoc(ctx, cmd, tmp);
-	redir = new_ast(ctx, AST_REDIR, tmp);
+	if (err_redir(ctx, op, curr) != 2)
+		return (err_redir(ctx, op, curr));
+	cat_empty_heredoc(ctx, cmd, op);
+	if (!*curr || (*curr)->type != TOKEN_WORD)
+		return (1);
 	file_node = new_ast(ctx, AST_COMMAND, *curr);
+	while ((*curr)->next && (*curr)->next->type == TOKEN_WORD
+		&& (*curr)->next->has_space == false)
+	{
+		ast_add(ctx, file_node, new_ast(ctx, AST_COMMAND, (*curr)->next), -1);
+		*curr = (*curr)->next;
+	}
+	redir = new_ast(ctx, AST_REDIR, op);
 	ast_add(ctx, redir, file_node, -1);
 	redir_priority(ctx, cmd, redir);
 	*curr = (*curr)->next;

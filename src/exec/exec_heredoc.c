@@ -38,9 +38,11 @@ int	pid_verification(t_ctx *ctx, t_ast *node)
 
 static void	exec_heredoc(t_ctx *ctx, char *prompt, char *eof, int pipefd[2])
 {
+	char	*err;
 	char	*line;
 
 	ctx->status = 0;
+	err = "here-document at line %i delimited by end-of-file (wanted `%s')\n";
 	while (1)
 	{
 		if (ctx->status == 130)
@@ -50,6 +52,11 @@ static void	exec_heredoc(t_ctx *ctx, char *prompt, char *eof, int pipefd[2])
 		{
 			if (line)
 				free(line);
+			else if (!line && ctx->status != 130)
+			{
+				ft_dprintf(2, "minishell: warning: ");
+				ft_dprintf(2, err, ctx->lines_nb, eof);
+			}
 			break ;
 		}
 		ft_dprintf(pipefd[1], "%s\n", line);
@@ -122,6 +129,7 @@ int	check_hd(t_ctx *ctx, t_ast *ast)
 	{
 		if (!ft_strcmp(ast->value, "<<"))
 		{
+			merge_redir(ctx, ast);
 			if (!ast->childs[0]->value || !*ast->childs[0]->value)
 				return (parsing_err(ctx, "newline", 2));
 			fd = here_doc(ctx, ast->childs[0]->value);

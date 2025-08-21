@@ -184,3 +184,15 @@ childs: supp_file
 		--trace-children=yes							\
 		--suppressions=$(CURDIR)/$(D_OBJ)$(SUPP_FILE)	\
 		./$(NAME)
+
+env: supp_file
+	@$(MAKE)
+	@clear
+	env -i valgrind										\
+		--leak-check=full								\
+		--show-leak-kinds=all							\
+		--track-origins=yes 							\
+		--track-fds=yes									\
+		--trace-children=yes							\
+		--suppressions=$(CURDIR)/$(D_OBJ)$(SUPP_FILE)	\
+		./$(NAME)

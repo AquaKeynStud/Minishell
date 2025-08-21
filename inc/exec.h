@@ -47,6 +47,7 @@ int		exec_subshell(t_ctx *ctx, t_ast *subtree);
 void	sort_char_table(char **arr);
 void	glob_ast(t_ctx *ctx, t_ast *node);
 void	merge_ast(t_ctx *ctx, t_ast *node);
+void	merge_redir(t_ctx *ctx, t_ast *node);
 void	expand_args(t_ctx *ctx, t_ast *node);
 void	globbing_all(t_ctx *ctx, t_ast *node);
 void	check_command(t_ctx *ctx, t_ast *ast);

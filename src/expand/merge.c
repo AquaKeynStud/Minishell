@@ -69,14 +69,19 @@ void	merge_redir(t_ctx *ctx, t_ast *node)
 	if (!node->childs || node->sub_count < 2)
 		return ;
 	merge_ast(ctx, cmd);
+	if ((!file->value || !*file->value) && file->sub_count && file->childs[0])
+	{
+		file->value = s_save(ctx, ft_strdup(file->childs[0]->value));
+		remove_ast_child(ctx, file, 0);
+	}
+	while (file->sub_count && !file->childs[0]->has_space)
+	{
+		file->value = s_save(ctx,
+				ft_strjoin(file->value, file->childs[0]->value));
+		remove_ast_child(ctx, file, 0);
+	}
 	if (!file->value || !*file->value)
 		remove_ast_child(ctx, node, 0);
-	if (node->sub_count >= 2 && !cmd->has_space)
-	{
-		file->value = ft_strjoin_free(ctx, file->value, cmd->value);
-		cmd->value = NULL;
-		remove_ast_child(ctx, node, 1);
-	}
 }
 
 static void	merge_childs(t_ctx *ctx, t_ast *node)

@@ -22,6 +22,7 @@ static void	init_context(t_ctx *ctx, char **argv, char **envp)
 	ctx->fds = NULL;
 	ctx->ast = NULL;
 	ctx->status = 0;
+	ctx->lines_nb = 0;
 	ctx->input = NULL;
 	ctx->tokens = NULL;
 	ctx->allocs = NULL;
@@ -55,7 +56,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	t_token	*tokens;
 
 	tokens = tokenize(ctx, cmd);
-	if (!tokens || !tokens_err(ctx, tokens) || !bonus_err(ctx, tokens))
+	if (!tokens || !bonus_err(ctx, tokens) || !tokens_err(ctx, tokens))
 	{
 		close_unregistered_fds(ctx);
 		return (free_tokens(ctx, &tokens));
@@ -72,20 +73,17 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 	destroy_command(&ctx, &tokens, &ast);
 }
 
-static void	get_input_loop(t_ctx *ctx)
+static void	get_input_loop(t_ctx *ctx, const char *prompt)
 {
 	char	*input;
 
 	input = NULL;
-	while (1)
+	while (true)
 	{
-		if (COLOR)
-		{
+		ctx->lines_nb++;
+		if (!prompt)
 			print_status(ctx);
-			input = readline(NULL);
-		}
-		else
-			input = readline("minishell => ");
+		input = readline(prompt);
 		if (!input)
 			break ;
 		if (input && *input)
@@ -104,6 +102,7 @@ static void	get_input_loop(t_ctx *ctx)
 int	main(int argc, char **argv, char **envp)
 {
 	t_ctx	ctx;
+	char	*prompt;
 
 	(void)argc;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
@@ -115,7 +114,10 @@ int	main(int argc, char **argv, char **envp)
 	init_context(&ctx, argv, envp);
 	set_status(&ctx, 0);
 	sig_init();
-	get_input_loop(&ctx);
+	prompt = "minishell => ";
+	if (COLOR)
+		prompt = NULL;
+	get_input_loop(&ctx, prompt);
 	rl_clear_history();
 	ft_printf("exit\n");
 	secure_exit(&ctx);
