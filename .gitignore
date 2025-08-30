@@ -6,5 +6,6 @@
 .obj/
 minishell
 testeur_minishell
-libft/obj
+libft/.obj/
+libft/.dep/
 libft/libft.a

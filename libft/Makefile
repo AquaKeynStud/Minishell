@@ -1,37 +1,89 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: arocca <arocca@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/20 09:07:20 by abouclie          #+#    #+#              #
-#    Updated: 2025/07/07 09:11:46 by arocca           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+.PHONY : all clean fclean re
 
-NAME	=	libft.a
-CC		=	cc
-FLAGS	=	-Wall -Wextra -Werror -MMD -MP
-REMOVE	=	rm -rf
-MKDIR	=	mkdir -p
+.DELETE_ON_ERROR:
 
-OBJ_DIR	=	./obj
-DEP_DIR	=	./dep
+NAME := libft.a
 
-SRCS	=	ft_atoi.c ft_atoll.c ft_bzero.c ft_calloc.c ft_abs.c\
-			ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
-			ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c \
-			ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_realloc.c \
-			ft_split.c ft_split_str.c ft_strchr.c ft_strcmp.c ft_strndup.c ft_strdup.c \
-			ft_striteri.c ft_strjoin.c ft_strlcat.c ft_strlen.c ft_strmapi.c ft_strncmp.c \
-			ft_strnstr.c ft_strchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c \
-			ft_putnbr.c ft_putstr_fd.c ft_trim.c in_str.c is_whitespace.c \
-			ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
-			ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
-			gnl/get_next_line.c gnl/get_next_line_utils.c \
+# ╭━━━━━━━━━━━━══════════╕出 ❖ BASICS VARIABLES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
-P_SRC	=	main.c					\
+CC				:=	cc
+
+CFLAGS			:=	-Wall -Wextra -Werror -MMD -MP
+
+RM				:=	rm	-rf
+
+SHOW_MSG_CLEAN	=	true
+
+MAKEFLAGS		+=	--no-print-directory
+
+# ╰━━━━━━━━━━━━━━━━════════════════╛出 ❖ 力╘════════════════━━━━━━━━━━━━━━━━╯ #
+
+# ╭━━━━━━━━━━━━══════════╕出 ❖ FILE TREE ❖ 力╒═══════════━━━━━━━━━━━━╮ #
+
+# directories
+D_OBJ	=	.obj/
+D_DEP	=	.dep/
+D_PTF	=	./printf/
+D_GNL	=	./gnl/
+
+LST_SRC	=	ft_abs.c				\
+			in_str.c				\
+			ft_atoi.c				\
+			ft_itoa.c				\
+			ft_trim.c				\
+			ft_atoll.c				\
+			ft_bzero.c				\
+			ft_split.c				\
+			ft_calloc.c				\
+			ft_memchr.c				\
+			ft_memcmp.c				\
+			ft_memcpy.c				\
+			ft_memset.c				\
+			ft_strchr.c				\
+			ft_strcmp.c				\
+			ft_lstmap.c				\
+			ft_lstnew.c				\
+			ft_strdup.c				\
+			ft_strlen.c				\
+			ft_substr.c				\
+			ft_putnbr.c				\
+			ft_isalnum.c			\
+			ft_isalpha.c			\
+			ft_isascii.c			\
+			ft_isdigit.c			\
+			ft_isprint.c			\
+			ft_memmove.c			\
+			ft_realloc.c			\
+			ft_strndup.c			\
+			ft_strjoin.c			\
+			ft_strlcat.c			\
+			ft_strlcpy.c			\
+			ft_strmapi.c			\
+			ft_strncmp.c			\
+			ft_strncpy.c			\
+			ft_strnstr.c			\
+			ft_strrchr.c			\
+			ft_strtrim.c			\
+			ft_lstiter.c			\
+			ft_lstlast.c			\
+			ft_lstsize.c			\
+			ft_tolower.c			\
+			ft_toupper.c			\
+			ft_striteri.c			\
+			ft_lstclear.c			\
+			ft_split_str.c			\
+			ft_putnbr_fd.c			\
+			ft_putstr_fd.c			\
+			ft_lstdelone.c			\
+			ft_putchar_fd.c			\
+			ft_putendl_fd.c			\
+			is_whitespace.c			\
+			ft_lstadd_back.c		\
+			ft_lstadd_front.c		\
+			gnl/get_next_line.c		\
+			gnl/get_next_line_utils.c
+
+LST_PTF	=	main.c					\
 			utils.c					\
 			handlers.c				\
 			printers.c				\
@@ -44,39 +96,56 @@ P_SRC	=	main.c					\
 			bonus_printers_spxX.c	\
 			bonus_error_handler.c	\
 
-P_LST	=	$(addprefix printf/, $(P_SRC))
+LST_GNL	=	get_next_line.c			\
+			get_next_line_utils.c
 
-OBJS	=	$(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
-OBJS	+=	$(addprefix $(OBJ_DIR)/, $(P_LST:.c=.o))
-DEPS	=	$(addprefix $(DEP_DIR)/, $(SRCS:.c=.d))
+LST_INC		=	libft.h ft_printf.h
 
-HEADERS	=	libft.h ft_printf.h
-MAKEFILE=	Makefile
+LST_SRCS	=	$(LST_SRC) $(LST_PTF) $(LST_GNL)
+
+OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRCS:.c=.o)))
+
+INC			:=	-I.
+
+DEP		=	$(addprefix $(D_DEP), $(notdir $(LST_SRCS:.c=.d)))
 
 GREEN	=	\033[0;32m
+YELLOW	=	\033[33m
 RESET	=	\033[0m
 
-all:	${NAME}
+all:	$(NAME)
 
-${NAME}:	${OBJS} ${HEADERS} ${MAKEFILE}
-	@ar -rcs $(NAME) $(OBJS)
-	@echo "$(GREEN)\n$(NAME): $(NAME) created$(RESET)\n\n"
+$(NAME): $(OBJ) $(LST_INC) Makefile | $(D_OBJ) $(D_DEP) Makefile
+	@ar -rcs $(NAME) $(OBJ)
+	@echo "$(GREEN)\nLIBFT: $(NAME) created$(RESET)\n\n"
 
-$(OBJ_DIR)/%.o: %.c ${HEADERS} ${MAKEFILE}
-	@$(MKDIR) $(dir $@) $(patsubst $(OBJ_DIR)%,$(DEP_DIR)%,$(dir $@))
-	@${CC} ${FLAGS} -I. -c $< -o $@ -MF $(patsubst $(OBJ_DIR)%.o,$(DEP_DIR)%.d,$@)
-	@echo "$(GREEN)$(NAME): $@ created$(RESET)"
+$(D_OBJ):
+	@mkdir -p $@
 
-clean:
-	@${REMOVE} ${OBJ_DIR} ${DEP_DIR}
-	@echo "$(GREEN)\n$(NAME): object files and dependencies deleted$(RESET)"
+$(D_DEP):
+	@mkdir -p $@
 
-fclean:		clean
-	@${REMOVE} ${NAME}
-	@echo "$(GREEN)\n${NAME}: ${NAME} deleted$(RESET)"
+vpath %.c . $(D_PTF) $(D_GNL)
 
-re:			fclean all
-
-.PHONY: all clean fclean re
+$(D_OBJ)%.o: %.c $(LST_INC) Makefile | $(D_OBJ) $(D_DEP) Makefile
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
+	@echo "$(YELLOW)LIBFT: $@ created$(RESET)"
 
 -include $(DEPS)
+
+clean:
+	@$(RM) $(D_OBJ) $(D_DEP)
+	@echo "$(GREEN)$(NAME): object files and dependencies deleted$(RESET)\n"
+
+fclean:
+	@$(MAKE) clean
+	@$(RM) $(NAME)
+	@echo "$(GREEN)$(NAME): $(NAME) deleted$(RESET)\n"
+
+re:
+	@$(MAKE) fclean
+	@$(MAKE) all
+	@echo "\e[0;32m$(NAME) archive recreated successfully ! 🫡\e[0m"
+
+norminette:
+	norminette . $(D_PTF) $(D_GNL)

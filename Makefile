@@ -35,7 +35,12 @@ D_PAR	=	$(D_SRC)parsing/
 D_BLT	=	$(D_SRC)builtins/
 D_SIG	=	$(D_SRC)signal_handlers/
 
-D_SRCS	= $(D_SRC) $(D_EXE) $(D_TOK) $(D_EXP) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
+D_GNL	=	$(D_LFT)gnl/
+D_PTF	=	$(D_LFT)printf/
+
+D_LFTS	=	$(D_LFT) $(D_GNL) $(D_PTF)
+
+D_SRCS	=	$(D_SRC) $(D_EXE) $(D_TOK) $(D_EXP) $(D_BLT) $(D_PAR) $(D_SIG) $(D_UTL)
 
 # file lists
 LST_SRC		=	main.c
@@ -94,13 +99,15 @@ INC			=	$(addprefix $(D_INC), $(LST_INC))
 
 OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRCS:.c=.o)))
 
-DEPS		=	$(addprefix $(D_DEPS), $(notdir $(LST_SRCS:.c=.d)))
+DEPS		=	$(addprefix $(D_DEP), $(notdir $(LST_SRCS:.c=.d)))
 
 LIBS		:=	-L$(D_LFT) -lft -lreadline -lncurses
 
 INCS		:=	-I$(D_INC) -I$(D_LFT)
 
 LIBFT		:=	$(D_LFT)libft.a
+
+LFT_DEP		=	$(foreach dir, $(D_LFTS), $(wildcard $(dir)*.c $(dir)*.h $(dir)Makefile))
 
 SUPP_FILE	:=	readline.supp
 
@@ -110,7 +117,7 @@ COLOR ?= false
 
 all:	$(NAME)
 
-$(NAME): $(OBJ) $(INC) $(LIBFT) | $(D_OBJ) $(D_DEP) Makefile
+$(NAME): $(LIBFT) $(OBJ) $(INC) Makefile | $(D_OBJ) $(D_DEP) Makefile
 	@echo "\033[35mCompilation de $(NAME)...\033[0m"
 #	$(info ⏱️  Rebuild check: $?)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
@@ -127,14 +134,20 @@ $(D_DEP):
 
 vpath %.c $(D_SRCS)
 
-$(D_OBJ)%.o: %.c $(INC) $(LIBFT) | $(D_OBJ) $(D_DEP) Makefile
+$(D_OBJ)%.o: %.c $(INC) Makefile | $(D_OBJ) $(D_DEP) Makefile
 	@$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
 	@echo "\033[34m$(NAME): $@ created\033[0m"
 
--include $(DEPS)
+# LFT_SRCS := $(shell find $(D_LFT) -type f -name '*.c')
+# LFT_HDRS := $(shell find $(D_LFT) -type f -name '*.h')
 
-$(LIBFT): $(shell find $(D_LFT) -name "*.c") $(shell find $(D_LFT) -name "*.h") $(D_LFT)Makefile
+LFT_SRCS := $(wildcard $(D_LFT)/**/*.c)
+LFT_HDRS := $(wildcard $(D_LFT)/**/*.h)
+
+$(LIBFT): $(LFT_DEP)
 	@$(MAKE) -C $(D_LFT)
+
+-include $(DEPS)
 
 clean:
 ifeq ($(SHOW_MSG_CLEAN), true)
@@ -144,8 +157,8 @@ endif
 	@$(RM) $(D_OBJ) $(D_DEP)
 
 fclean:
-	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(MAKE) -s -C $(D_LFT) fclean
+	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(RM) $(NAME)
 	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
