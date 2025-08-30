@@ -38,7 +38,7 @@ static void	interractive_exit(void)
 		ft_dprintf(2, "exit\n");
 }
 
-static int	check_exit_args(int argc, char **args)
+static int	check_exit_args(t_ctx *ctx, int argc, char **args)
 {
 	if (argc > 2 && str_is_numeric(args[1]) == 0)
 	{
@@ -56,7 +56,7 @@ static int	check_exit_args(int argc, char **args)
 			return (2);
 		}
 	}
-	return (0);
+	return (ctx->status);
 }
 
 static void	handle_exit(t_ctx *ctx, int argc, char **args)
@@ -86,8 +86,8 @@ static void	handle_exit(t_ctx *ctx, int argc, char **args)
 
 int	ft_exit(t_ctx *ctx, int argc, char **args)
 {
-	ctx->status = check_exit_args(argc, args);
-	if (ctx->status)
+	ctx->status = check_exit_args(ctx, argc, args);
+	if (ctx->status == 1 || ctx->status == 2)
 	{
 		if (ctx->status == 2)
 		{
