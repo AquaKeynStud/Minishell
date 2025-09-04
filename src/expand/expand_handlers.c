@@ -3,15 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   expand_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 13:56:01 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 13:57:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/04 08:07:07 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include "minishell.h"
+
+void	replace_char(t_ast *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->value[i])
+	{
+		if (node->value[i] == -1)
+			node->value[i] = '*';
+		i++;
+	}
+}
 
 static void	append(t_ctx *ctx, t_ast *node, char **res, int *i)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:53:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/13 10:09:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/04 08:18:42 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int		exec_operators(t_ctx *ctx, t_ast *ast);
 int		exec_subshell(t_ctx *ctx, t_ast *subtree);
 
 /* -- Expand - Functions -- */
+void	replace_char(t_ast *node);
 void	sort_char_table(char **arr);
 void	glob_ast(t_ctx *ctx, t_ast *node);
 void	merge_ast(t_ctx *ctx, t_ast *node);
@@ -52,6 +53,7 @@ void	expand_args(t_ctx *ctx, t_ast *node);
 void	globbing_all(t_ctx *ctx, t_ast *node);
 void	check_command(t_ctx *ctx, t_ast *ast);
 t_ast	*expand_childs(t_ctx *ctx, t_ast *node);
+void	remove_wlcd(t_ctx *ctx, t_token *tokens);
 void	split_ifs(t_ctx *ctx, t_ast *parent, t_ast *ast, int index);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 06:13:33 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/18 23:43:16 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/04 08:06:42 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,27 @@ static bool	expand_child(t_ctx *ctx, t_ast *node, int *i)
 	return (false);
 }
 
+static void	replace_wlcd(t_ast *ast)
+{
+	int		j;
+	t_ast	*tmp;
+
+	tmp = ast;
+	if (tmp->type != AST_COMMAND)
+	{
+		replace_wlcd(ast->childs[0]);
+		replace_wlcd(ast->childs[1]);
+	}
+	if (tmp->value && *tmp->value)
+		replace_char(tmp);
+	j = 0;
+	while (j < tmp->sub_count && tmp->childs && tmp->childs[j])
+	{
+		replace_char(tmp->childs[j]);
+		j++;
+	}
+}
+
 t_ast	*expand_childs(t_ctx *ctx, t_ast *node)
 {
 	int		i;
@@ -94,5 +115,6 @@ t_ast	*expand_childs(t_ctx *ctx, t_ast *node)
 	}
 	merge_ast(ctx, node);
 	glob_ast(ctx, node);
+	replace_wlcd(node);
 	return (node);
 }

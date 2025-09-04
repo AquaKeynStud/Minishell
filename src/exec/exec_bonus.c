@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 09:26:55 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/13 10:33:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/04 08:16:07 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,30 @@ int	exec_subshell(t_ctx *ctx, t_ast *subtree)
 	waitpid(pid, &ctx->status, 0);
 	sig_init();
 	return (s_exec_exit(ctx->status));
+}
+
+void	remove_wlcd(t_ctx *ctx, t_token *tokens)
+{
+	int		i;
+	t_token	*tmp;
+
+	(void)ctx;
+	tmp = tokens;
+	while (tmp)
+	{
+		if (tmp->type != TOKEN_WORD || tmp->quote == NONE
+			|| !tmp->value || !*tmp->value)
+		{
+			tmp = tmp->next;
+			continue ;
+		}
+		i = 0;
+		while (tmp->value[i])
+		{
+			if (tmp->value[i] == '*')
+				tmp->value[i] = -1;
+			i++;
+		}
+		tmp = tmp->next;
+	}
 }

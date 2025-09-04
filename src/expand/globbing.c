@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   globbing.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:27:03 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/15 12:17:54 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/04 08:22:37 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "parsing.h"
 
-static int	match(const char *str, const char *pattern)
+static int	match(char *str, const char *pattern)
 {
 	if (*pattern == '\0')
 		return (*str == '\0');
 	if (*pattern == '*')
 		return (match(str, pattern + 1) || (*str && match(str + 1, pattern)));
-	if (*pattern == *str)
+	if (*pattern == *str || (*pattern == -1 && *str == '*'))
 		return (match(str + 1, pattern + 1));
 	return (0);
 }
 
-char	**append_str_to_array(t_ctx *ctx, char **arr, const char *str)
+char	**append_str_to_array(t_ctx *ctx, char **arr, char *str)
 {
 	size_t	count;
 

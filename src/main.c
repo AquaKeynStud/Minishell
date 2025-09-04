@@ -6,7 +6,7 @@
 /*   By: abouclie <abouclie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:53:51 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/23 00:57:01 by abouclie         ###   ########.fr       */
+/*   Updated: 2025/09/04 08:16:42 by abouclie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static void	command_handler(t_ctx *ctx, char *cmd)
 		close_unregistered_fds(ctx);
 		return (free_tokens(ctx, &tokens));
 	}
+	remove_wlcd(ctx, tokens);
 	ast = parse_input(ctx, tokens);
 	ctx->ast = ast;
 	ctx->tokens = tokens;
