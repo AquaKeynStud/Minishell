@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:04:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/11 00:37:41 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/06 13:41:11 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	**ast_to_argv(t_ctx *ctx, t_ast *node)
 	argc = count_argv(node);
 	argv = s_malloc(ctx, (argc + 2) * sizeof(char *));
 	argv[0] = node->value;
-	argv[argc + 1] = NULL;
+	argv[argc] = NULL;
 	while (i < node->sub_count)
 	{
 		if (childs[i]->type == AST_REDIR)

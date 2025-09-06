@@ -135,14 +135,8 @@ $(D_DEP):
 vpath %.c $(D_SRCS)
 
 $(D_OBJ)%.o: %.c $(INC) Makefile | $(D_OBJ) $(D_DEP) Makefile
-	@$(CC) $(CFLAGS) -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
+	@$(CC) $(CFLAGS) -g3 -D COLOR=$(COLOR) $(INCS) -c $< -o $@ -MF $(D_DEP)$(notdir $*.d)
 	@echo "\033[34m$(NAME): $@ created\033[0m"
-
-# LFT_SRCS := $(shell find $(D_LFT) -type f -name '*.c')
-# LFT_HDRS := $(shell find $(D_LFT) -type f -name '*.h')
-
-LFT_SRCS := $(wildcard $(D_LFT)/**/*.c)
-LFT_HDRS := $(wildcard $(D_LFT)/**/*.h)
 
 $(LIBFT): $(LFT_DEP)
 	@$(MAKE) -C $(D_LFT)
