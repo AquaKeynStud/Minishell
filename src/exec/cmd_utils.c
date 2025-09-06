@@ -19,22 +19,26 @@
 
 static int	count_argv(t_ast *node)
 {
-	int	i;
-	int	count;
+	int		i;
+	int		count;
+	t_ast	*child;
 
 	i = 0;
 	count = 0;
 	while (i < node->sub_count)
 	{
-		if (node->childs[i]->type == AST_REDIR)
+		child = node->childs[i];
+		if (child->type == AST_REDIR)
 			i += 2;
 		else
 		{
-			if (node->quote != NONE || (node->value && *node->value))
+			if (child->value && (*child->value || child->quote != NONE))
 				count++;
 			i++;
 		}
 	}
+	if (node->value && (*node->value || node->quote != NONE))
+		count++;
 	return (count);
 }
 
@@ -66,26 +70,25 @@ char	**ast_to_argv(t_ctx *ctx, t_ast *node)
 	int		argc;
 	char	**argv;
 	int		arg_idx;
-	t_ast	**childs;
+	t_ast	**ast;
 
-	if (!node)
-		return (NULL);
 	i = 0;
-	arg_idx = 1;
-	childs = node->childs;
+	arg_idx = 0;
+	ast = node->childs;
 	argc = count_argv(node);
-	argv = s_malloc(ctx, (argc + 2) * sizeof(char *));
-	argv[0] = node->value;
-	argv[argc] = NULL;
+	argv = s_malloc(ctx, (argc + 1) * sizeof(char *));
+	argv[arg_idx++] = node->value;
 	while (i < node->sub_count)
 	{
-		if (childs[i]->type == AST_REDIR)
+		if (ast[i]->type == AST_REDIR)
 			i += 2;
-		else if (childs[i]->quote != NONE || *childs[i]->value)
-			argv[arg_idx++] = childs[i++]->value;
+		else if (ast[i]->value
+			&& (*ast[i]->value || ast[i]->quote != NONE))
+			argv[arg_idx++] = ast[i++]->value;
 		else
 			i++;
 	}
+	argv[arg_idx] = NULL;
 	return (argv);
 }
 
