@@ -92,7 +92,7 @@ static int	here_doc(t_ctx *ctx, char *eof)
 	char	*prompt;
 	int		pipefd[2];
 
-	if (!eof || !*eof)
+	if (!eof)
 		return (-1);
 	if (pipe(pipefd) < 0)
 		return (-1);
@@ -130,7 +130,7 @@ int	check_hd(t_ctx *ctx, t_ast *ast)
 		if (!ft_strcmp(ast->value, "<<"))
 		{
 			merge_redir(ctx, ast);
-			if (!ast->childs[0]->value || !*ast->childs[0]->value)
+			if (!ast->childs[0]->value)
 				return (parsing_err(ctx, "newline", 2));
 			fd = here_doc(ctx, ast->childs[0]->value);
 			if (fd < 0)
@@ -138,7 +138,7 @@ int	check_hd(t_ctx *ctx, t_ast *ast)
 			ast->fd = fd;
 			register_fd(&ctx->fds, fd);
 		}
-		if (!check_hd(ctx, ast->childs[1]))
+		if (ast->sub_count > 1 && !check_hd(ctx, ast->childs[1]))
 			return (0);
 	}
 	return (1);

@@ -64,10 +64,10 @@ void	merge_redir(t_ctx *ctx, t_ast *node)
 	t_ast	*cmd;
 	t_ast	*file;
 
-	file = node->childs[0];
-	cmd = node->childs[1];
 	if (!node->childs || node->sub_count < 2)
 		return ;
+	file = node->childs[0];
+	cmd = node->childs[1];
 	merge_ast(ctx, cmd);
 	if ((!file->value || !*file->value) && file->sub_count && file->childs[0])
 	{
@@ -80,8 +80,6 @@ void	merge_redir(t_ctx *ctx, t_ast *node)
 				ft_strjoin(file->value, file->childs[0]->value));
 		remove_ast_child(ctx, file, 0);
 	}
-	if (!file->value || !*file->value)
-		remove_ast_child(ctx, node, 0);
 }
 
 static void	merge_childs(t_ctx *ctx, t_ast *node)

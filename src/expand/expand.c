@@ -83,7 +83,8 @@ static void	replace_wlcd(t_ast *ast)
 	if (tmp->type != AST_COMMAND)
 	{
 		replace_wlcd(ast->childs[0]);
-		replace_wlcd(ast->childs[1]);
+		if (ast->sub_count > 1)
+			replace_wlcd(ast->childs[1]);
 	}
 	if (tmp->value && *tmp->value)
 		replace_char(tmp);

@@ -106,19 +106,26 @@ void	print_status(t_ctx *ctx)
 {
 	char	*cwd;
 
+	cwd = NULL;
 	if (ctx && ctx->status == 0)
 		ft_printf("\033[0m\033[1m\033[32m%s  \033[0m", "➜");
 	else
 		ft_printf("\033[1m\033[31m%s  \033[0m", "➜");
 	if (ctx && get_from_env(ctx->env, "USER"))
 		ft_printf("\033[35m\033[1m[%s] ", get_from_env(ctx->env, "USER"));
+	else
+		ft_printf("\033[35m\033[1m[Ctrl+C] ");
 	if (ctx && get_from_env(ctx->env, "SHLVL"))
 		ft_printf("\033[31m\033[1m-%s- ", get_from_env(ctx->env, "SHLVL"));
-	cwd = s_save(ctx, getcwd(NULL, 0));
+	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{
 		ft_printf("\033[36m\033[1m%s \033[0m", cwd);
-		s_free(ctx, cwd);
+		free(cwd);
 	}
-	ft_printf("\033[33m\033[1m%s \033[0m\n", "✗");
+	ft_printf("\033[33m\033[1m%s \033[0m", "✗");
+	if (ctx)
+		ft_printf("\033[37m\033[1m\t\t\t\t\t\t\t%03i\033[0m\n", ctx->lines_nb);
+	else
+		ft_printf("\n");
 }

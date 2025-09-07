@@ -83,7 +83,8 @@ static int	exec_redir(t_ctx *ctx, t_ast *ast)
 		else
 			dup2(fd, STDOUT_FILENO);
 		close(fd);
-		ctx->status = execute_ast(ctx, ast->childs[1]);
+		if (ast->sub_count > 1)
+			ctx->status = execute_ast(ctx, ast->childs[1]);
 		secure_exit(ctx);
 	}
 	close_fd(&ctx->fds, fd);
