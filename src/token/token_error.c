@@ -60,6 +60,22 @@ static bool	check_bonus(t_ctx *ctx, t_token *tmp, int *count)
 	return (true);
 }
 
+static bool	first_tok_pass(t_ctx *ctx, t_token *tmp)
+{
+	if (tmp->type == TOKEN_AND && ft_strlen(tmp->value) != 2)
+	{
+		if (ft_strlen(tmp->value) > 2)
+			return (parsing_err(ctx, "&&", 2));
+		else if (ft_strlen(tmp->value) < 2)
+			return (parsing_err(ctx, "&", 2));
+	}
+	else if (tmp->type == TOKEN_OR && ft_strlen(tmp->value) != 2)
+		return (parsing_err(ctx, "||", 2));
+	else if (is_ope(tmp) || tmp->type == TOKEN_RPAR)
+		return (parsing_err(ctx, tmp->value, 2));
+	return (true);
+}
+
 bool	tokens_err(t_ctx *ctx, t_token *tokens)
 {
 	t_token	*tmp;
@@ -67,8 +83,8 @@ bool	tokens_err(t_ctx *ctx, t_token *tokens)
 
 	tmp = tokens;
 	lpar_counter = 0;
-	if (is_ope(tmp) || tmp->type == TOKEN_RPAR)
-		return (parsing_err(ctx, tmp->value, 2));
+	if (!first_tok_pass(ctx, tmp))
+		return (false);
 	while (tmp->next)
 	{
 		if (!check_bonus(ctx, tmp, &lpar_counter))
