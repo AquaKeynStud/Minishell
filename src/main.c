@@ -82,7 +82,7 @@ static void	get_input_loop(t_ctx *ctx, const char *prompt)
 	while (true)
 	{
 		ctx->lines_nb++;
-		if (!prompt)
+		if (!prompt && isatty(STDIN_FILENO))
 			print_status(ctx);
 		input = readline(prompt);
 		if (!input)
@@ -106,9 +106,9 @@ int	main(int argc, char **argv, char **envp)
 	char	*prompt;
 
 	(void)argc;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	if (!isatty(STDOUT_FILENO) || !isatty(STDIN_FILENO))
 	{
-		if (isatty(STDERR_FILENO))
+		if (isatty(STDOUT_FILENO))
 			ft_dprintf(2, "minishell: interactive mode not allowed\n");
 		exit(EXIT_FAILURE);
 	}
@@ -120,7 +120,8 @@ int	main(int argc, char **argv, char **envp)
 		prompt = NULL;
 	get_input_loop(&ctx, prompt);
 	rl_clear_history();
-	ft_printf("exit\n");
+	if (isatty(STDIN_FILENO))
+		ft_printf("exit\n");
 	secure_exit(&ctx);
 	return (0);
 }
